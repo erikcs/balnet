@@ -1,0 +1,9 @@
+---
+title: Changelog
+---
+
+```{r, echo = FALSE, results = 'asis'}
+path = file.path('../../../CHANGELOG.md')
+x = xfun::read_utf8(path)
+xfun::raw_string(x[-1]) # -1: zap title
+```

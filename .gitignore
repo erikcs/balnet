@@ -1,0 +1,12 @@
+*.RData
+*.Rhistory
+*Rprof.out
+*_snaps*
+.vscode
+research
+*.DS_Store
+inst/doc
+/doc/
+/Meta/
+*CRAN-SUBMISSION
+.Rproj.user

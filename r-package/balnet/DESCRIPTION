@@ -1,0 +1,26 @@
+Package: balnet
+Title: Pathwise Estimation of Covariate Balancing Propensity Scores
+Version: 0.0.0
+Authors@R: c(
+    person("Erik", "Sverdrup", role = c("aut", "cre"), email = "erik.sverdrup@monash.edu")
+    )
+Description: Provides pathwise estimation of regularized logistic propensity score models
+    using covariate balancing loss functions rather than maximum likelihood.
+    Regularization paths are fit via the 'adelie' elastic-net solver with an
+    interface inspired by 'glmnet', and objectives that directly target covariate
+    balance for the ATE and ATT.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+LinkingTo:
+    Rcpp,
+    RcppEigen
+SystemRequirements: C++17
+Imports:
+    Rcpp,
+    Matrix
+Suggests:
+    testthat (>= 3.0.0),
+URL: https://github.com/erikcs/balnet
+BugReports: https://github.com/erikcs/balnet/issues

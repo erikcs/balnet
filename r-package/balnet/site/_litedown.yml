@@ -1,0 +1,12 @@
+# Basic site using litedown: https://github.com/yihui/litedown/tree/main/site
+# Build by running:
+# Rscript -e "litedown::fuse('_footer.Rmd', '.md')" && Rscript -e "litedown::fuse_site()"
+
+site:
+
+output:
+  html:
+    meta:
+      include_after: "_footer.md"
+    options:
+      number_sections: false

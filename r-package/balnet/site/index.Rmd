@@ -1,0 +1,15 @@
+---
+title: "Pathwise Estimation of Covariate Balancing Propensity Scores"
+---
+
+```{r, echo = FALSE, results = 'asis'}
+path = file.path('../../../README.md')
+x = xfun::read_utf8(path)
+xfun::raw_string(x[-1]) # -1: zap title
+```
+
+---
+
+**Source code**: https://github.com/erikcs/balnet
+
+**Bug reports**: https://github.com/erikcs/balnet/issues

@@ -1,0 +1,11 @@
+^src/*\.o$
+^src/*\.so$
+^docs$
+^site$
+^README\.md$
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.github$
+^\.Rhistory$
+^doc$
+^.*Rprof\.out$
