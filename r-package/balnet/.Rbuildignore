@@ -1,6 +1,7 @@
 ^src/*\.o$
 ^src/*\.so$
 ^docs$
+^tests/valgrind$
 ^site$
 ^README\.md$
 ^.*\.Rproj$
