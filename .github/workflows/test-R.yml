@@ -10,11 +10,7 @@ on:
 
 jobs:
   ci:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest, ubuntu-latest]
+    runs-on: macOS-latest
 
     env:
       USE_BSPM: true
@@ -24,7 +20,6 @@ jobs:
     defaults:
       run:
         working-directory: r-package/balnet
-        shell: bash
 
     steps:
       - uses: actions/checkout@v4
