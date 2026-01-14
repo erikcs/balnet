@@ -1,3 +1,4 @@
+library(balnet)
 n <- 100
 p <- 30
 X <- matrix(rnorm(n * p), n, p)
