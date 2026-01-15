@@ -12,4 +12,4 @@ The development version can be installed via
 devtools::install_github("erikcs/balnet", subdir = "r-package/balnet")
 ```
 
-Installing from source requires a C++17 compiler or later. To build with multithreading enabled, OpenMP needs to be available (on Mac, a simple option is compiling with `gcc` installed via `brew`).
+Installing from source requires a C++17 compiler or later. To build with multithreading enabled, OpenMP needs to be available (on Mac, a simple option is to set the default C++ compiler to `gcc` installed via `brew`).
