@@ -7,6 +7,7 @@ site:
 output:
   html:
     meta:
+      include_before: "[Home](/) [Get Started](/get-started.html) [Reference](/reference.html) [Changelog](/changelog.html)"
       include_after: "_footer.md"
     options:
       number_sections: false
