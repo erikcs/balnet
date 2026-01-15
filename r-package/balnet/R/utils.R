@@ -156,7 +156,7 @@ process_groups <- function(groups, p) {
   )
 }
 
-# Construct a p * p_new sparse aggregation matrix mapping original columns
+# Construct a p * p.new sparse aggregation matrix mapping original columns
 # to group-level means (weights 1/|group|), with identity mapping
 # for columns not assigned to any group.
 col_group_mat <- function(groups, p, colnames) {
