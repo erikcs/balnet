@@ -145,7 +145,7 @@ balnet.fit <- function(
   active_set_size <- length(screen_set)
   active_set <- integer(groups$G)
   if (active_set_size > 0) {
-      active_set[1:active_set_size] <- 0:(active_set_size-1)
+    active_set[1:active_set_size] <- 0:(active_set_size-1)
   }
 
   args <- list(
