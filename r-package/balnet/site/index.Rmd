@@ -1,5 +1,5 @@
 ---
-title: "Pathwise Estimation of Covariate Balancing Propensity Scores"
+title: "`{r} litedown:::detect_pkg()`: `{r} packageDescription(litedown:::detect_pkg(), fields = 'Title')`"
 ---
 
 ```{r, echo = FALSE, results = 'asis'}
@@ -10,12 +10,12 @@ xfun::raw_string(x[-1]) # -1: zap title
 
 ---
 
-**Source code**: https://github.com/erikcs/balnet
-
-**Bug reports**: https://github.com/erikcs/balnet/issues
-
-<p align="right">
-  <a href="https://github.com/erikcs/balnet">
-    <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" width="24"/>
-  </a>
-</p>
+```{r, echo = FALSE, results = 'asis'}
+desc = packageDescription(litedown:::detect_pkg())
+cat(
+  "**Version:** ", desc$Version,
+  paste0(" - [Source code](", strsplit(desc$URL, ",\\s*")[[1]][1], ")"),
+  paste0(" - [Bug reports](", desc$BugReports, ")"),
+  sep = ""
+)
+```

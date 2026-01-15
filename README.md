@@ -1,8 +1,8 @@
 # balnet
 
-Pathwise estimation of covariate balancing propensity scores using the [adelie](https://jamesyang007.github.io/adelie/) lasso solver.
+🚧 Work in progress 🚧
 
-> 🚧 Work in progress
+A package for pathwise estimation of regularized logistic propensity score models using covariate balancing loss functions rather than maximum likelihood. Regularization paths are fit via the [`adelie`](https://jamesyang007.github.io/adelie/) elastic-net solver with an interface inspired by [`glmnet`](https://glmnet.stanford.edu/), and objectives that directly target covariate balance for the ATE and ATT.
 
 ## Installation
 
