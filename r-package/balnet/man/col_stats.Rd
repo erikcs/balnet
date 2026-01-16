@@ -4,7 +4,7 @@
 \alias{col_stats}
 \title{Compute weighted column means and standard deviations.}
 \usage{
-col_stats(X, weights = NULL, compute_sd = FALSE)
+col_stats(X, weights = NULL, compute_sd = FALSE, n_threads = 1L)
 }
 \arguments{
 \item{X}{A \code{n * p} numeric R matrix.}
