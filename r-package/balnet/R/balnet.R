@@ -421,6 +421,7 @@ print.balnet <- function(
 #' @param lambda If NULL (default) diagnostics over the lambda path is shown.
 #' Otherwise, diagnostics for a single lambda value is shown.
 #' (if target = "ATE", lambda can be a 2-vector, arm 0 and arm 1.)
+#' @param groups A list of group indices.
 #' @param max The number of covariates to display in balance plot. Defaults to all covariates.
 #' @param ... Additional arguments.
 #'
@@ -457,6 +458,7 @@ print.balnet <- function(
 plot.balnet <- function(
   x,
   lambda = NULL,
+  groups = NULL,
   max = NULL,
   ...
 )
@@ -474,6 +476,10 @@ plot.balnet <- function(
   }
   plot_func <- if (is.null(lambda)) `plot_path` else `plot_smd`
 
+  if (!is.null(groups)) {
+    rm(list = intersect(c("stats0", "stats1"), ls(envir = x[["_cache"]])), envir = x[["_cache"]])
+  }
+
   lambdas <- x[["lambda"]]
   W.orig <- x[["W.orig"]]
   pp <- get0("pp", envir = x[["_cache"]], inherits = FALSE)
@@ -487,8 +493,8 @@ plot.balnet <- function(
   stats1 <- get0("stats1", envir = x[["_cache"]], inherits = FALSE)
   if (!is.null(x[["_fit"]]$control)) {
     if (is.null(stats0)) {
-      stats0 <- get_metrics(lambdas$control, pp$control, 1 - W.orig, x)
-      x[["_cache"]]$stats0 <- stats0
+      stats0 <- get_metrics(lambdas$control, pp$control, 1 - W.orig, groups, x)
+      if (is.null(groups)) x[["_cache"]]$stats0 <- stats0
     }
     if (!is.null(x[["_fit"]]$treated)) {
       graphics::par(mfrow = c(1, 2))
@@ -499,8 +505,8 @@ plot.balnet <- function(
 
   if (!is.null(x[["_fit"]]$treated)) {
     if (is.null(stats1)) {
-      stats1 <- get_metrics(lambdas$treated, pp$treated, W.orig, x)
-      x[["_cache"]]$stats1 <- stats1
+      stats1 <- get_metrics(lambdas$treated, pp$treated, W.orig, groups, x)
+      if (is.null(groups)) x[["_cache"]]$stats1 <- stats1
     }
     plot_func(stats1, lambda.in[[2]], max)
     if (x[["target"]] == "ATE") graphics::mtext("Treated", side = 3, line = 1, adj = 0)
@@ -510,9 +516,8 @@ plot.balnet <- function(
   invisible(out[sapply(out, length) > 0])
 }
 
-get_metrics <- function(lambdas, pp, W, fit) {
+get_metrics <- function(lambdas, pp, W, groups, fit) {
   target <- fit[["target"]]
-  groups <- fit[["groups"]]
   X <- fit[["X.orig"]]
   colnames <- fit[["colnames"]]
   # if groups present, we calculate SMDs on group-level means
@@ -569,7 +574,7 @@ plot_path <- function(stats, lambda, ...) {
 plot_smd <- function(stats, lambda, max = NULL, ...) {
     lambdas <- stats[["smd"]][, "lambda"]
     smd <- stats[["smd"]][, -1]
-    labels <- abbreviate(colnames(smd), minlength = 30, dot = TRUE)
+    labels <- colnames(smd)
     if (is.null(max)) {
       max <- length(labels)
     }

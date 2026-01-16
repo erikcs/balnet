@@ -4,7 +4,7 @@
 \alias{plot.balnet}
 \title{Plot diagnostics for a \code{balnet} object.}
 \usage{
-\method{plot}{balnet}(x, lambda = NULL, max = NULL, ...)
+\method{plot}{balnet}(x, lambda = NULL, groups = NULL, max = NULL, ...)
 }
 \arguments{
 \item{x}{A \code{balnet} object.}
@@ -12,6 +12,8 @@
 \item{lambda}{If NULL (default) diagnostics over the lambda path is shown.
 Otherwise, diagnostics for a single lambda value is shown.
 (if target = "ATE", lambda can be a 2-vector, arm 0 and arm 1.)}
+
+\item{groups}{A list of group indices.}
 
 \item{max}{The number of covariates to display in balance plot. Defaults to all covariates.}
 
