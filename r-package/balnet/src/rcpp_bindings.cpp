@@ -69,9 +69,13 @@ Rcpp::List rcpp_solver(
 Rcpp::List rcpp_col_stats(
     const Rcpp::NumericMatrix& X, // n * p
     const Rcpp::NumericMatrix& weights, // n * L
-    bool compute_sd
+    bool compute_sd,
+    size_t n_threads
 )
 {
+    auto n_threads_def = Eigen::nbThreads();
+    Eigen::setNbThreads(n_threads);
+
     size_t n = X.nrow();
     size_t p = X.ncol();
     size_t L = weights.ncol();
@@ -96,6 +100,7 @@ Rcpp::List rcpp_col_stats(
         scale_map.array() = (scale_map.array() <= value_t(0)).select(value_t(0), scale_map.array());
         scale_map.array() = scale_map.array().sqrt();
     }
+    Eigen::setNbThreads(n_threads_def);
 
     return Rcpp::List::create(
         Rcpp::Named("center") = center,

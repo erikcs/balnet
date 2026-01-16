@@ -23,15 +23,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // rcpp_col_stats
-Rcpp::List rcpp_col_stats(const Rcpp::NumericMatrix& X, const Rcpp::NumericMatrix& weights, bool compute_sd);
-RcppExport SEXP _balnet_rcpp_col_stats(SEXP XSEXP, SEXP weightsSEXP, SEXP compute_sdSEXP) {
+Rcpp::List rcpp_col_stats(const Rcpp::NumericMatrix& X, const Rcpp::NumericMatrix& weights, bool compute_sd, size_t n_threads);
+RcppExport SEXP _balnet_rcpp_col_stats(SEXP XSEXP, SEXP weightsSEXP, SEXP compute_sdSEXP, SEXP n_threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type weights(weightsSEXP);
     Rcpp::traits::input_parameter< bool >::type compute_sd(compute_sdSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_col_stats(X, weights, compute_sd));
+    Rcpp::traits::input_parameter< size_t >::type n_threads(n_threadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_col_stats(X, weights, compute_sd, n_threads));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -65,7 +66,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_balnet_rcpp_solver", (DL_FUNC) &_balnet_rcpp_solver, 1},
-    {"_balnet_rcpp_col_stats", (DL_FUNC) &_balnet_rcpp_col_stats, 3},
+    {"_balnet_rcpp_col_stats", (DL_FUNC) &_balnet_rcpp_col_stats, 4},
     {"_balnet_rcpp_standardize", (DL_FUNC) &_balnet_rcpp_standardize, 4},
     {"_balnet_rcpp_standardize_inplace", (DL_FUNC) &_balnet_rcpp_standardize_inplace, 4},
     {NULL, NULL, 0}

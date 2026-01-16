@@ -5,8 +5,8 @@ rcpp_solver <- function(args) {
     .Call(`_balnet_rcpp_solver`, args)
 }
 
-rcpp_col_stats <- function(X, weights, compute_sd) {
-    .Call(`_balnet_rcpp_col_stats`, X, weights, compute_sd)
+rcpp_col_stats <- function(X, weights, compute_sd, n_threads) {
+    .Call(`_balnet_rcpp_col_stats`, X, weights, compute_sd, n_threads)
 }
 
 rcpp_standardize <- function(X, center, scale, n_threads) {

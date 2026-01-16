@@ -158,8 +158,9 @@ balnet <- function(
   out[["X.orig"]] <- X
   out[["W.orig"]] <- W
   out[["sample.weights"]] <- sample.weights
-  out[["verbose"]] <- verbose
   out[["target"]] <- target
+  out[["verbose"]] <- verbose
+  out[["num.threads"]] <- num.threads
   out[["colnames"]] <- colnames
   out[["groups"]] <- groups
   out[["lambda"]] <- lambda[sapply(lambda, length) > 0]
@@ -534,7 +535,7 @@ get_metrics <- function(lambdas, pp, W, fit) {
   }
   ess <- (colSums(ipw)^2 / colSums(ipw^2)) / sum(W) * 100
 
-  smd <- col_stats(X, ipw)$center
+  smd <- col_stats(X, ipw, n_threads = fit[["num.threads"]])$center
   smd <- sweep(smd, 2L, X.stats$center, `-`, check.margin	= FALSE)
   smd <- sweep(smd, 2L, X.stats$scale, `/`, check.margin = FALSE)
   pbr <- (1 - rowSums(abs(smd)) / sum(abs(smd[1, ]))) * 100

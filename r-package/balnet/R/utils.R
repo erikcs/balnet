@@ -18,7 +18,8 @@
 col_stats <- function(
   X,
   weights = NULL,
-  compute_sd = FALSE
+  compute_sd = FALSE,
+  n_threads = 1L
 )
 {
   if (is.null(weights)) {
@@ -28,7 +29,7 @@ col_stats <- function(
   }
   stopifnot(nrow(X) == nrow(weights))
 
-  rcpp_col_stats(X, weights, compute_sd)
+  rcpp_col_stats(X, weights, compute_sd, n_threads)
 }
 
 #' Quickly center and scale a standard dense R matrix.
@@ -56,7 +57,7 @@ standardize <- function(
     } else {
       weights <- as.matrix(weights)
     }
-    col.stats <- rcpp_col_stats(X, weights, compute_sd = TRUE)
+    col.stats <- rcpp_col_stats(X, weights, compute_sd = TRUE, n_threads = n_threads)
     center <- drop(col.stats$center)
     scale <- drop(col.stats$scale)
     scale[scale <= 0] <- 1
