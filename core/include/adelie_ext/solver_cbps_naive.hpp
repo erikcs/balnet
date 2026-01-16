@@ -544,7 +544,7 @@ inline void solve(
     const auto pb_add_suffix_f = [&](const auto& state, auto& pb) {
         const auto& devs = state.devs;
         pb << " [mean|SMD|:"
-            << std::fixed << std::setprecision(2)
+            << std::setprecision(2)
             << ((devs.size() == 0) ? 0.0 : devs.back())
             << "]"
             ;
