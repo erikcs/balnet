@@ -44,7 +44,8 @@ balnet(
 
 \item{alpha}{Elastic net mixing parameter. Default is 1 (lasso). 0 is ridge.}
 
-\item{standardize}{Whether to standardize the input matrix. This should only be set to \code{FALSE} if \code{X} already has zero-mean columns with unit variances.
+\item{standardize}{Whether to standardize the input matrix. This should only be set to \code{FALSE} if \code{X} already has zero-mean columns with unit variances
+(for \code{target = "ATT"}, \code{X} is expected to be standardized with the treated information).
 It can also be set to "inplace", which overwrites the input matrix \code{X} with standardized information.}
 
 \item{thresh}{Coordinate descent convergence tolerance, default 1e-7.}
