@@ -8,6 +8,7 @@ balnet.fit(
   stan,
   y,
   weights = NULL,
+  target_scale = 1,
   lambda = NULL,
   lmda_path_size = 100L,
   min_ratio = 0.01,
@@ -34,6 +35,10 @@ balnet.fit(
 \item{stan}{List containing the standardized feature matrix along with mean and scales.}
 
 \item{y}{The 0/1 outcome.}
+
+\item{weights}{Sample weights.}
+
+\item{target_scale}{Gradient scaling for glm.}
 
 \item{lambda}{Optional \code{lambda} sequence. By default, the program computes \code{lambda} sequence based on \code{lmda_path_size} and \code{min_ratio}.}
 

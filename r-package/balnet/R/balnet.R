@@ -10,7 +10,8 @@
 #' @param penalty.factor Penalty factor per feature. Default is 1 (i.e, each feature recieves the same penalty).
 #' @param groups A list of group indices.
 #' @param alpha Elastic net mixing parameter. Default is 1 (lasso). 0 is ridge.
-#' @param standardize Whether to standardize the input matrix. This should only be set to `FALSE` if `X` already has zero-mean columns with unit variances.
+#' @param standardize Whether to standardize the input matrix. This should only be set to `FALSE` if `X` already has zero-mean columns with unit variances
+#'  (for `target = "ATT"`, `X` is expected to be standardized with the treated information).
 #'  It can also be set to "inplace", which overwrites the input matrix `X` with standardized information.
 #' @param thresh Coordinate descent convergence tolerance, default 1e-7.
 #' @param maxit Maximum total number of coordinate descent iterations, default is 1e5.
@@ -101,11 +102,16 @@ balnet <- function(
 
   stan <- standardize(
     X,
-    weights = sample.weights,
+    weights = if (target == "ATT") W * sample.weights else sample.weights,
     standardize = standardize,
     inplace = inplace,
     n_threads = num.threads
   )
+  if (target == "ATT") {
+    target_scale = sum(sample.weights) / sum(sample.weights * W) # "n / n_1"
+  } else {
+    target_scale = 1
+  }
 
   fit0 <- fit1 <- NULL
   lmdas0 <- lmdas1 <- NULL
@@ -115,6 +121,7 @@ balnet <- function(
       stan = stan,
       y = 1 - W,
       weights = sample.weights,
+      target_scale = target_scale,
       lambda = lambda.in[[1]],
       lmda_path_size = nlambda,
       min_ratio = lambda.min.ratio,
@@ -135,6 +142,7 @@ balnet <- function(
       stan = stan,
       y = W,
       weights = sample.weights,
+      target_scale = target_scale,
       lambda = lambda.in[[2]],
       lmda_path_size = nlambda,
       min_ratio = lambda.min.ratio,

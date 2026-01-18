@@ -23,9 +23,12 @@ public:
     using base_t::y;
     using base_t::weights;
 
+    const value_t target_scale;
+
     explicit GlmCBPS(
         const Eigen::Ref<const vec_value_t>& y,
-        const Eigen::Ref<const vec_value_t>& weights
+        const Eigen::Ref<const vec_value_t>& weights,
+        value_t target_scale
     );
 
     ADELIE_CORE_GLM_PURE_OVERRIDE_DECL

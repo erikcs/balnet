@@ -1,8 +1,13 @@
-// Calibration loss for mu_1 = E[Y(1)] with logit link
-// The loss is
-// l(eta) = sum_{i=1}^{n} w_i (y * exp(-eta) + (1 - y) * eta), where y is 0 or 1
-// with (negative) gradient: -w_i * (-y * exp(-eta) + (1 - y)) and raw hessian: y * exp(-eta)
-// We get the mu_0 loss by using the same construction on inverted outcomes y' = 1 - y.
+/* Calibration loss for mu_1 = E[Y(1)] with logit link.
+ * The loss is:
+ * l(eta) = sum_{i=1}^{n} w_i (y * exp(-eta) + (1 - y) * eta), where y is 0 or 1
+ * with (negative) gradient: -w_i * (-y * exp(-eta) + (1 - y))
+ * and raw hessian: y * exp(-eta)
+ * We get the mu_0 loss by using the same construction on inverted
+ * outcomes y' = 1 - y. The mu_0 loss is used for the ATT, and we
+ * scale the gradient with target_scale = n / n_0 to get printed
+ * path metrics on the same scale.
+ */
 #pragma once
 #define _USE_MATH_DEFINES // for C++
 #include <cmath>
@@ -16,9 +21,11 @@ namespace glm {
 GLM_CBPS_TP
 GLM_CBPS::GlmCBPS(
     const Eigen::Ref<const vec_value_t>& y,
-    const Eigen::Ref<const vec_value_t>& weights
+    const Eigen::Ref<const vec_value_t>& weights,
+    value_t target_scale
 ):
-    base_t("cbps", y, weights)
+    base_t("cbps", y, weights),
+    target_scale(target_scale)
 {}
 
 GLM_CBPS_TP
@@ -29,7 +36,7 @@ GLM_CBPS::gradient(
 )
 {
     base_t::check_gradient(eta, grad);
-    grad = weights * (y * (-eta).exp() - (1 - y));
+    grad = target_scale * weights * (y * (-eta).exp() - (1 - y));
 }
 
 GLM_CBPS_TP
@@ -41,7 +48,7 @@ GLM_CBPS::hessian(
 )
 {
     base_t::check_hessian(eta, grad, hess);
-    hess = grad + weights * (1 - y);
+    hess = grad + target_scale * weights * (1 - y);
 }
 
 GLM_CBPS_TP
@@ -51,7 +58,7 @@ GLM_CBPS::loss(
 )
 {
     base_t::check_loss(eta);
-    return (weights * (y * (-eta).exp() + (1 - y) * eta)).sum();
+    return (target_scale * weights * (y * (-eta).exp() + (1 - y) * eta)).sum();
 }
 
 GLM_CBPS_TP
