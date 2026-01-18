@@ -4,6 +4,7 @@ EXPECTED_AD_ERROR <- "adelie_core solver: max coordinate descents reached at lam
 #'
 #' @param stan List containing the standardized feature matrix along with mean and scales.
 #' @param y The 0/1 outcome.
+#' @param target_scale Gradient scaling for glm.
 #' @param lambda Optional `lambda` sequence. By default, the program computes `lambda` sequence based on `lmda_path_size` and `min_ratio`.
 #' @param lmda_path_size Number of values for `lambda`, if generated automatically. Default is 100.
 #' @param min_ratio Ratio between smallest and largest value of lambda. Default is 1e-2.
