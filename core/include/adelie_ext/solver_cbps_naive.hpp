@@ -3,9 +3,8 @@
 //
 // Original file: "adelie_core/solver/solver_glm_naive.hpp"
 // Changes made (highlighted with "NOTE" in code):
-//   - Deviance calculations adapted for CBPS calibration loss
+//   - Interactive path progress: updated dev calculations + progress bar suffix
 //   - Added heuristic for failing fast in inadmissible lambda region
-//   - Added calibration suffix to progress bar
 // ------------------------------------------------------------
 #pragma once
 #include <adelie_core/configs.hpp>
@@ -159,17 +158,8 @@ void update_solutions(
 
     /*
     * balnet NOTE:
-    *
-    * Default glm deviance is not well-defined for CBPS calibration loss.
-    *
-    * For interactive progress tracking, we use norm of the gradient (imbalance) instead.
-    * Since X is always standardized to zero mean columns, we track the L2 norm
-    * of the covariate imbalance
-    *
-    *  || 1/n \sum_{i=1}^{n}(1 + exp(-eta_i)) W_i X_i ||_2
-    *
-    *  (which equals the gradient of the calibration loss)
-    *  TODO-balnet: clean up comment, use weights
+    * For interactive progress tracking we use imbalance, which is simply
+    * the gradient of the calibration loss.
     */
     const auto& X = *state.X;
     const auto& resid = state.resid;
