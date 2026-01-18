@@ -28,7 +28,6 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
   fit <- balnet(X, W)
   capture.output(pth <- print(fit))
   stats <- plot(fit)
-
   expect_equal(
     rowMeans(abs(stats$control$smd[, -1])),
     pth$control$`Mean |SMD|`
@@ -37,7 +36,6 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
     rowMeans(abs(stats$treated$smd[, -1])),
     pth$treated$`Mean |SMD|`
   )
-
   expect_equal(
     apply(abs(stats$control$smd[, -1]), 1, max),
     pth$control$Lambda,
@@ -52,12 +50,10 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
   fit.att <- balnet(X, W, target = "ATT")
   capture.output(pth.att <- print(fit.att))
   stats.att <- plot(fit.att)
-
   expect_equal(
     rowMeans(abs(stats.att$control$smd[, -1])),
     pth.att$control$`Mean |SMD|`
   )
-
   expect_equal(
     apply(abs(stats.att$control$smd[, -1]), 1, max),
     pth.att$control$Lambda,
