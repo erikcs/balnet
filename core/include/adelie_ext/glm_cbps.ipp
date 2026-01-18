@@ -1,8 +1,13 @@
-// Calibration loss for mu_1 = E[Y(1)] with logit link
-// The loss is
-// l(eta) = sum_{i=1}^{n} w_i (y * exp(-eta) + (1 - y) * eta), where y is 0 or 1
-// with (negative) gradient: -w_i * (-y * exp(-eta) + (1 - y)) and raw hessian: y * exp(-eta)
-// We get the mu_0 loss by using the same construction on inverted outcomes y' = 1 - y.
+/* Calibration loss for mu_1 = E[Y(1)] with logit link.
+ * The loss is:
+ * l(eta) = sum_{i=1}^{n} w_i (y * exp(-eta) + (1 - y) * eta), where y is 0 or 1
+ * with (negative) gradient: -w_i * (-y * exp(-eta) + (1 - y))
+ * and raw hessian: y * exp(-eta)
+ * We get the mu_0 loss by using the same construction on inverted
+ * outcomes y' = 1 - y. The mu_0 loss is used for the ATT, and we
+ * scale the gradient with target_scale = n / n_0 to get printed
+ * path metrics on the same scale.
+ */
 #pragma once
 #define _USE_MATH_DEFINES // for C++
 #include <cmath>
@@ -53,7 +58,7 @@ GLM_CBPS::loss(
 )
 {
     base_t::check_loss(eta);
-    return (weights * (y * (-eta).exp() + (1 - y) * eta)).sum();
+    return (target_scale * weights * (y * (-eta).exp() + (1 - y) * eta)).sum();
 }
 
 GLM_CBPS_TP
