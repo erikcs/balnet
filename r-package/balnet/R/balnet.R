@@ -101,11 +101,16 @@ balnet <- function(
 
   stan <- standardize(
     X,
-    weights = sample.weights,
+    weights = if (target == "ATT") W * sample.weights else sample.weights,
     standardize = standardize,
     inplace = inplace,
     n_threads = num.threads
   )
+  if (target == "ATT") {
+    target_scale = sum(sample.weights) / sum(sample.weights * W) # "n / n_1"
+  } else {
+    target_scale = 1
+  }
 
   fit0 <- fit1 <- NULL
   lmdas0 <- lmdas1 <- NULL
@@ -114,6 +119,7 @@ balnet <- function(
     fit0 <- balnet.fit(
       stan = stan,
       y = 1 - W,
+      target_scale = target_scale,
       weights = sample.weights,
       lambda = lambda.in[[1]],
       lmda_path_size = nlambda,
@@ -134,6 +140,7 @@ balnet <- function(
     fit1 <- balnet.fit(
       stan = stan,
       y = W,
+      target_scale = target_scale,
       weights = sample.weights,
       lambda = lambda.in[[2]],
       lmda_path_size = nlambda,

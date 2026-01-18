@@ -21,7 +21,8 @@ Rcpp::List rcpp_solver(
     // Setup GLM
     const Eigen::Map<vec_value_t> y = args["y"];
     const Eigen::Map<vec_value_t> weights = args["weights"];
-    auto glm = std::unique_ptr<glm_cbps_64_t>(new glm_cbps_64_t(y, weights));
+    const value_t target_scale = args["target_scale"];
+    auto glm = std::unique_ptr<glm_cbps_64_t>(new glm_cbps_64_t(y, weights, target_scale));
 
     // Invoke solver
     ad::Configs::pb_symbol = "\U0001F428";

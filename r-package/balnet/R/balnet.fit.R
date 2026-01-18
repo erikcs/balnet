@@ -32,6 +32,7 @@ EXPECTED_AD_ERROR <- "adelie_core solver: max coordinate descents reached at lam
 balnet.fit <- function(
   stan,
   y,
+  target_scale = 1,
   weights = NULL,
   lambda = NULL,
   lmda_path_size = 100L,
@@ -197,6 +198,7 @@ balnet.fit <- function(
     # GLM args
     "y" = y,
     "weights" = weights,
+    "target_scale" = target_scale,
     # Solver args
     "progress_bar" = progress_bar
   )

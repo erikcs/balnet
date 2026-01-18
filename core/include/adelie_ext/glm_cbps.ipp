@@ -16,9 +16,11 @@ namespace glm {
 GLM_CBPS_TP
 GLM_CBPS::GlmCBPS(
     const Eigen::Ref<const vec_value_t>& y,
-    const Eigen::Ref<const vec_value_t>& weights
+    const Eigen::Ref<const vec_value_t>& weights,
+    value_t target_scale
 ):
-    base_t("cbps", y, weights)
+    base_t("cbps", y, weights),
+    target_scale(target_scale)
 {}
 
 GLM_CBPS_TP
@@ -29,7 +31,7 @@ GLM_CBPS::gradient(
 )
 {
     base_t::check_gradient(eta, grad);
-    grad = weights * (y * (-eta).exp() - (1 - y));
+    grad = target_scale * weights * (y * (-eta).exp() - (1 - y));
 }
 
 GLM_CBPS_TP
@@ -41,7 +43,7 @@ GLM_CBPS::hessian(
 )
 {
     base_t::check_hessian(eta, grad, hess);
-    hess = grad + weights * (1 - y);
+    hess = grad + target_scale * weights * (1 - y);
 }
 
 GLM_CBPS_TP
