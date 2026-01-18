@@ -120,8 +120,8 @@ balnet <- function(
     fit0 <- balnet.fit(
       stan = stan,
       y = 1 - W,
-      target_scale = target_scale,
       weights = sample.weights,
+      target_scale = target_scale,
       lambda = lambda.in[[1]],
       lmda_path_size = nlambda,
       min_ratio = lambda.min.ratio,
@@ -141,8 +141,8 @@ balnet <- function(
     fit1 <- balnet.fit(
       stan = stan,
       y = W,
-      target_scale = target_scale,
       weights = sample.weights,
+      target_scale = target_scale,
       lambda = lambda.in[[2]],
       lmda_path_size = nlambda,
       min_ratio = lambda.min.ratio,
