@@ -427,15 +427,11 @@ inline auto fit(
 
         constexpr auto eta_lim = 50.0;
         auto eta_min = eta.minCoeff();
-        auto eta_max = eta.maxCoeff();
         if (
             std::isnan(hess_sum) ||
-            eta_min < -eta_lim ||
-            eta_max > eta_lim
+            eta_min < -eta_lim
         ) {
             max_iters_prime = fast_fail_iters;
-            // TODO-balnet:
-            // std::cout << "DEBUG: hess_sum: " << hess_sum  << " lmda: " << lmda << " min e " << eta.minCoeff() << " max e "<< eta.maxCoeff() << std::endl;
         }
 
         /* fit gaussian pin */
