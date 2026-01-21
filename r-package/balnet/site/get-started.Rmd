@@ -4,13 +4,16 @@ set.seed(42)
 
 # Introduction to `balnet`
 
-This vignette gives a brief overview of the `balnet` package.
-A commonly used method for estimating propensty scores for use in observational studies, is to use logistic regression, with, depending on data size and application, a regularization penalty.
-`balnet` estimates regularized logistic regression models, except it does so using covariate balancing loss functions with a logistic link instead of traditional maximum likelihood. A property of these loss functions, is that they automatically ensure covariate balance for uses-cases in inverse probability weighting (IPW).
-The following example gives a brief demonstration.
+This vignette provides a brief introduction to the `balnet` package.
 
+A commonly used approach for estimating propensity scores in observational studies is logistic regression, often combined with regularization when the number of covariates is large or when overfitting is a concern. The `balnet` package also fits regularized logistic regression models, but replaces the traditional maximum likelihood loss with *covariate balancing loss functions* paired with a logistic link.
 
-We begin by simulating a small toy example. Here, units with particular values of the pre-treatment covariate $X_1$ are less likely to be included in the treatment arm.
+A key property of these loss functions is that they directly target covariate balance for inverse probability weighting (IPW) estimators. As a result, the fitted propensity score models are explicitly tailored to the causal estimand of interest. The example below illustrates these ideas in a simple simulated setting.
+
+## A toy example
+
+We begin by simulating a small example in which treatment assignment depends on a single pre-treatment covariate. In particular, units with certain values of $X_1$ are less likely to receive treatment.
+
 ```{r}
 library(balnet)
 
@@ -20,56 +23,71 @@ X <- matrix(rnorm(n * p), n, p)
 W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 ```
 
-If we are interested in estimating an average treatment effect (ATE), we can fit a `balnet` object with default options. This fits a lasso regularization path with options that reflect typical `glmnet` usage.
+Suppose we are interested in estimating an average treatment effect (ATE). We can fit a `balnet` object using the default options.
+
 ```{r}
 fit <- balnet(X, W)
 ```
 
-A few details are worth pointing out. Firstly, when estimating propensity scores using covariate balancing loss functions, they are tailored to the particular estimand we are interested in. For the ATE, balnet fit two propensity score models, one for the control arm, and one for the treatment arm. When forming IPW estimates, we'd use the control fit to estimate the mean in the control arm $E[Y_i(0)]$ and the treated fit to estimate $E[Y_i(1))$. If we print the returned object, we see fit information for the two arms (the output is by default truncated to show the beginning and end of the path fit - the entire fit can be displayed by setting the `max` option in `print`)
+By default, this fits a lasso-regularized path of logistic models, with tuning parameters and path construction chosen to mirror common `glmnet` usage.
+
+A few details are worth highlighting. When propensity scores are estimated using covariate balancing loss functions, the fitted models depend on the target estimand. For the ATE, `balnet` fits two propensity score models: one for the control arm and one for the treated arm. When forming IPW estimators, the control-arm model is used to estimate $E[Y_i(0)]$, while the treated-arm model is used to estimate $E[Y_i(1)]$.
+
+Printing the fitted object shows summary information for both arms. By default, the output is truncated to display only the beginning and end of the regularization path, the full path can be displayed by increasing the `max` argument in `print`.
+
 ```{r}
 print(fit)
 ```
 
-The first column of the displayed outcome should be self-explanatry and mimics the number of non-zero coefficients. Like `glmnet`, `balnet` by default starts the $\lambda$ that yields with the intercept-only model where all coefficients are zero, and continues in `nlambda` log-steps down to the $\lambda$ value that is a fraction `lambda.min.ratio` of this value. The next column displays the mean, across all covarites, of the absolute standardized mean difference (SMD). Note: `balnet` always reports and solves balance metrics on the standardized scale.
+The first column reports the number of nonzero coefficients and is analogous to the output of `glmnet`. As in `glmnet`, the regularization path starts at a value of $\lambda$ corresponding to an intercept-only model and proceeds in `nlambda` logarithmically spaced steps down to a minimum value determined by `lambda.min.ratio`.
 
-For the particular data example we simulated, it is not possible to find weights that *exactly* balances the covariate means in the treatment and control arm such that they match the overall sample means of $X$. This is reflected in the print output: for both arms, `balnet` truncated the regularization path before reaching the default path length of `nlambda = 100`. The treatment is evidently more challenging to balance than the control arm.
+The next column reports the mean absolute standardized mean difference (SMD), averaged across covariates. Importantly, `balnet` always computes and reports balance metrics on the standardized scale.
 
-A few more details are worth noting before moving on. For lasso regularized generalized linear models, we often think of the penalty parameter $\lambda$ as a budget on the overall coefficients. The interpreation is different in our case. Covariate balancing loss functions are the primal of the optimization problem that finds that weight that minimize imbalance subject to balance levels. This means that for lasso, $\lambda$ is the maximum allowable absolute SMD across all covariates.
+In this simulated example, it is not possible to find weights that *exactly* balance the treated and control covariate means to the overall sample means of $X$. As a result, for both treatment arms the regularization path is truncated before reaching the default path length of `nlambda = 100`. The treated arm, in particular, is more difficult to balance.
 
-As an example, consider $\lambda_{max} \approx 0.62$ from the treatment arm printout. We can easily very this via:
+## The role of λ
+
+For lasso-regularized generalized linear models, $\lambda$ is often interpreted as a budget on the overall magnitude of the coefficients. In the covariate balancing framework, the interpretation is different. Covariate balancing loss functions arise as the primal formulation of an optimization problem that minimizes imbalance subject to constraints on balance. For the lasso case, $\lambda$ can be interpreted as the maximum allowable absolute SMD across covariates.
+
+To illustrate this, consider $\lambda_{\max} \approx 0.62$ for the treated arm in the printed output. This value corresponds to the imbalance in the unweighted treatment arm data and can be verified directly:
+
 ```{r}
-smd.baseline <- (colMeans(X[W == 1, ]) - colMeans(X)) / (apply(X, 2, sd) * sqrt((n - 1) / n))
+smd.baseline <- (colMeans(X[W == 1, ]) - colMeans(X)) /
+  (apply(X, 2, sd) * sqrt((n - 1) / n))
 max(abs(smd.baseline))
 ```
 
-Since the lowest value of $\lambda$ `balnet` computed for the treatment arm is $\lambda_{min} \approx .21$, it means the closes we're able to get the standardized treated covariate means to the overall standardized means, is around 0.21.
+Since the smallest value of $\lambda$ attained for the treated arm is approximately $\lambda_{\min} \approx 0.21$, this indicates that the closest we can bring the standardized treated covariate means to the overall means is an absolute SMD of about 0.21.
 
-This $\lambda$ property gives users a very flexible option to try and reach a desired imbalance threshold. The user can simply calcualte $\lambda_{max}$ for their dataset, then set the parameter `lambda.min.ratio` to the desired fraction of the maximum imbalance they desire. For example, if $\lambda_{max} = 10$, then a default `lambda.min.ratio = 0.01` means the maximum absolute standardized mean diffrence will be $10 * 0.01 = 0.1$. `balnet` will the attempt to compute the full path, stopping gracefully if it is not possible to achieve a lower imbalance (if the balance is only approximate, advanced users way wish to augment the IPW construction with an outcome model).
+This interpretation of $\lambda$ provides a convenient way to target a desired level of imbalance. Users can compute $\lambda_{\max}$ for their dataset and then choose `lambda.min.ratio` to reflect an acceptable fraction of this maximum imbalance. For example, if $\lambda_{\max} = 10$, the default setting `lambda.min.ratio = 0.01` corresponds to a target maximum absolute SMD of $10 \times 0.01 = 0.1$. The algorithm then attempts to compute the full regularization path, stopping gracefully if further reductions in imbalance are not achievable (in cases where balance remains approximate, users may wish to augment IPW estimation with an outcome model).
 
 ## Plotting path diagnostics
-`balnet` has some default plot methods for visualizing the fit. If we call `plot` without any further arguments, we see metrics that attempt to summarize the regularization path, ranging from largest to smallest values of $\lambda$, on the log-scale.
+
+`balnet` provides default plotting methods for visualizing regularization path diagnostics. Calling `plot` without additional arguments produces a summary of key metrics along the path, indexed by $\lambda$ on the log scale.
+
 ```{r}
 plot(fit)
 ```
 
-The plot shows two metrics, normalized to units in percent. The first one, percent bias reduction ("PBR"), measure the reduction in the absolute standardized mean difference after weighting with the estimating propensity scores at a given $\lambda$. The second, effective sample size ("ESS") is simply the ratio of the squared sum of IPW weights, over the sums of squared wieights, normalized to sum to 100.
+Two quantities are shown, both normalized to percentages. The first is the percent bias reduction (PBR), which measures the reduction in absolute SMD after weighting relative to the unweighted data. The second is the effective sample size (ESS), defined as the squared sum of IPW weights divided by the sum of squared weights, normalized to sum to 100.
 
-Recall that by default $\lambda_{max}$ equal the all zero fit, which in the balancing case corresponds to the unweighted data. The plot shows that as the penalty parameter decreases, the overall SMD is reduced, while the effective sample size decreased, as we are placing more weight on a smaller set of units.
+Recall that $\lambda_{\max}$ corresponds to the intercept-only (unweighted) fit. As $\lambda$ decreases, covariate imbalance is reduced, but at the cost of a smaller effective sample size, reflecting increased concentration of weights on a subset of units.
 
-We can also plot individual SMDs at different values of $\lambda$ by specifying the `lambda` argument. Plot shows the fit for the closest lambda queried, so a quick way to see the SMD for the smallest $\lambda$ in the path is simply calling it with `lambda = 0`.
+Individual covariate SMDs can also be visualized at specific values of $\lambda$ by supplying the `lambda` argument. Setting `lambda = 0` selects the smallest value along the path.
+
 ```{r}
 plot(fit, lambda = 0)
 ```
 
-$\lambda_{max}$ shows the SMD for the unweighted data, the SMD for the weights corresponding to the given `lambda` is shown in colors. Two plots are shown since separate propensity models are fit for each treatment arm, with the goal of balancing the covarate means in the given arms closer to the overall covariate means. The SMD metric in `balnet` takes the form "(weighted mean covariate - target mean) / std.dev(target))".
+The unweighted SMDs are shown at $\lambda_{\max}$, while colored points correspond to the weighted SMDs at the selected $\lambda$. Separate panels are displayed for the treated and control arms, reflecting the fact that distinct propensity score models are fit for each arm in the ATE case. In `balnet`, SMDs take the form $(\text{weighted mean covariate} - \text{target mean}) ~/~ \text{sd(target)}$.
 
-The plots make it pretty obivous that the ATE is probably not an appropriate target parameter, given overlap issues with treatment assignment in the treated arm. We can fit a balancing loss logistic model targeting the average treatment effect on the treated (ATT) by setting `target = "ATT"`. Under the hood, `balnet` will fit a logistic model that aims to balance the control means closer to the treated means.
+In this example, the plots suggest limited overlap for the treated arm, indicating that the ATE may not be an appropriate target estimand. Instead, we can target the average treatment effect on the treated (ATT) by setting `target = "ATT"`. In this case, `balnet` fits a model that aims to balance control covariate means toward those of the treated group.
+
 ```{r}
 fit.att <- balnet(X, W, target = "ATT")
-
 plot(fit.att, lambda = 0)
 ```
 
-We see that the this IPW weights do a quite good job.
+Here, the resulting IPW weights achieve substantially improved balance.
 
-For more functionalty, we encourage users to inspect the documentation for the standard S3 methods for `balnet`, such as `predict` for predictions, and `coef` for estimated model coefficients.
+For additional functionality, users are encouraged to consult the documentation for the standard S3 methods provided by `balnet`, including `predict` for propensity score prediction and `coef` for extracting estimated coefficients.
