@@ -33,17 +33,8 @@ W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 # Fit an ATE model.
 cv.fit <- cv.balnet(X, W)
 
-# Print CV summary.
-print(cv.fit)
-
-# Plot at cross-validated lambda.
-plot(cv.fit)
-
 # Predict at cross-validated lambda.
 pp <- predict(cv.fit, X)
-
-# Extract coefficients at cross-validated lambda.
-coefs <- coef(cv.fit)
 }
 
 }

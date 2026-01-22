@@ -33,18 +33,6 @@ fit <- balnet(X, W)
 
 # Print path summary.
 print(fit)
-
-# Plot path diagnostics.
-plot(fit)
-
-# Plot covariate imbalance at the end of the path (closest to lambda = 0).
-plot(fit, lambda = 0)
-
-# Predict propensity scores.
-pp <- predict(fit, X)
-
-# Extract coefficients.
-coefs <- coef(fit)
 }
 
 }

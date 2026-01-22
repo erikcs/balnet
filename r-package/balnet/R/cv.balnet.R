@@ -138,15 +138,6 @@ cv.balnet <- function(
 #' # Fit an ATE model.
 #' cv.fit <- cv.balnet(X, W)
 #'
-#' # Print CV summary.
-#' print(cv.fit)
-#'
-#' # Plot at cross-validated lambda.
-#' plot(cv.fit)
-#'
-#' # Predict at cross-validated lambda.
-#' pp <- predict(cv.fit, X)
-#'
 #' # Extract coefficients at cross-validated lambda.
 #' coefs <- coef(cv.fit)
 #' }
@@ -186,17 +177,8 @@ coef.cv.balnet <- function(
 #' # Fit an ATE model.
 #' cv.fit <- cv.balnet(X, W)
 #'
-#' # Print CV summary.
-#' print(cv.fit)
-#'
-#' # Plot at cross-validated lambda.
-#' plot(cv.fit)
-#'
 #' # Predict at cross-validated lambda.
 #' pp <- predict(cv.fit, X)
-#'
-#' # Extract coefficients at cross-validated lambda.
-#' coefs <- coef(cv.fit)
 #' }
 #'
 #' @method predict cv.balnet
@@ -234,15 +216,6 @@ predict.cv.balnet <- function(
 #'
 #' # Print CV summary.
 #' print(cv.fit)
-#'
-#' # Plot at cross-validated lambda.
-#' plot(cv.fit)
-#'
-#' # Predict at cross-validated lambda.
-#' pp <- predict(cv.fit, X)
-#'
-#' # Extract coefficients at cross-validated lambda.
-#' coefs <- coef(cv.fit)
 #' }
 #'
 #' @method print cv.balnet
@@ -287,17 +260,8 @@ print.cv.balnet <- function(
 #' # Fit an ATE model.
 #' cv.fit <- cv.balnet(X, W)
 #'
-#' # Print CV summary.
-#' print(cv.fit)
-#'
 #' # Plot at cross-validated lambda.
 #' plot(cv.fit)
-#'
-#' # Predict at cross-validated lambda.
-#' pp <- predict(cv.fit, X)
-#'
-#' # Extract coefficients at cross-validated lambda.
-#' coefs <- coef(cv.fit)
 #' }
 #'
 #' @method plot cv.balnet
