@@ -1,5 +1,5 @@
-get_calibration_loss <- function(object, X, W, sample.weights, lambda) {
-  .calibration_loss <- function(W) {
+get_balance_loss <- function(object, X, W, sample.weights, lambda) {
+  .balance_loss <- function(W) {
     colSums(sample.weights * (W * exp(-eta) + (1 - W) * eta)) / sum(sample.weights)
   }
 
@@ -7,11 +7,11 @@ get_calibration_loss <- function(object, X, W, sample.weights, lambda) {
   loss0 <- loss1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
     eta <- predict(object[["_fit"]]$control, X, lambda = lambda[[1]], type = "link")
-    loss0 <- .calibration_loss(1 - W)
+    loss0 <- .balance_loss(1 - W)
   }
   if (!is.null(object[["_fit"]]$treated)) {
     eta <- predict(object[["_fit"]]$treated, X, lambda = lambda[[2]], type = "link")
-    loss1 <- .calibration_loss(W)
+    loss1 <- .balance_loss(W)
   }
   out <- list(control = loss0, treated = loss1)
 
@@ -22,7 +22,7 @@ get_calibration_loss <- function(object, X, W, sample.weights, lambda) {
 #'
 #' @param X Feature matrix.
 #' @param W Treatment vector (0: control, 1: treated).
-#' @param type.measure The loss to minimize for cross-validation. Default is calibration loss.
+#' @param type.measure The loss to minimize for cross-validation. Default is balance loss.
 #' @param nfolds The number of folds used for cross-validation, default is 10.
 #' @param foldid An optional `n`-vector specifying which fold 1 to `nfold` a sample belongs to.
 #' If NULL, this defaults to `sample(rep(seq(nfolds), length.out = nrow(X)))`.
@@ -57,15 +57,15 @@ get_calibration_loss <- function(object, X, W, sample.weights, lambda) {
 cv.balnet <- function(
   X,
   W,
-  type.measure = c("calibration.loss"),
+  type.measure = c("balance.loss"),
   nfolds = 10,
   foldid = NULL,
   ...
 )
 {
   type.measure <- match.arg(type.measure)
-  if (type.measure == "calibration.loss") {
-    get_loss <- `get_calibration_loss`
+  if (type.measure == "balance.loss") {
+    get_loss <- `get_balance_loss`
   }
   nfolds <- max(nfolds, 3)
   if (is.null(foldid)) {

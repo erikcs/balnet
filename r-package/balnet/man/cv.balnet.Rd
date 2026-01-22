@@ -7,7 +7,7 @@
 cv.balnet(
   X,
   W,
-  type.measure = c("calibration.loss"),
+  type.measure = c("balance.loss"),
   nfolds = 10,
   foldid = NULL,
   ...
@@ -18,7 +18,7 @@ cv.balnet(
 
 \item{W}{Treatment vector (0: control, 1: treated).}
 
-\item{type.measure}{The loss to minimize for cross-validation. Default is calibration loss.}
+\item{type.measure}{The loss to minimize for cross-validation. Default is balance loss.}
 
 \item{nfolds}{The number of folds used for cross-validation, default is 10.}
 
