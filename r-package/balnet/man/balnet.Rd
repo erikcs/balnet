@@ -24,7 +24,7 @@ balnet(
 )
 }
 \arguments{
-\item{X}{Feature matrix.}
+\item{X}{A numeric matrix or data frame with pre-treatment covariates.}
 
 \item{W}{Treatment vector (0: control, 1: treated).}
 
@@ -40,7 +40,7 @@ balnet(
 
 \item{penalty.factor}{Penalty factor per feature. Default is 1 (i.e, each feature recieves the same penalty).}
 
-\item{groups}{A list of group indices.}
+\item{groups}{An optional list of group indices for group penalization.}
 
 \item{alpha}{Elastic net mixing parameter. Default is 1 (lasso). 0 is ridge.}
 

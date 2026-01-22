@@ -1,6 +1,6 @@
 #' Pathwise estimation of covariate balancing propensity scores.
 #'
-#' @param X Feature matrix.
+#' @param X A numeric matrix or data frame with pre-treatment covariates.
 #' @param W Treatment vector (0: control, 1: treated).
 #' @param target The target estimand. Default is ATE.
 #' @param sample.weights Optional sample weights. If `NULL` (default), then each unit receives the same weight.
@@ -8,7 +8,7 @@
 #' @param lambda.min.ratio Ratio between smallest and largest value of lambda. Default is 1e-2.
 #' @param lambda Optional `lambda` sequence. By default, the `lambda` sequence is constructed automatically using `nlambda` and `lambda.min.ratio`.
 #' @param penalty.factor Penalty factor per feature. Default is 1 (i.e, each feature recieves the same penalty).
-#' @param groups A list of group indices.
+#' @param groups An optional list of group indices for group penalization.
 #' @param alpha Elastic net mixing parameter. Default is 1 (lasso). 0 is ridge.
 #' @param standardize Whether to standardize the input matrix. This should only be set to `FALSE` if `X` already has zero-mean columns with unit variances
 #'  (for `target = "ATT"`, `X` is expected to be standardized with the treated information).
