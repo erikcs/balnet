@@ -9,7 +9,7 @@ Some helpful links for getting started:
 * [An introduction to `balnet`](https://erikcs.github.io/balnet/get-started.html)
 * [Package docs](https://erikcs.github.io/balnet/reference.html)
 
-## Installation
+### Installation
 
 The development version can be installed via
 
