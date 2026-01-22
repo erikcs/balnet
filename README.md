@@ -1,4 +1,4 @@
-# Pathwise Estimation of Covariate Balancing Propensity Scores
+## Pathwise Estimation of Covariate Balancing Propensity Scores
 
 🚧 Work in progress 🚧
 
