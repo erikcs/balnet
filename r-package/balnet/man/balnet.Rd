@@ -62,7 +62,8 @@ It can also be set to "inplace", which overwrites the input matrix \code{X} with
 A fit balnet object.
 }
 \description{
-Pathwise estimation of covariate balancing propensity scores.
+Fits regularized logistic regression models using covariate balancing loss
+functions, targeting the ATE, ATT, or treated/control means.
 }
 \examples{
 \donttest{

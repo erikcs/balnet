@@ -20,7 +20,7 @@ get_balance_loss <- function(object, X, W, sample.weights, lambda) {
 
 #' Cross-validation for balnet.
 #'
-#' @param X Feature matrix.
+#' @param X A numeric matrix or data frame with pre-treatment covariates.
 #' @param W Treatment vector (0: control, 1: treated).
 #' @param type.measure The loss to minimize for cross-validation. Default is balance loss.
 #' @param nfolds The number of folds used for cross-validation, default is 10.

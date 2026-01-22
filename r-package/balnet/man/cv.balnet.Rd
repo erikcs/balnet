@@ -14,7 +14,7 @@ cv.balnet(
 )
 }
 \arguments{
-\item{X}{Feature matrix.}
+\item{X}{A numeric matrix or data frame with pre-treatment covariates.}
 
 \item{W}{Treatment vector (0: control, 1: treated).}
 

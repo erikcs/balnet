@@ -1,5 +1,8 @@
 #' Pathwise estimation of covariate balancing propensity scores.
 #'
+#' Fits regularized logistic regression models using covariate balancing loss
+#' functions, targeting the ATE, ATT, or treated/control means.
+#'
 #' @param X A numeric matrix or data frame with pre-treatment covariates.
 #' @param W Treatment vector (0: control, 1: treated).
 #' @param target The target estimand. Default is ATE.
