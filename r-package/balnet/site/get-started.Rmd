@@ -49,7 +49,7 @@ In this simulated example, it is not possible to find weights that *exactly* bal
 
 For lasso-regularized generalized linear models, $\lambda$ is often interpreted as a budget on the overall magnitude of the coefficients. In the covariate balancing framework, the interpretation is different. Covariate balancing loss functions arise as the primal formulation of an optimization problem that minimizes imbalance subject to constraints on balance. For the lasso case, $\lambda$ can be interpreted as the maximum allowable absolute SMD across covariates.
 
-To illustrate this, consider $\lambda_{\max} \approx 0.62$ for the treated arm in the printed output. This value corresponds to the imbalance in the unweighted treatment arm data and can be verified directly:
+To illustrate this, consider $\lambda^{\max} \approx 0.62$ for the treated arm in the printed output. This value corresponds to the imbalance in the unweighted treatment arm data and can be verified directly:
 
 ```{r}
 smd.baseline <- (colMeans(X[W == 1, ]) - colMeans(X)) /
@@ -59,7 +59,7 @@ max(abs(smd.baseline))
 
 Since the smallest value of $\lambda$ attained for the treated arm is approximately $\lambda_{\min} \approx 0.21$, this indicates that the closest we can bring the standardized treated covariate means to the overall means is an absolute SMD of about 0.21.
 
-This interpretation of $\lambda$ provides a convenient way to target a desired level of imbalance. Users can compute $\lambda_{\max}$ for their dataset and then choose `lambda.min.ratio` to reflect an acceptable fraction of this maximum imbalance. For example, if $\lambda_{\max} = 10$, the default setting `lambda.min.ratio = 0.01` corresponds to a target maximum absolute SMD of $10 \times 0.01 = 0.1$. The algorithm then attempts to compute the full regularization path, stopping gracefully if further reductions in imbalance are not achievable (in cases where balance remains approximate, users may wish to augment IPW estimation with an outcome model).
+This interpretation of $\lambda$ provides a convenient way to target a desired level of imbalance. Users can compute $\lambda^{\max}$ for their dataset and then choose `lambda.min.ratio` to reflect an acceptable fraction of this maximum imbalance. For example, if $\lambda^{\max} = 10$, the default setting `lambda.min.ratio = 0.01` corresponds to a target maximum absolute SMD of $10 \times 0.01 = 0.1$. The algorithm then attempts to compute the full regularization path, stopping gracefully if further reductions in imbalance are not achievable (in cases where balance remains approximate, users may wish to augment IPW estimation with an outcome model).
 
 > *Note*: Setting lambda = 0 to try to achieve exact balance is not recommended, just as `glmnet` advises against it. `balnet` works best by using warm starts and gradually increasing regularization, a strategy similar to barrier methods in convex optimization. This approach helps the algorithm converge reliably and improves performance on real-world datasets where achieving covariate balance can be difficult.
 
@@ -73,7 +73,7 @@ plot(fit)
 
 Two quantities are shown, both normalized to percentages. The first is the percent bias reduction (PBR), which measures the reduction in absolute SMD after weighting relative to the unweighted data. The second is the effective sample size (ESS), defined as the squared sum of IPW weights divided by the sum of squared weights, normalized to sum to 100.
 
-Recall that $\lambda_{\max}$ corresponds to the intercept-only (unweighted) fit. As $\lambda$ decreases, covariate imbalance is reduced, but at the cost of a smaller effective sample size, reflecting increased concentration of weights on a subset of units.
+Recall that $\lambda^{\max}$ corresponds to the intercept-only (unweighted) fit. As $\lambda$ decreases, covariate imbalance is reduced, but at the cost of a smaller effective sample size, reflecting increased concentration of weights on a subset of units.
 
 Individual covariate SMDs can also be visualized at specific values of $\lambda$ by supplying the `lambda` argument. Setting `lambda = 0` selects the smallest value along the path.
 
@@ -81,7 +81,7 @@ Individual covariate SMDs can also be visualized at specific values of $\lambda$
 plot(fit, lambda = 0)
 ```
 
-The unweighted SMDs are shown at $\lambda_{\max}$, while colored points correspond to the weighted SMDs at the selected $\lambda$. Separate panels are displayed for the treated and control arms, reflecting the fact that distinct propensity score models are fit for each arm in the ATE case. In `balnet`, SMDs take the form $(\text{weighted mean covariate} - \text{target mean}) ~/~ \text{sd(target)}$.
+The unweighted SMDs are shown at $\lambda^{\max}$, while colored points correspond to the weighted SMDs at the selected $\lambda$. Separate panels are displayed for the treated and control arms, reflecting the fact that distinct propensity score models are fit for each arm in the ATE case. In `balnet`, SMDs take the form $(\text{weighted mean covariate} - \text{target mean}) ~/~ \text{sd(target)}$.
 
 In this example, the plots suggest limited overlap for the treated arm, indicating that the ATE may not be an appropriate target estimand. Instead, we can target the average treatment effect on the treated (ATT) by setting `target = "ATT"`. In this case, `balnet` fits a model that aims to balance control covariate means toward those of the treated group.
 
