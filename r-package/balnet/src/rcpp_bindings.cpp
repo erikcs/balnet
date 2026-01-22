@@ -98,7 +98,7 @@ Rcpp::List rcpp_col_stats(
 
         // compute stable and fast variance with the "shifted naive algorithm"
         Eigen::RowVectorXd shift = center_map.row(0);
-        dense_64F_t X_shifted_sq = (X_map.rowwise() - shift).array().square();
+        auto X_shifted_sq = (X_map.rowwise() - shift).array().square().matrix();
 
         scale_map.noalias() = weights_map.transpose() * X_shifted_sq;
         scale_map.array().colwise() /= weight_sum.array().transpose();
