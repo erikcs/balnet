@@ -21,9 +21,4 @@ For X column \code{x}, and weight column \code{w}, this function computes
 \eqn{\mu = \frac{\sum_{i}^{n} w_i x_i}{\sum_{i}^{n} w_i}} and
 \eqn{\sigma^2 = \frac{\sum_{i}^{n} w_i (x_i - \mu)^2}{\sum_{i}^{n} w_i}.}
 }
-\details{
-Simply calls into Eigen to do the following at a slight speed advantage
-\code{col.means <- crossprod(weights, X) / colSums(weights);}
-\code{col.vars <- crossprod(weights, X^2) / colSums(weights) - col.means^2}
-}
 \keyword{internal}

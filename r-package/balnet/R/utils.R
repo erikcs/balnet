@@ -4,10 +4,6 @@
 #' \eqn{\mu = \frac{\sum_{i}^{n} w_i x_i}{\sum_{i}^{n} w_i}} and
 #' \eqn{\sigma^2 = \frac{\sum_{i}^{n} w_i (x_i - \mu)^2}{\sum_{i}^{n} w_i}.}
 #'
-#' Simply calls into Eigen to do the following at a slight speed advantage
-#' `col.means <- crossprod(weights, X) / colSums(weights);`
-#' `col.vars <- crossprod(weights, X^2) / colSums(weights) - col.means^2`
-#'
 #' @param X A `n * p` numeric R matrix.
 #' @param weights A `n * L` numeric weight matrix, or an `n`-vector.
 #' @param compute_sd Whether to return the standard deviation.

@@ -13,30 +13,50 @@ test_that("col stats works as expected", {
     col_stats(X, weights * 42, TRUE)
   )
 
-  weights <- runif(n)
+  weights.rn <- runif(n)
   expect_equal(
-    col_stats(X, weights, TRUE),
-    col_stats(X, weights * 42, TRUE)
+    col_stats(X, weights.rn, TRUE),
+    col_stats(X, weights.rn * 42, TRUE)
   )
 
   expect_equal(
-    col_stats(X, weights)$center[, ],
-    apply(X, 2, weighted.mean, weights)
+    col_stats(X, weights.rn)$center[, ],
+    apply(X, 2, weighted.mean, weights.rn)
   )
 
   expect_equal(
-    col_stats(X, weights, TRUE)$scale[, ],
-    apply(X, 2, function(x) sqrt(sum(weights * (x - weighted.mean(x, weights))^2) / sum(weights)))
+    col_stats(X, weights.rn, TRUE)$scale[, ],
+    apply(X, 2, function(x) sqrt(sum(weights.rn * (x - weighted.mean(x, weights.rn))^2) / sum(weights.rn)))
   )
 
-  weights <- cbind(1, weights, 1)
+  weights.mat <- cbind(1, weights.rn, 1, runif(n))
   expect_equal(
-    col_stats(X, weights, TRUE)$center[1, ],
-    col_stats(X, weights, TRUE)$center[3, ]
+    col_stats(X, weights.mat, TRUE)$center[1, ],
+    col_stats(X, weights.mat, TRUE)$center[3, ]
   )
   expect_equal(
-    col_stats(X, weights, TRUE)$scale[1, ],
-    col_stats(X, weights, TRUE)$scale[3, ]
+    col_stats(X, weights.mat, TRUE)$scale[1, ],
+    col_stats(X, weights.mat, TRUE)$scale[3, ]
+  )
+
+  expect_equal(
+    col_stats(X, weights.mat, TRUE)$center[4, ],
+    col_stats(X, weights.mat[, 4], TRUE)$center[, ]
+  )
+  expect_equal(
+    col_stats(X, weights.mat, TRUE)$scale[4, ],
+    col_stats(X, weights.mat[, 4], TRUE)$scale[1, ]
+  )
+
+  n <- 1000
+  p <- 10
+  X <- matrix(rnorm(n * p), n, p) * 4.42
+  W <- rbinom(n, 1, 1 / (1 + exp(2.5 - X[, 1])))
+  X[W == 1, 8] <- 1.42
+
+  expect_equal(
+    col_stats(X, W, compute_sd = TRUE)$scale[, 8],
+    0
   )
 })
 

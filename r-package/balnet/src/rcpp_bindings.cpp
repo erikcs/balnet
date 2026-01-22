@@ -74,7 +74,8 @@ Rcpp::List rcpp_col_stats(
     size_t n_threads
 )
 {
-    auto n_threads_def = Eigen::nbThreads();
+    auto constexpr eps = 1e-14;
+    auto n_threads_default = Eigen::nbThreads();
     Eigen::setNbThreads(n_threads);
 
     size_t n = X.nrow();
@@ -94,14 +95,19 @@ Rcpp::List rcpp_col_stats(
     if (compute_sd) {
         scale = Rcpp::no_init(L, p);
         Eigen::Map<dense_64F_t> scale_map(scale.begin(), L, p);
-        scale_map.noalias() = weights_map.transpose() * X_map.array().square().matrix();
-        scale_map.array().colwise() /= weight_sum.transpose().array();
-        scale_map.noalias() -= center_map.array().square().matrix();
-        // >= 0
-        scale_map.array() = (scale_map.array() <= value_t(0)).select(value_t(0), scale_map.array());
-        scale_map.array() = scale_map.array().sqrt();
+
+        // compute stable and fast variance with the "shifted naive algorithm"
+        Eigen::RowVectorXd shift = center_map.row(0);
+        dense_64F_t X_shifted_sq = (X_map.rowwise() - shift).array().square();
+
+        scale_map.noalias() = weights_map.transpose() * X_shifted_sq;
+        scale_map.array().colwise() /= weight_sum.array().transpose();
+        scale_map.array() -= (center_map.rowwise() - shift).array().square();
+
+        // precision clamping and sqrt
+        scale_map.array() = (scale_map.array() <= eps).select(0.0, scale_map.array().sqrt());
     }
-    Eigen::setNbThreads(n_threads_def);
+    Eigen::setNbThreads(n_threads_default);
 
     return Rcpp::List::create(
         Rcpp::Named("center") = center,
