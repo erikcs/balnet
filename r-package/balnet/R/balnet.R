@@ -13,9 +13,10 @@
 #' @param penalty.factor Penalty factor per feature. Default is 1 (i.e, each feature recieves the same penalty).
 #' @param groups An optional list of group indices for group penalization.
 #' @param alpha Elastic net mixing parameter. Default is 1 (lasso). 0 is ridge.
-#' @param standardize Whether to standardize the input matrix. This should only be set to `FALSE` if `X` already has zero-mean columns with unit variances
-#'  (for `target = "ATT"`, `X` is expected to be standardized with the treated information).
-#'  It can also be set to "inplace", which overwrites the input matrix `X` with standardized information.
+#' @param standardize Whether to standardize the input matrix. This should only be set to `FALSE` if
+#'  `X` already has zero-mean columns with unit variance; for `target = "ATT"`, standardization
+#'  should be based on the treated group. Alternatively, set to `"inplace"` to overwrite `X` with
+#'  its standardized version, avoiding an additional copy.
 #' @param thresh Coordinate descent convergence tolerance, default 1e-7.
 #' @param maxit Maximum total number of coordinate descent iterations, default is 1e5.
 #' @param verbose Whether to display information during fitting. Default is `FALSE`.
