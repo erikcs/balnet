@@ -274,12 +274,8 @@ predict.balnet <- function(
 {
   lambda.in <- validate_lambda(lambda)
   type <- match.arg(type)
-  dot.args <- list(...)
   if (missing(newx)) {
     stop("newx required for predictions.")
-  }
-  if ("s" %in% names(dot.args) && is.null(lambda)) {
-    lambda <- dot.args$s
   }
   if (is.matrix(newx) || is.data.frame(newx)) {
     newx <- as.matrix(newx)
