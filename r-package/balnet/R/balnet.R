@@ -516,7 +516,7 @@ get_metrics <- function(lambdas, pp, W, groups, fit) {
   )
 }
 
-plot_path <- function(stats, lambda, ...) {
+plot_path <- function(stats, ...) {
   lambdas <- stats[["pth"]][, "lambda"]
   pbr <- stats[["pth"]][, "pbr"]
   ess <- stats[["pth"]][, "ess"]
