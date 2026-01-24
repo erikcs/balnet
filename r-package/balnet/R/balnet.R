@@ -275,9 +275,7 @@ predict.balnet <- function(
   lambda.in <- validate_lambda(lambda)
   type <- match.arg(type)
   dot.args <- list(...)
-  if (missing(newx) && !is.null(dot.args$newdata)) {
-    newx <- dot.args$newdata
-  } else if (missing(newx)) {
+  if (missing(newx)) {
     stop("newx required for predictions.")
   }
   if ("s" %in% names(dot.args) && is.null(lambda)) {
