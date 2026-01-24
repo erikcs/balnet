@@ -537,7 +537,7 @@ plot_path <- function(stats, lambda, ...) {
 
 plot_smd <- function(stats, lambda, max = NULL, ...) {
     lambdas <- stats[["smd"]][, "lambda"]
-    smd <- stats[["smd"]][, -1]
+    smd <- stats[["smd"]][, -1, drop = FALSE]
     labels <- colnames(smd)
     if (is.null(max)) {
       max <- length(labels)
