@@ -79,7 +79,7 @@ get_lambda_min_ratio <- function(lambda.min.ratio, max.smd, X.stan, W, sample.we
       stop("Setting max.smd is only possible with lasso (alpha = 1).")
     }
     if (max.smd <= 0) {
-      stop("lambda.min should be > 0.")
+      stop("max.smd should be > 0.")
     }
     lambda.min.ratio0 <- lambda.min.ratio1 <- lambda.min.ratio
     if (target %in% c("ATE", "ATT", "control")) {
