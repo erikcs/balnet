@@ -65,7 +65,7 @@ This interpretation of $\lambda$ provides a convenient way to target a desired l
 
 ## Plotting path diagnostics
 
-`balnet` provides default plotting methods for visualizing regularization path diagnostics. Calling `plot` without additional arguments produces a summary of key metrics along the path, indexed by $\lambda$ on the log scale.
+`balnet` provides default plotting methods for visualizing regularization path diagnostics. Calling `plot` without additional arguments produces a summary of metrics along the path, indexed by $\lambda$ on the log scale.
 
 ```{r}
 plot(fit)
