@@ -9,7 +9,7 @@ balnet(
   W,
   target = c("ATE", "ATT", "treated", "control"),
   sample.weights = NULL,
-  max.smd = NULL,
+  max.imbalance = NULL,
   nlambda = 100L,
   lambda.min.ratio = 0.01,
   lambda = NULL,
@@ -33,10 +33,10 @@ balnet(
 
 \item{sample.weights}{Optional sample weights. If \code{NULL} (default), then each unit receives the same weight.}
 
-\item{max.smd}{Optional upper bound on the standardized mean difference.
+\item{max.imbalance}{Optional upper bound on the covariate imbalance.
 For lasso penalization (\code{alpha = 1}), there is a one-to-one correspondence between the penalty parameter
-\eqn{\lambda} and the maximum allowable covariate imbalance under the balancing loss.
-When supplied, \code{max.smd} is used to adjust the lambda sequence (via \code{lambda.min.ratio}) so that the
+\eqn{\lambda} and the maximum allowable covariate imbalance.
+When supplied, \code{max.imbalance} is used to adjust the lambda sequence (via \code{lambda.min.ratio}) so that the
 generated lambda sequence ends at the specified imbalance level.}
 
 \item{nlambda}{Number of values for \code{lambda}, if generated automatically. Default is 100.}
@@ -45,7 +45,7 @@ generated lambda sequence ends at the specified imbalance level.}
 
 \item{lambda}{Optional \code{lambda} sequence.
 By default, the \code{lambda} sequence is constructed automatically using \code{nlambda} and \code{lambda.min.ratio}
-(or \code{max.smd}, if specified).}
+(or \code{max.imbalance}, if specified).}
 
 \item{penalty.factor}{Penalty factor per feature. Default is 1 (i.e, each feature recieves the same penalty).}
 

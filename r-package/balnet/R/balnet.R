@@ -7,16 +7,16 @@
 #' @param W Treatment vector (0: control, 1: treated).
 #' @param target The target estimand. Default is ATE.
 #' @param sample.weights Optional sample weights. If `NULL` (default), then each unit receives the same weight.
-#' @param max.smd Optional upper bound on the standardized mean difference.
+#' @param max.imbalance Optional upper bound on the covariate imbalance.
 #'  For lasso penalization (`alpha = 1`), there is a one-to-one correspondence between the penalty parameter
-#'  \eqn{\lambda} and the maximum allowable covariate imbalance under the balancing loss.
-#'  When supplied, \code{max.smd} is used to adjust the lambda sequence (via `lambda.min.ratio`) so that the
+#'  \eqn{\lambda} and the maximum allowable covariate imbalance.
+#'  When supplied, `max.imbalance` is used to adjust the lambda sequence (via `lambda.min.ratio`) so that the
 #'  generated lambda sequence ends at the specified imbalance level.
 #' @param nlambda Number of values for `lambda`, if generated automatically. Default is 100.
 #' @param lambda.min.ratio Ratio between smallest and largest value of lambda. Default is 1e-2.
 #' @param lambda Optional `lambda` sequence.
 #'  By default, the `lambda` sequence is constructed automatically using `nlambda` and `lambda.min.ratio`
-#'  (or `max.smd`, if specified).
+#'  (or `max.imbalance`, if specified).
 #' @param penalty.factor Penalty factor per feature. Default is 1 (i.e, each feature recieves the same penalty).
 #' @param groups An optional list of group indices for group penalization.
 #' @param alpha Elastic net mixing parameter. Default is 1 (lasso). 0 is ridge.
@@ -64,7 +64,7 @@ balnet <- function(
   W,
   target = c("ATE", "ATT", "treated", "control"),
   sample.weights = NULL,
-  max.smd = NULL,
+  max.imbalance = NULL,
   nlambda = 100L,
   lambda.min.ratio = 1e-2,
   lambda = NULL,
@@ -119,7 +119,7 @@ balnet <- function(
     inplace = inplace,
     n_threads = num.threads
   )
-  lambda.min.ratio <- get_lambda_min_ratio(lambda.min.ratio, max.smd, stan$X, W, sample.weights, target, alpha)
+  lambda.min.ratio <- get_lambda_min_ratio(lambda.min.ratio, max.imbalance, stan$X, W, sample.weights, target, alpha)
 
   if (target == "ATT") {
     target_scale = sum(sample.weights) / sum(sample.weights * W) # "n / n_1"
