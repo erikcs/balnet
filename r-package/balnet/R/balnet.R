@@ -94,7 +94,6 @@ balnet <- function(
   } else if (is.null(sample.weights)) {
     sample.weights <- rep_len(1, nrow(X))
   }
-  lambda.in <- validate_lambda(lambda)
   if (is.character(standardize) && standardize == "inplace") {
     inplace <- TRUE
     standardize <- TRUE
@@ -103,6 +102,7 @@ balnet <- function(
   } else {
     stop("Invalid standardize option.")
   }
+  lambda.in <- validate_lambda(lambda)
   colnames <- if (is.null(colnames(X))) make.names(1:ncol(X)) else colnames(X)
   validate_groups(groups, ncol(X), colnames)
 
@@ -113,12 +113,13 @@ balnet <- function(
     inplace = inplace,
     n_threads = num.threads
   )
+  lambda.min.ratio <- get_lambda_min_ratio(lambda.min.ratio, max.smd, stan$X, W, sample.weights, target, alpha)
+
   if (target == "ATT") {
     target_scale = sum(sample.weights) / sum(sample.weights * W) # "n / n_1"
   } else {
     target_scale = 1
   }
-  lambda.min.ratio <- get_lambda_min_ratio(lambda.min.ratio, max.smd, stan$X, W, sample.weights, target, alpha)
 
   fit0 <- fit1 <- NULL
   lmdas0 <- lmdas1 <- NULL
