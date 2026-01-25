@@ -75,7 +75,7 @@ Two quantities are shown, both normalized to percentages. The first is the perce
 
 Recall that $\lambda^{\max}$ corresponds to the intercept-only (unweighted) fit. As $\lambda$ decreases, covariate imbalance is reduced, but at the cost of a smaller effective sample size, reflecting increased concentration of weights on a subset of units.
 
-Individual covariate SMDs can also be visualized at specific values of $\lambda$ by supplying the `lambda` argument. Setting `lambda = 0` selects the smallest value along the path.
+Individual covariate SMDs can be visualized at specific values of $\lambda$ by supplying the `lambda` argument. If the requested value is not exactly on the fitted $\lambda$ sequence, the closest value is used; in particular, setting `lambda = 0` selects the smallest value along the path. `balnet` then predicts the corresponding propensity scores, constructs inverse probability weights for the chosen estimand, and computes the resulting SMDs.
 
 ```{r}
 plot(fit, lambda = 0)
