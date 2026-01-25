@@ -7,6 +7,7 @@
 #' @param W Treatment vector (0: control, 1: treated).
 #' @param target The target estimand. Default is ATE.
 #' @param sample.weights Optional sample weights. If `NULL` (default), then each unit receives the same weight.
+#' @param max.smd TODO
 #' @param nlambda Number of values for `lambda`, if generated automatically. Default is 100.
 #' @param lambda.min.ratio Ratio between smallest and largest value of lambda. Default is 1e-2.
 #' @param lambda Optional `lambda` sequence. By default, the `lambda` sequence is constructed automatically using `nlambda` and `lambda.min.ratio`.
@@ -57,6 +58,7 @@ balnet <- function(
   W,
   target = c("ATE", "ATT", "treated", "control"),
   sample.weights = NULL,
+  max.smd = NULL,
   nlambda = 100L,
   lambda.min.ratio = 1e-2,
   lambda = NULL,
@@ -116,6 +118,7 @@ balnet <- function(
   } else {
     target_scale = 1
   }
+  lambda.min.ratio <- get_lambda_min_ratio(lambda.min.ratio, max.smd, stan$X, W, sample.weights, target, alpha)
 
   fit0 <- fit1 <- NULL
   lmdas0 <- lmdas1 <- NULL
@@ -128,7 +131,7 @@ balnet <- function(
       target_scale = target_scale,
       lambda = lambda.in[[1]],
       lmda_path_size = nlambda,
-      min_ratio = lambda.min.ratio,
+      min_ratio = lambda.min.ratio[[1]],
       penalty = penalty.factor,
       groups = groups,
       alpha = alpha,
@@ -149,7 +152,7 @@ balnet <- function(
       target_scale = target_scale,
       lambda = lambda.in[[2]],
       lmda_path_size = nlambda,
-      min_ratio = lambda.min.ratio,
+      min_ratio = lambda.min.ratio[[2]],
       penalty = penalty.factor,
       groups = groups,
       alpha = alpha,

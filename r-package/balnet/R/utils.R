@@ -71,6 +71,38 @@ standardize <- function(
   list(X = X, center = center, scale = scale)
 }
 
+get_lambda_min_ratio <- function(lambda.min.ratio, max.smd, X.stan, W, sample.weights, target, alpha) {
+  if (is.null(max.smd)) {
+    out <- c(lambda.min.ratio, lambda.min.ratio)
+  } else {
+    if (alpha < 1) {
+      stop("setting max.smd is only possible with lasso (alpha = 1).")
+    }
+    if (max.smd <= 0) {
+      stop("lambda.min should be > 0.")
+    }
+    lambda.min.ratio0 <- lambda.min.ratio1 <- lambda.min.ratio
+    if (target %in% c("ATE", "ATT", "control")) {
+      stats0 <- col_stats(X.stan, weights = (1 - W) * sample.weights)
+      lambda0.max <- max(abs(stats0$center))
+      if (max.smd < lambda0.max) {
+        lambda.min.ratio0 <- max.smd / lambda0.max
+      }
+    }
+    if (target %in% c("ATE", "treated")) {
+      stats1 <- col_stats(X.stan, weights = W * sample.weights
+      )
+      lambda1.max <- max(abs(stats1$center))
+      if (max.smd < lambda1.max) {
+        lambda.min.ratio1 <- max.smd / lambda1.max
+      }
+    }
+    out <- c(lambda.min.ratio0, lambda.min.ratio1)
+  }
+
+  out
+}
+
 validate_lambda <- function(lambda) {
   if (is.character(lambda)) {
     stop("Unsupported lambda argument.")
