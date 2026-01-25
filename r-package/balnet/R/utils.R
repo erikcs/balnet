@@ -84,7 +84,7 @@ get_lambda_min_ratio <- function(lambda.min.ratio, max.imbalance, X.stan, W, sam
     lambda.min.ratio0 <- lambda.min.ratio1 <- lambda.min.ratio
     if (target %in% c("ATE", "ATT", "control")) {
       stats0 <- col_stats(X.stan, weights = (1 - W) * sample.weights)
-      lambda0.max <- max(abs(stats0$center))
+      lambda0.max <- max(abs(stats0$center)) # Note, this assumes X.stan is standardized.
       if (max.imbalance < lambda0.max) {
         lambda.min.ratio0 <- max.imbalance / lambda0.max
       }
