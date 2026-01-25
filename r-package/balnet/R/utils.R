@@ -90,8 +90,7 @@ get_lambda_min_ratio <- function(lambda.min.ratio, max.smd, X.stan, W, sample.we
       }
     }
     if (target %in% c("ATE", "treated")) {
-      stats1 <- col_stats(X.stan, weights = W * sample.weights
-      )
+      stats1 <- col_stats(X.stan, weights = W * sample.weights)
       lambda1.max <- max(abs(stats1$center))
       if (max.smd < lambda1.max) {
         lambda.min.ratio1 <- max.smd / lambda1.max
