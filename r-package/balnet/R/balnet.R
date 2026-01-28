@@ -298,7 +298,7 @@ predict.balnet <- function(
 
   pred0 <- pred1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
-    pred0 <- predict(object[["_fit"]]$control, newx, lambda = lambda.in[[1]], type = type)
+    pred0 <- 1 - predict(object[["_fit"]]$control, newx, lambda = lambda.in[[1]], type = type)
   }
   if (!is.null(object[["_fit"]]$treated)) {
     pred1 <- predict(object[["_fit"]]$treated, newx, lambda = lambda.in[[2]], type = type)
