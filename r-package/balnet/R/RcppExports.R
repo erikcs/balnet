@@ -9,6 +9,10 @@ rcpp_col_stats <- function(X, weights, compute_sd, n_threads) {
     .Call(`_balnet_rcpp_col_stats`, X, weights, compute_sd, n_threads)
 }
 
+rcpp_sp_tcrossprod <- function(X, beta, n_threads) {
+    .Call(`_balnet_rcpp_sp_tcrossprod`, X, beta, n_threads)
+}
+
 rcpp_standardize <- function(X, center, scale, n_threads) {
     .Call(`_balnet_rcpp_standardize`, X, center, scale, n_threads)
 }

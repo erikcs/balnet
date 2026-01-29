@@ -71,6 +71,18 @@ standardize <- function(
   list(X = X, center = center, scale = scale)
 }
 
+sp_tcrossprod <- function(
+  X,
+  beta,
+  n_threads = 1L
+) {
+  stopifnot(ncol(X) == ncol(beta))
+  stopifnot(is.matrix(X))
+  stopifnot(is(beta, "dgRMatrix"))
+
+  rcpp_sp_tcrossprod(X, beta, n_threads)
+}
+
 get_lambda_min_ratio <- function(lambda.min.ratio, max.imbalance, X.stan, W, sample.weights, target, alpha) {
   if (is.null(max.imbalance)) {
     out <- c(lambda.min.ratio, lambda.min.ratio)
