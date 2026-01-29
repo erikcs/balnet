@@ -1,6 +1,6 @@
 if (!interactive()) pdf(NULL)
 
-test_that("cv.balnet works as expected", {
+test_that("basic cv.balnet runs", {
   n <- 100
   p <- 21
   X <- matrix(rnorm(n * p), n, p)
