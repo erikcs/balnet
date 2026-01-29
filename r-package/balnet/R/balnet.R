@@ -238,8 +238,13 @@ coef.balnet <- function(
     coef1 <- coef(object[["_fit"]]$treated, lambda = lambda.in[[2]])
   }
   out <- list(control = coef0, treated = coef1)
+  out.nn <- out[!vapply(out, is.null, logical(1))]
 
-  out[sapply(out, length) > 0]
+  if (length(out.nn) > 1) {
+    return(out.nn)
+  } else {
+    return(out.nn[[1]])
+  }
 }
 
 #' Predict using a balnet object.
@@ -304,8 +309,13 @@ predict.balnet <- function(
     pred1 <- predict(object[["_fit"]]$treated, newx, lambda = lambda.in[[2]], type = type)
   }
   out <- list(control = pred0, treated = pred1)
+  out.nn <- out[!vapply(out, is.null, logical(1))]
 
-  out[sapply(out, length) > 0]
+  if (length(out.nn) > 1) {
+    return(out.nn)
+  } else {
+    return(out.nn[[1]])
+  }
 }
 
 #' Print a balnet object.
