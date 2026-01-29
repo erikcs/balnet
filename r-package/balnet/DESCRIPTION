@@ -19,7 +19,8 @@ LinkingTo:
 SystemRequirements: C++17
 Imports:
     Rcpp,
-    Matrix
+    Matrix,
+    methods
 Suggests:
     testthat (>= 3.0.0),
 URL: https://github.com/erikcs/balnet

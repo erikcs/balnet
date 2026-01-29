@@ -116,6 +116,24 @@ Rcpp::List rcpp_col_stats(
 }
 
 // [[Rcpp::export]]
+Rcpp::NumericMatrix rcpp_sp_tcrossprod(
+    const Rcpp::NumericMatrix& X,
+    const Eigen::SparseMatrix<double, Eigen::RowMajor>& beta,
+    size_t n_threads
+)
+{
+    auto n_threads_default = Eigen::nbThreads();
+    Eigen::setNbThreads(n_threads);
+    Rcpp::NumericMatrix out = Rcpp::no_init(X.nrow(), beta.rows());
+    Eigen::Map<dense_64F_t> out_map(out.begin(), out.nrow(), out.ncol());
+    Eigen::Map<const dense_64F_t> X_map(X.begin(), X.nrow(), X.ncol());
+    out_map.noalias() = X_map * beta.transpose();
+    Eigen::setNbThreads(n_threads_default);
+
+    return out;
+}
+
+// [[Rcpp::export]]
 Rcpp::NumericMatrix rcpp_standardize(
     const Rcpp::NumericMatrix& X,
     const Rcpp::NumericVector& center,
