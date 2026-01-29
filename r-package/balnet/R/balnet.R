@@ -190,9 +190,9 @@ balnet <- function(
   out
 }
 
-#' Extract lambda
+#' Extract lambda sequence from a fit.
 #'
-#' @param object An `balnet` type object.
+#' @param object A `balnet` type object.
 #' @param lambda For `cv.balnet`, which lambda to extract.
 #' @param ... Additional arguments (currently ignored).
 #'

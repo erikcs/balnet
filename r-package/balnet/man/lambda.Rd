@@ -4,7 +4,7 @@
 \alias{lambda}
 \alias{lambda.balnet}
 \alias{lambda.cv.balnet}
-\title{Extract lambda}
+\title{Extract lambda sequence from a fit.}
 \usage{
 lambda(object, lambda = NULL, ...)
 
@@ -13,9 +13,9 @@ lambda(object, lambda = NULL, ...)
 \method{lambda}{cv.balnet}(object, lambda = "lambda.min", ...)
 }
 \arguments{
-\item{object}{An object.}
+\item{object}{A \code{balnet} type object.}
 
-\item{lambda}{Value of the penalty parameter \code{lambda}}
+\item{lambda}{For \code{cv.balnet}, which lambda to extract.}
 
 \item{...}{Additional arguments (currently ignored).}
 }
@@ -23,7 +23,7 @@ lambda(object, lambda = NULL, ...)
 The lambda sequence.
 }
 \description{
-Extract lambda
+Extract lambda sequence from a fit.
 }
 \examples{
 \donttest{
