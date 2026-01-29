@@ -1,6 +1,6 @@
 if (!interactive()) pdf(NULL)
 
-test_that("balnet works as expected", {
+test_that("basic balnet runs", {
   n <- 100
   p <- 210
   X <- matrix(rnorm(n * p), n, p)
@@ -51,12 +51,50 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
   capture.output(pth.att <- print(fit.att))
   stats.att <- plot(fit.att)
   expect_equal(
-    rowMeans(abs(stats.att$control$smd[, -1])),
-    pth.att$control$`Mean |SMD|`
+    rowMeans(abs(stats.att$smd[, -1])),
+    pth.att$`Mean |SMD|`
   )
   expect_equal(
-    apply(abs(stats.att$control$smd[, -1]), 1, max),
-    pth.att$control$Lambda,
+    apply(abs(stats.att$smd[, -1]), 1, max),
+    pth.att$Lambda,
     tolerance = 1e-4
+  )
+})
+
+test_that("balnet is internally consistent (predict/coef)", {
+  n <- 111
+  p <- 11
+  X <- matrix(rnorm(n * p), n, p)
+  W <- rbinom(n, 1, 0.5)
+
+  fit <- balnet(X, W)
+  expect_equal(
+    predict(fit, X),
+    predict(fit, X, lambda = fit$lambda)
+  )
+  expect_equal(
+    coef(fit),
+    coef(fit, lambda = fit$lambda)
+  )
+})
+
+test_that("balnet is internally consistent (fits)", {
+  n <- 111
+  p <- 11
+  X <- matrix(rnorm(n * p), n, p)
+  W <- rbinom(n, 1, 0.5)
+
+  fit <- balnet(X, W)
+  expect_equal(
+    predict(fit, X)$control,
+    predict(balnet(X, W, target = "control"), X)
+  )
+  expect_lt(
+    mean(abs(predict(fit, X)$control - predict(balnet(X, W, target = "ATT"), X))),
+    0.009
+  )
+  expect_equal(
+    predict(fit, X)$treated,
+    predict(balnet(X, W, target = "treated"), X)
   )
 })

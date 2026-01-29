@@ -21,12 +21,13 @@ two-column \code{matrix}: the first element/column corresponds to the control
 arm and the second to the treatment arm.
 }}
 
-\item{type}{The type of predictions.}
+\item{type}{The type of predictions. Default is "response" (propensity scores).}
 
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-Predictions.
+Estimated predictions. For dual-arm fits (control and treatment),
+returns a list containing predictions for each arm.
 }
 \description{
 Predict using a balnet object.

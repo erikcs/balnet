@@ -171,7 +171,6 @@ balnet <- function(
     )
     lmdas1 <- fit1$lmdas
   }
-  lambda <- list(control = lmdas0, treated = lmdas1)
 
   out <- list()
   class(out) <- "balnet"
@@ -185,11 +184,55 @@ balnet <- function(
   out[["num.threads"]] <- num.threads
   out[["colnames"]] <- colnames
   out[["groups"]] <- groups
-  out[["lambda"]] <- lambda[sapply(lambda, length) > 0]
+  out[["lambda"]] <- lambda <- list(control = lmdas0, treated = lmdas1)
   out[["_fit"]] <- list(control = fit0, treated = fit1)
-  out[["_cache"]] <- new.env(parent = emptyenv()) # saves plotting statistics etc.
 
   out
+}
+
+#' Extract lambda sequence from a fit.
+#'
+#' @param object A `balnet` type object.
+#' @param lambda For `cv.balnet`, which lambda to extract.
+#' @param ... Additional arguments (currently ignored).
+#'
+#' @return The lambda sequence.
+#'
+#' @examples
+#' \donttest{
+#' n <- 100
+#' p <- 25
+#' X <- matrix(rnorm(n * p), n, p)
+#' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
+#'
+#' fit <- balnet(X, W)
+#' lambda <- lambda(fit)
+#'
+#' fit.cv <- cv.balnet(X, W, target = "ATT")
+#' lambda.min <- lambda(fit)
+#' }
+#'
+#' @export
+lambda <- function(object, lambda = NULL, ...) {
+  UseMethod("lambda")
+}
+
+#' @rdname lambda
+#' @method lambda balnet
+#' @export
+lambda.balnet <- function(
+  object,
+  ...
+)
+{
+  out <- object[["lambda"]]
+  out.nn <- out[!vapply(out, is.null, logical(1))]
+
+  if (length(out.nn) > 1) {
+    return(out.nn)
+  } else {
+    return(out.nn[[1]])
+  }
 }
 
 #' Extract coefficients from a balnet object.
@@ -238,8 +281,13 @@ coef.balnet <- function(
     coef1 <- coef(object[["_fit"]]$treated, lambda = lambda.in[[2]])
   }
   out <- list(control = coef0, treated = coef1)
+  out.nn <- out[!vapply(out, is.null, logical(1))]
 
-  out[sapply(out, length) > 0]
+  if (length(out.nn) > 1) {
+    return(out.nn)
+  } else {
+    return(out.nn[[1]])
+  }
 }
 
 #' Predict using a balnet object.
@@ -253,10 +301,11 @@ coef.balnet <- function(
 #'   * For dual-arm fits (control and treatment), `lambda` can be a `list` or
 #'     two-column `matrix`: the first element/column corresponds to the control
 #'     arm and the second to the treatment arm.
-#' @param type The type of predictions.
+#' @param type The type of predictions. Default is "response" (propensity scores).
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return Predictions.
+#' @return Estimated predictions. For dual-arm fits (control and treatment),
+#'   returns a list containing predictions for each arm.
 #'
 #' @examples
 #' \donttest{
@@ -298,14 +347,21 @@ predict.balnet <- function(
 
   pred0 <- pred1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
-    pred0 <- predict(object[["_fit"]]$control, newx, lambda = lambda.in[[1]], type = type)
+    pred0 <- 1 - predict(object[["_fit"]]$control, newx, lambda = lambda.in[[1]], type = type)
   }
   if (!is.null(object[["_fit"]]$treated)) {
     pred1 <- predict(object[["_fit"]]$treated, newx, lambda = lambda.in[[2]], type = type)
   }
   out <- list(control = pred0, treated = pred1)
+  out.nn <- out[!vapply(out, is.null, logical(1))]
 
-  out[sapply(out, length) > 0]
+  dots <- list(...)
+  drop <- is.null(dots[["drop"]])
+  if (length(out.nn) > 1 || !drop) {
+    return(out.nn)
+  } else {
+    return(out.nn[[1]])
+  }
 }
 
 #' Print a balnet object.
@@ -391,8 +447,15 @@ print.balnet <- function(
     .print_compact(txt)
   }
   out <- list(control = df0, treated = df1)
+  out.nn <- out[vapply(out, length, integer(1)) > 0]
 
-  invisible(out[sapply(out, length) > 0])
+  dots <- list(...)
+  drop <- is.null(dots[["drop"]])
+  if (length(out.nn) > 1 || !drop) {
+    invisible(out.nn)
+  } else {
+    invisible(out.nn[[1]])
+  }
 }
 
 #' Plot diagnostics for a `balnet` object.
@@ -444,26 +507,13 @@ plot.balnet <- function(
   }
   plot_func <- if (is.null(lambda)) `plot_path` else `plot_smd`
 
-  if (!is.null(groups)) {
-    rm(list = intersect(c("stats0", "stats1"), ls(envir = x[["_cache"]])), envir = x[["_cache"]])
-  }
-
   lambdas <- x[["lambda"]]
   W.orig <- x[["W.orig"]]
-  pp <- get0("pp", envir = x[["_cache"]], inherits = FALSE)
+  pp <- predict(x, x[["X.orig"]], lambda = NULL, type = "response", drop = FALSE)
 
-  if (is.null(pp)) {
-    pp <- predict(x, x[["X.orig"]], lambda = NULL, type = "response")
-    x[["_cache"]]$pp <- pp
-  }
-
-  stats0 <- get0("stats0", envir = x[["_cache"]], inherits = FALSE)
-  stats1 <- get0("stats1", envir = x[["_cache"]], inherits = FALSE)
+  stats0 <- stats1 <- NULL
   if (!is.null(x[["_fit"]]$control)) {
-    if (is.null(stats0)) {
-      stats0 <- get_metrics(lambdas$control, pp$control, 1 - W.orig, groups, x)
-      if (is.null(groups)) x[["_cache"]]$stats0 <- stats0
-    }
+    stats0 <- get_metrics(lambdas$control, 1 - pp$control, 1 - W.orig, groups, x)
     if (!is.null(x[["_fit"]]$treated)) {
       graphics::par(mfrow = c(1, 2))
     }
@@ -472,16 +522,18 @@ plot.balnet <- function(
   }
 
   if (!is.null(x[["_fit"]]$treated)) {
-    if (is.null(stats1)) {
-      stats1 <- get_metrics(lambdas$treated, pp$treated, W.orig, groups, x)
-      if (is.null(groups)) x[["_cache"]]$stats1 <- stats1
-    }
+    stats1 <- get_metrics(lambdas$treated, pp$treated, W.orig, groups, x)
     plot_func(stats1, lambda.in[[2]], max)
     if (x[["target"]] == "ATE") graphics::mtext("Treated", side = 3, line = 1, adj = 0)
   }
   out <- list(control = stats0, treated = stats1)
+  out.nn <- out[!vapply(out, is.null, logical(1))]
 
-  invisible(out[sapply(out, length) > 0])
+  if (length(out.nn) > 1) {
+    invisible(out.nn)
+  } else {
+    invisible(out.nn[[1]])
+  }
 }
 
 get_metrics <- function(lambdas, pp, W, groups, fit) {

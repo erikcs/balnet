@@ -15,7 +15,7 @@ get_balance_loss <- function(object, X, W, sample.weights, lambda) {
   }
   out <- list(control = loss0, treated = loss1)
 
-  out[sapply(out, length) > 0]
+  out[!vapply(out, is.null, logical(1))]
 }
 
 #' Cross-validation for balnet.
@@ -90,12 +90,12 @@ cv.balnet <- function(
     X.test <- X[test, , drop = FALSE]
     W.test <- W[test]
     sample.weights.test <- sample.weights[test]
-    loss <- do.call(get_loss, list(fit.train, X.test, W.test, sample.weights.test, lambda.full)) # TODO-balnet gradient norm loss
+    loss <- do.call(get_loss, list(fit.train, X.test, W.test, sample.weights.test, lambda.full))
     cv.list[[k]] <- loss
   }
   cv.mean0 <- cv.mean1 <- NULL
-  idx.min0 <- idx.min1 <- NA
-  lambda.min0 <- lambda.min1 <- NA
+  idx.min0 <- idx.min1 <- NULL
+  lambda.min0 <- lambda.min1 <- NULL
   if (!is.null(cv.list[[1]][["control"]])) {
     cv.mean0 <- colMeans(matrix(unlist(lapply(cv.list, `[[`, "control")), nfolds, length(lambda.full$control)))
     idx.min0 <- which.min(cv.mean0)
@@ -113,11 +113,36 @@ cv.balnet <- function(
     "type.measure" = type.measure
   )
 
-  fit.full[["cv.info"]] <- cv.info #TODO-balnet: store "keep"-like entry like glmnet?
+  fit.full[["cv.info"]] <- cv.info # TODO-balnet: store "keep"-like entry like glmnet?
   fit.full[["call"]] <- match.call()
   class(fit.full) <- c("cv.balnet", class(fit.full))
 
   fit.full
+}
+
+#' @rdname lambda
+#' @method lambda cv.balnet
+#' @export
+lambda.cv.balnet <- function(
+  object,
+  lambda = "lambda.min",
+  ...
+)
+{
+  if (identical(lambda, "lambda.min")) {
+    out <- object[["cv.info"]]$lambda.min
+  } else if (is.null(lambda)) {
+    return(lambda.balnet(object))
+  } else {
+    stop("Invalid lambda.")
+  }
+  out.nn <- out[!vapply(out, is.null, logical(1))]
+
+  if (length(out.nn) > 1) {
+    return(out.nn)
+  } else {
+    return(out.nn[[1]])
+  }
 }
 
 #' Extract coefficients from a cv.balnet object.
@@ -162,10 +187,11 @@ coef.cv.balnet <- function(
 #' @param object A `cv.balnet` object.
 #' @param newx A numeric matrix.
 #' @param lambda The lambda to use. Defaults to the cross-validated lambda.
-#' @param type The type of predictions.
+#' @param type The type of predictions. Default is "response" (propensity scores).
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return Predictions.
+#' @return Estimated predictions. For dual-arm fits (control and treatment),
+#'   returns a list containing predictions for each arm.
 #'
 #' @examples
 #' \donttest{
@@ -228,7 +254,7 @@ print.cv.balnet <- function(
 {
   cat("Call: ", paste(deparse(x$call), collapse = "\n"), "\n\n")
 
-  utils::capture.output(out <- print.balnet(x, digits = digits, ...))
+  utils::capture.output(out <- print.balnet(x, digits = digits, drop = FALSE, ...))
   df0 <- df1 <- data.frame()
   if (!is.null(x[["_fit"]]$control)) {
     idx.min0 <- x[["cv.info"]]$idx.min[[1]]
@@ -239,8 +265,8 @@ print.cv.balnet <- function(
     df1 <- cbind(Arm = "Treated", out$treated[idx.min1, ], Index = idx.min1)
   }
 
-  type.measure.nice <- gsub(".", " ", x[["cv.info"]]$type.measure, fixed = TRUE)
-  cat("Lambda min (", type.measure.nice, "):\n", sep = "")
+  type.measure <- paste0("type.measure = ", x[["cv.info"]]$type.measure)
+  cat("Cross-validated lambda minimizing ", type.measure, ":\n", sep = "")
   print(rbind(df0, df1), digits = digits, row.names = FALSE, right = FALSE)
 }
 

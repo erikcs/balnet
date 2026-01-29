@@ -255,7 +255,7 @@ collapse_X <- function(X, groups, colnames) {
 }
 
 # From glmnet: linear interpolation of lambda values
-lambda.interp = function(lambda, s) {
+lambda_interp = function(lambda, s) {
   ### lambda is the index sequence that is produced by the model
   ### s is the new vector at which evaluations are required.
   ### the value is a vector of left and right indices, and a vector of fractions.
