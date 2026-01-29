@@ -258,6 +258,7 @@ coef.balnet <- function(
 #'     two-column `matrix`: the first element/column corresponds to the control
 #'     arm and the second to the treatment arm.
 #' @param type The type of predictions.
+#' @param drop Whether to drop the arm naming for single-arm fits. Default is TRUE.
 #' @param ... Additional arguments (currently ignored).
 #'
 #' @return Predictions.
@@ -283,6 +284,7 @@ predict.balnet <- function(
   newx,
   lambda = NULL,
   type = c("response"),
+  drop = TRUE,
   ...
 )
 {
@@ -310,7 +312,7 @@ predict.balnet <- function(
   out <- list(control = pred0, treated = pred1)
   out.nn <- out[!vapply(out, is.null, logical(1))]
 
-  if (length(out.nn) > 1) {
+  if (length(out.nn) > 1 || !drop) {
     return(out.nn)
   } else {
     return(out.nn[[1]])
@@ -460,7 +462,7 @@ plot.balnet <- function(
 
   lambdas <- x[["lambda"]]
   W.orig <- x[["W.orig"]]
-  pp <- predict(x, x[["X.orig"]], lambda = NULL, type = "response")
+  pp <- predict(x, x[["X.orig"]], lambda = NULL, type = "response", drop = FALSE)
 
   stats0 <- stats1 <- NULL
   if (!is.null(x[["_fit"]]$control)) {
