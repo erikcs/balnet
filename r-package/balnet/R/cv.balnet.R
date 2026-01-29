@@ -255,7 +255,7 @@ print.cv.balnet <- function(
 {
   cat("Call: ", paste(deparse(x$call), collapse = "\n"), "\n\n")
 
-  utils::capture.output(out <- print.balnet(x, digits = digits, ...))
+  utils::capture.output(out <- print.balnet(x, digits = digits, drop = FALSE, ...))
   df0 <- df1 <- data.frame()
   if (!is.null(x[["_fit"]]$control)) {
     idx.min0 <- x[["cv.info"]]$idx.min[[1]]

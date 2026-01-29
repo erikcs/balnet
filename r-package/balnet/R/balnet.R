@@ -303,7 +303,6 @@ coef.balnet <- function(
 #'     two-column `matrix`: the first element/column corresponds to the control
 #'     arm and the second to the treatment arm.
 #' @param type The type of predictions. Default is "response" (propensity scores).
-#' @param drop Whether to drop the arm naming for single-arm fits. Default is TRUE.
 #' @param ... Additional arguments (currently ignored).
 #'
 #' @return Estimated predictions. For dual-arm fits (control and treatment),
@@ -330,7 +329,6 @@ predict.balnet <- function(
   newx,
   lambda = NULL,
   type = c("response"),
-  drop = TRUE,
   ...
 )
 {
@@ -358,6 +356,8 @@ predict.balnet <- function(
   out <- list(control = pred0, treated = pred1)
   out.nn <- out[!vapply(out, is.null, logical(1))]
 
+  dots <- list(...)
+  drop <- is.null(dots[["drop"]])
   if (length(out.nn) > 1 || !drop) {
     return(out.nn)
   } else {
@@ -450,10 +450,12 @@ print.balnet <- function(
   out <- list(control = df0, treated = df1)
   out.nn <- out[vapply(out, length, integer(1)) > 0]
 
-  if (length(out.nn) > 1) {
-    return(invisible(out.nn))
+  dots <- list(...)
+  drop <- is.null(dots[["drop"]])
+  if (length(out.nn) > 1 || !drop) {
+    invisible(out.nn)
   } else {
-    return(invisible(out.nn[[1]]))
+    invisible(out.nn[[1]])
   }
 }
 
@@ -529,9 +531,9 @@ plot.balnet <- function(
   out.nn <- out[!vapply(out, is.null, logical(1))]
 
   if (length(out.nn) > 1) {
-    return(invisible(out.nn))
+    invisible(out.nn)
   } else {
-    return(invisible(out.nn[[1]]))
+    invisible(out.nn[[1]])
   }
 }
 

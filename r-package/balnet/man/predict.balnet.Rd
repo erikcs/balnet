@@ -4,7 +4,7 @@
 \alias{predict.balnet}
 \title{Predict using a balnet object.}
 \usage{
-\method{predict}{balnet}(object, newx, lambda = NULL, type = c("response"), drop = TRUE, ...)
+\method{predict}{balnet}(object, newx, lambda = NULL, type = c("response"), ...)
 }
 \arguments{
 \item{object}{A \code{balnet} object.}
@@ -22,8 +22,6 @@ arm and the second to the treatment arm.
 }}
 
 \item{type}{The type of predictions. Default is "response" (propensity scores).}
-
-\item{drop}{Whether to drop the arm naming for single-arm fits. Default is TRUE.}
 
 \item{...}{Additional arguments (currently ignored).}
 }
