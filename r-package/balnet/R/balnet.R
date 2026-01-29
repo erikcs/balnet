@@ -185,7 +185,7 @@ balnet <- function(
   out[["num.threads"]] <- num.threads
   out[["colnames"]] <- colnames
   out[["groups"]] <- groups
-  out[["lambda"]] <- lambda[sapply(lambda, length) > 0]
+  out[["lambda"]] <- lambda[!vapply(lambda, is.null, logical(1))]
   out[["_fit"]] <- list(control = fit0, treated = fit1)
 
   out
