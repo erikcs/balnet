@@ -21,7 +21,8 @@ test_that("cv.balnet is internally consistent", {
   X <- matrix(rnorm(n * p), n, p)
   W <- rbinom(n, 1, 0.5)
 
-  cv.fit <- cv.balnet(X, W)
+  foldid <- sample(rep(seq(10), length.out = nrow(X)))
+  cv.fit <- cv.balnet(X, W, foldid = foldid)
   fit <- balnet(X, W)
 
   expect_equal(
@@ -39,5 +40,14 @@ test_that("cv.balnet is internally consistent", {
   expect_equal(
     predict(cv.fit, X, lambda = list(0, 42)),
     predict(fit, X, lambda = list(0, 42))
+  )
+
+  expect_equal(
+    predict(cv.fit, X)$control,
+    predict(cv.balnet(X, W, foldid = foldid, target = "control"), X)
+  )
+  expect_equal(
+    predict(cv.fit, X)$treated,
+    predict(cv.balnet(X, W, foldid = foldid, target = "treated"), X)
   )
 })
