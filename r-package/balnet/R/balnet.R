@@ -480,8 +480,13 @@ plot.balnet <- function(
     if (x[["target"]] == "ATE") graphics::mtext("Treated", side = 3, line = 1, adj = 0)
   }
   out <- list(control = stats0, treated = stats1)
+  out.nn <- out[vapply(out, length, integer(1)) > 0]
 
-  invisible(out[sapply(out, length) > 0])
+  if (length(out.nn) > 1) {
+    return(invisible(out.nn))
+  } else {
+    return(invisible(out.nn[[1]]))
+  }
 }
 
 get_metrics <- function(lambdas, pp, W, groups, fit) {

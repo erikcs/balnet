@@ -51,11 +51,11 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
   capture.output(pth.att <- print(fit.att))
   stats.att <- plot(fit.att)
   expect_equal(
-    rowMeans(abs(stats.att$control$smd[, -1])),
+    rowMeans(abs(stats.att$smd[, -1])),
     pth.att$`Mean |SMD|`
   )
   expect_equal(
-    apply(abs(stats.att$control$smd[, -1]), 1, max),
+    apply(abs(stats.att$smd[, -1]), 1, max),
     pth.att$Lambda,
     tolerance = 1e-4
   )
