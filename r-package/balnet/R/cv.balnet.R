@@ -162,10 +162,11 @@ coef.cv.balnet <- function(
 #' @param object A `cv.balnet` object.
 #' @param newx A numeric matrix.
 #' @param lambda The lambda to use. Defaults to the cross-validated lambda.
-#' @param type The type of predictions.
+#' @param type The type of predictions. Default is "response" (propensity scores).
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return Predictions.
+#' @return Estimated predictions. For dual-arm fits (control and treatment),
+#'   returns a list containing predictions for each arm.
 #'
 #' @examples
 #' \donttest{

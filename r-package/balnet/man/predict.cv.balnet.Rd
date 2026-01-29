@@ -13,12 +13,13 @@
 
 \item{lambda}{The lambda to use. Defaults to the cross-validated lambda.}
 
-\item{type}{The type of predictions.}
+\item{type}{The type of predictions. Default is "response" (propensity scores).}
 
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-Predictions.
+Estimated predictions. For dual-arm fits (control and treatment),
+returns a list containing predictions for each arm.
 }
 \description{
 Predict using a cv.balnet object.

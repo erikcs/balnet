@@ -257,11 +257,12 @@ coef.balnet <- function(
 #'   * For dual-arm fits (control and treatment), `lambda` can be a `list` or
 #'     two-column `matrix`: the first element/column corresponds to the control
 #'     arm and the second to the treatment arm.
-#' @param type The type of predictions.
+#' @param type The type of predictions. Default is "response" (propensity scores).
 #' @param drop Whether to drop the arm naming for single-arm fits. Default is TRUE.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return Predictions.
+#' @return Estimated predictions. For dual-arm fits (control and treatment),
+#'   returns a list containing predictions for each arm.
 #'
 #' @examples
 #' \donttest{
