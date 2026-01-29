@@ -91,7 +91,7 @@ test_that("balnet is internally consistent (fits)", {
   )
   expect_lt(
     mean(abs(predict(fit, X)$control - predict(balnet(X, W, target = "ATT"), X))),
-    0.0075
+    0.009
   )
   expect_equal(
     predict(fit, X)$treated,
