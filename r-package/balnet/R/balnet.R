@@ -401,8 +401,13 @@ print.balnet <- function(
     .print_compact(txt)
   }
   out <- list(control = df0, treated = df1)
+  out.nn <- out[vapply(out, length, integer(1)) > 0]
 
-  invisible(out[sapply(out, length) > 0])
+  if (length(out.nn) > 1) {
+    return(invisible(out.nn))
+  } else {
+    return(invisible(out.nn[[1]]))
+  }
 }
 
 #' Plot diagnostics for a `balnet` object.
