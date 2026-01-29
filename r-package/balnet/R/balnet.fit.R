@@ -207,6 +207,7 @@ balnet.fit <- function(
   fit <- rcpp_solver(args)
   class(fit) <- "balnet.fit"
 
+  fit[["n_threads"]] <- n_threads
   fit[["lmda_path"]] <- drop(fit[["lmda_path"]])
   fit[["stan"]] <- stan[-1]
 
@@ -256,6 +257,7 @@ coef.balnet.fit <- function(
     lamlist <- lambda.interp(object[["lmdas"]], lambda)
     betas <- Matrix::Diagonal(x = lamlist$frac) %*% betas[lamlist$left, , drop = FALSE] +
       Matrix::Diagonal(x = 1 - lamlist$frac) %*% betas[lamlist$right, , drop = FALSE]
+    betas <- methods::as(betas, "RsparseMatrix") # line above converst to C-storage, convert back to original to stay consistent
     intercepts <- diag(x = lamlist$frac, nrow = length(lambda)) %*% intercepts[lamlist$left] +
       diag(x = 1 - lamlist$frac, nrow = length(lambda)) %*% intercepts[lamlist$right]
   }
@@ -296,7 +298,7 @@ predict.balnet.fit <- function(
   coefs <- coef(object, lambda = lambda)
   intercepts <- coefs[["intercepts"]]
   betas <- coefs[["betas"]]
-  eta <- tcrossprod(newx, betas) + matrix(intercepts, nrow(newx), length(intercepts), byrow = TRUE)
+  eta <- sp_tcrossprod(newx, betas, object[["n_threads"]]) + matrix(intercepts, nrow(newx), length(intercepts), byrow = TRUE)
 
   if (type == "response") {
     out <- 1 / (1 + exp(-eta))
