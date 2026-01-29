@@ -10,7 +10,7 @@ lambda(object, lambda = NULL, ...)
 
 \method{lambda}{balnet}(object, ...)
 
-\method{lambda}{balnet}(object, lambda = "lambda.min", ...)
+\method{lambda}{cv.balnet}(object, lambda = "lambda.min", ...)
 }
 \arguments{
 \item{object}{An object.}

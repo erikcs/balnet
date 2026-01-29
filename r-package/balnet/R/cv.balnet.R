@@ -121,7 +121,7 @@ cv.balnet <- function(
 }
 
 #' @rdname lambda
-#' @method lambda balnet
+#' @method lambda cv.balnet
 #' @export
 lambda.cv.balnet <- function(
   object,
