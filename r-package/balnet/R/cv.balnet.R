@@ -113,7 +113,7 @@ cv.balnet <- function(
     "type.measure" = type.measure
   )
 
-  fit.full[["cv.info"]] <- cv.info #TODO-balnet: store "keep"-like entry like glmnet?
+  fit.full[["cv.info"]] <- cv.info # TODO-balnet: store "keep"-like entry like glmnet?
   fit.full[["call"]] <- match.call()
   class(fit.full) <- c("cv.balnet", class(fit.full))
 
