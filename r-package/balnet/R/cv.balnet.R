@@ -15,7 +15,7 @@ get_balance_loss <- function(object, X, W, sample.weights, lambda) {
   }
   out <- list(control = loss0, treated = loss1)
 
-  out[sapply(out, length) > 0]
+  out[!vapply(out, is.null, logical(1))]
 }
 
 #' Cross-validation for balnet.
