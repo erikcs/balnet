@@ -466,7 +466,7 @@ plot.balnet <- function(
 
   stats0 <- stats1 <- NULL
   if (!is.null(x[["_fit"]]$control)) {
-    stats0 <- get_metrics(lambdas$control, pp$control, 1 - W.orig, groups, x)
+    stats0 <- get_metrics(lambdas$control, 1 - pp$control, 1 - W.orig, groups, x)
     if (!is.null(x[["_fit"]]$treated)) {
       graphics::par(mfrow = c(1, 2))
     }
