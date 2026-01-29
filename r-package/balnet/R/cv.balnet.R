@@ -266,8 +266,8 @@ print.cv.balnet <- function(
     df1 <- cbind(Arm = "Treated", out$treated[idx.min1, ], Index = idx.min1)
   }
 
-  type.measure.nice <- gsub(".", " ", x[["cv.info"]]$type.measure, fixed = TRUE)
-  cat("Lambda min (", type.measure.nice, "):\n", sep = "")
+  type.measure <- paste0("type.measure = ", x[["cv.info"]]$type.measure)
+  cat("Cross-validated lambda minimizing ", type.measure, ":\n", sep = "")
   print(rbind(df0, df1), digits = digits, row.names = FALSE, right = FALSE)
 }
 
