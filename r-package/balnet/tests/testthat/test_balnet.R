@@ -78,3 +78,23 @@ test_that("balnet is internally consistent (predict/coef)", {
   )
 })
 
+test_that("balnet is internally consistent (fits)", {
+  n <- 111
+  p <- 11
+  X <- matrix(rnorm(n * p), n, p)
+  W <- rbinom(n, 1, 0.5)
+
+  fit <- balnet(X, W)
+  expect_equal(
+    predict(fit, X)$control,
+    predict(balnet(X, W, target = "control"), X)
+  )
+  expect_lt(
+    mean(abs(predict(fit, X)$control - predict(balnet(X, W, target = "ATT"), X))),
+    0.0075
+  )
+  expect_equal(
+    predict(fit, X)$treated,
+    predict(balnet(X, W, target = "treated"), X)
+  )
+})
