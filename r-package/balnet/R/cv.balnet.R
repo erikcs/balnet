@@ -94,8 +94,8 @@ cv.balnet <- function(
     cv.list[[k]] <- loss
   }
   cv.mean0 <- cv.mean1 <- NULL
-  idx.min0 <- idx.min1 <- NA
-  lambda.min0 <- lambda.min1 <- NA
+  idx.min0 <- idx.min1 <- NULL
+  lambda.min0 <- lambda.min1 <- NULL
   if (!is.null(cv.list[[1]][["control"]])) {
     cv.mean0 <- colMeans(matrix(unlist(lapply(cv.list, `[[`, "control")), nfolds, length(lambda.full$control)))
     idx.min0 <- which.min(cv.mean0)
@@ -130,13 +130,12 @@ lambda.cv.balnet <- function(
 )
 {
   if (identical(lambda, "lambda.min")) {
-    lambda <- object[["cv.info"]]$lambda.min
+    out <- object[["cv.info"]]$lambda.min
   } else if (is.null(lambda)) {
-    return(coef.balnet(object, lambda = lambda))
+    return(lambda.balnet(object))
   } else {
     stop("Invalid lambda.")
   }
-  out <- object[["lambda"]]
   out.nn <- out[!vapply(out, is.null, logical(1))]
 
   if (length(out.nn) > 1) {

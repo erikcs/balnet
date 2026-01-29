@@ -193,8 +193,8 @@ balnet <- function(
 
 #' Extract lambda
 #'
-#' @param object An object.
-#' @param lambda Value of the penalty parameter `lambda`
+#' @param object An `balnet` type object.
+#' @param lambda For `cv.balnet`, which lambda to extract.
 #' @param ... Additional arguments (currently ignored).
 #'
 #' @return The lambda sequence.
