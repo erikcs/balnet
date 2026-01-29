@@ -90,7 +90,7 @@ cv.balnet <- function(
     X.test <- X[test, , drop = FALSE]
     W.test <- W[test]
     sample.weights.test <- sample.weights[test]
-    loss <- do.call(get_loss, list(fit.train, X.test, W.test, sample.weights.test, lambda.full)) # TODO-balnet gradient norm loss
+    loss <- do.call(get_loss, list(fit.train, X.test, W.test, sample.weights.test, lambda.full))
     cv.list[[k]] <- loss
   }
   cv.mean0 <- cv.mean1 <- NULL
