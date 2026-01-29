@@ -78,7 +78,7 @@ sp_tcrossprod <- function(
 ) {
   stopifnot(ncol(X) == ncol(beta))
   stopifnot(is.matrix(X))
-  stopifnot(is(beta, "dgRMatrix"))
+  stopifnot(methods::is(beta, "dgRMatrix"))
 
   rcpp_sp_tcrossprod(X, beta, n_threads)
 }

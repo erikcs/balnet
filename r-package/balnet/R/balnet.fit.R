@@ -257,7 +257,7 @@ coef.balnet.fit <- function(
     lamlist <- lambda.interp(object[["lmdas"]], lambda)
     betas <- Matrix::Diagonal(x = lamlist$frac) %*% betas[lamlist$left, , drop = FALSE] +
       Matrix::Diagonal(x = 1 - lamlist$frac) %*% betas[lamlist$right, , drop = FALSE]
-    betas <- as(betas, "RsparseMatrix") # line above converst to C-storage, convert back to original to stay consistent
+    betas <- methods::as(betas, "RsparseMatrix") # line above converst to C-storage, convert back to original to stay consistent
     intercepts <- diag(x = lamlist$frac, nrow = length(lambda)) %*% intercepts[lamlist$left] +
       diag(x = 1 - lamlist$frac, nrow = length(lambda)) %*% intercepts[lamlist$right]
   }
