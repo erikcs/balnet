@@ -171,7 +171,6 @@ balnet <- function(
     )
     lmdas1 <- fit1$lmdas
   }
-  lambda <- list(control = lmdas0, treated = lmdas1)
 
   out <- list()
   class(out) <- "balnet"
@@ -185,7 +184,7 @@ balnet <- function(
   out[["num.threads"]] <- num.threads
   out[["colnames"]] <- colnames
   out[["groups"]] <- groups
-  out[["lambda"]] <- lambda[!vapply(lambda, is.null, logical(1))]
+  out[["lambda"]] <- lambda <- list(control = lmdas0, treated = lmdas1)
   out[["_fit"]] <- list(control = fit0, treated = fit1)
 
   out
