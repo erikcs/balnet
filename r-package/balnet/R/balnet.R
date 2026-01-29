@@ -187,7 +187,6 @@ balnet <- function(
   out[["groups"]] <- groups
   out[["lambda"]] <- lambda[sapply(lambda, length) > 0]
   out[["_fit"]] <- list(control = fit0, treated = fit1)
-  out[["_cache"]] <- new.env(parent = emptyenv()) # saves plotting statistics etc.
 
   out
 }
@@ -459,26 +458,13 @@ plot.balnet <- function(
   }
   plot_func <- if (is.null(lambda)) `plot_path` else `plot_smd`
 
-  if (!is.null(groups)) {
-    rm(list = intersect(c("stats0", "stats1"), ls(envir = x[["_cache"]])), envir = x[["_cache"]])
-  }
-
   lambdas <- x[["lambda"]]
   W.orig <- x[["W.orig"]]
-  pp <- get0("pp", envir = x[["_cache"]], inherits = FALSE)
+  pp <- predict(x, x[["X.orig"]], lambda = NULL, type = "response")
 
-  if (is.null(pp)) {
-    pp <- predict(x, x[["X.orig"]], lambda = NULL, type = "response")
-    x[["_cache"]]$pp <- pp
-  }
-
-  stats0 <- get0("stats0", envir = x[["_cache"]], inherits = FALSE)
-  stats1 <- get0("stats1", envir = x[["_cache"]], inherits = FALSE)
+  stats0 <- stats1 <- NULL
   if (!is.null(x[["_fit"]]$control)) {
-    if (is.null(stats0)) {
-      stats0 <- get_metrics(lambdas$control, pp$control, 1 - W.orig, groups, x)
-      if (is.null(groups)) x[["_cache"]]$stats0 <- stats0
-    }
+    stats0 <- get_metrics(lambdas$control, pp$control, 1 - W.orig, groups, x)
     if (!is.null(x[["_fit"]]$treated)) {
       graphics::par(mfrow = c(1, 2))
     }
@@ -487,10 +473,7 @@ plot.balnet <- function(
   }
 
   if (!is.null(x[["_fit"]]$treated)) {
-    if (is.null(stats1)) {
-      stats1 <- get_metrics(lambdas$treated, pp$treated, W.orig, groups, x)
-      if (is.null(groups)) x[["_cache"]]$stats1 <- stats1
-    }
+    stats1 <- get_metrics(lambdas$treated, pp$treated, W.orig, groups, x)
     plot_func(stats1, lambda.in[[2]], max)
     if (x[["target"]] == "ATE") graphics::mtext("Treated", side = 3, line = 1, adj = 0)
   }
