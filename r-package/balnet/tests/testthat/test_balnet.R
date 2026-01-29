@@ -60,3 +60,21 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
     tolerance = 1e-4
   )
 })
+
+test_that("balnet is internally consistent (predict/coef)", {
+  n <- 111
+  p <- 11
+  X <- matrix(rnorm(n * p), n, p)
+  W <- rbinom(n, 1, 0.5)
+
+  fit <- balnet(X, W)
+  expect_equal(
+    predict(fit, X),
+    predict(fit, X, lambda = fit$lambda)
+  )
+  expect_equal(
+    coef(fit),
+    coef(fit, lambda = fit$lambda)
+  )
+})
+
