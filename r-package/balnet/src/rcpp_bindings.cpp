@@ -116,9 +116,10 @@ Rcpp::List rcpp_col_stats(
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericMatrix rcpp_sp_tcrossprod(
+Rcpp::NumericMatrix rcpp_sp_tcrossprod_plus(
     const Rcpp::NumericMatrix& X,
     const Eigen::SparseMatrix<double, Eigen::RowMajor>& beta,
+    const Rcpp::NumericVector& intercepts,
     size_t n_threads
 )
 {
@@ -127,7 +128,10 @@ Rcpp::NumericMatrix rcpp_sp_tcrossprod(
     Rcpp::NumericMatrix out = Rcpp::no_init(X.nrow(), beta.rows());
     Eigen::Map<dense_64F_t> out_map(out.begin(), out.nrow(), out.ncol());
     Eigen::Map<const dense_64F_t> X_map(X.begin(), X.nrow(), X.ncol());
+    Eigen::Map<const vec_value_t> intercepts_map(intercepts.begin(), intercepts.length());
+
     out_map.noalias() = X_map * beta.transpose();
+    out_map.rowwise() += intercepts_map.matrix().transpose();
     Eigen::setNbThreads(n_threads_default);
 
     return out;

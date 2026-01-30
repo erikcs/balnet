@@ -106,3 +106,18 @@ test_that("collapse mat works as expected", {
     rowMeans(X[, 5:10])
   )
 })
+
+test_that("sp_tcrossprod_plus works as expected", {
+  n <- 50
+  p <- 542
+  L <- 100
+  X <- matrix(rnorm(n * p), n, p)
+  beta <- Matrix::rsparsematrix(nrow = L, ncol = p, density = 0.05)
+  beta <- as(beta, "RsparseMatrix")
+  intercepts <- rnorm(L)
+
+  expect_equal(
+    sp_tcrossprod_plus(X, beta, intercepts),
+    as.matrix(tcrossprod(X, beta) + matrix(intercepts, nrow(X), length(intercepts), byrow = TRUE))
+  )
+})

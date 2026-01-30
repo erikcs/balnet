@@ -298,7 +298,7 @@ predict.balnet.fit <- function(
   coefs <- coef(object, lambda = lambda)
   intercepts <- coefs[["intercepts"]]
   betas <- coefs[["betas"]]
-  eta <- sp_tcrossprod(newx, betas, object[["n_threads"]]) + matrix(intercepts, nrow(newx), length(intercepts), byrow = TRUE)
+  eta <- sp_tcrossprod_plus(newx, betas, intercepts, object[["n_threads"]])
 
   if (type == "response") {
     out <- 1 / (1 + exp(-eta))

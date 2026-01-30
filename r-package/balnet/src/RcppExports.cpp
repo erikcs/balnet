@@ -36,16 +36,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_sp_tcrossprod
-Rcpp::NumericMatrix rcpp_sp_tcrossprod(const Rcpp::NumericMatrix& X, const Eigen::SparseMatrix<double, Eigen::RowMajor>& beta, size_t n_threads);
-RcppExport SEXP _balnet_rcpp_sp_tcrossprod(SEXP XSEXP, SEXP betaSEXP, SEXP n_threadsSEXP) {
+// rcpp_sp_tcrossprod_plus
+Rcpp::NumericMatrix rcpp_sp_tcrossprod_plus(const Rcpp::NumericMatrix& X, const Eigen::SparseMatrix<double, Eigen::RowMajor>& beta, const Rcpp::NumericVector& intercepts, size_t n_threads);
+RcppExport SEXP _balnet_rcpp_sp_tcrossprod_plus(SEXP XSEXP, SEXP betaSEXP, SEXP interceptsSEXP, SEXP n_threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const Eigen::SparseMatrix<double, Eigen::RowMajor>& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type intercepts(interceptsSEXP);
     Rcpp::traits::input_parameter< size_t >::type n_threads(n_threadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_sp_tcrossprod(X, beta, n_threads));
+    rcpp_result_gen = Rcpp::wrap(rcpp_sp_tcrossprod_plus(X, beta, intercepts, n_threads));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -80,7 +81,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_balnet_rcpp_solver", (DL_FUNC) &_balnet_rcpp_solver, 1},
     {"_balnet_rcpp_col_stats", (DL_FUNC) &_balnet_rcpp_col_stats, 4},
-    {"_balnet_rcpp_sp_tcrossprod", (DL_FUNC) &_balnet_rcpp_sp_tcrossprod, 3},
+    {"_balnet_rcpp_sp_tcrossprod_plus", (DL_FUNC) &_balnet_rcpp_sp_tcrossprod_plus, 4},
     {"_balnet_rcpp_standardize", (DL_FUNC) &_balnet_rcpp_standardize, 4},
     {"_balnet_rcpp_standardize_inplace", (DL_FUNC) &_balnet_rcpp_standardize_inplace, 4},
     {NULL, NULL, 0}
