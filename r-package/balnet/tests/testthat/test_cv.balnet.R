@@ -51,3 +51,19 @@ test_that("cv.balnet is internally consistent", {
     predict(cv.balnet(X, W, foldid = foldid, target = "treated"), X)
   )
 })
+
+test_that("cv.balnet is invariant to sample.weights scale", {
+  n <- 111
+  p <- 21
+  X <- matrix(rnorm(n * p), n, p)
+  W <- rbinom(n, 1, 0.5)
+  wts <- runif(n)
+
+  foldid <- sample(rep(seq(3), length.out = nrow(X)))
+  cv.fit <- cv.balnet(X, W, foldid = foldid, sample.weights = wts)
+  cv.fit.scaled <- cv.balnet(X, W, foldid = foldid, sample.weights = wts * 42)
+  expect_equal(
+    predict(cv.fit, X),
+    predict(cv.fit.scaled, X)
+  )
+})
