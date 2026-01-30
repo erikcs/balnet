@@ -554,7 +554,8 @@ get_metrics <- function(lambdas, pp, W, groups, fit) {
   }
   X.stats$scale[X.stats$scale <= 0] <- 1
 
-  ipw <- W  / pp
+  ipw <- matrix(0, nrow = nrow(pp), ncol = ncol(pp))
+  ipw[W == 1, ] <- 1 / pp[W == 1, ]
   if (target == "ATT") {
     ipw <- (1 - pp) * ipw
   }
