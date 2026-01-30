@@ -540,6 +540,7 @@ get_metrics <- function(lambdas, pp, W, groups, fit) {
   target <- fit[["target"]]
   X <- fit[["X.orig"]]
   colnames <- fit[["colnames"]]
+  sample.weights <- fit[["sample.weights"]]
   # if groups present, we calculate SMDs on group-level means
   if (!is.null(groups)) {
     X <- collapse_X(X, groups, colnames)
@@ -548,9 +549,9 @@ get_metrics <- function(lambdas, pp, W, groups, fit) {
 
   # ATT SMD: (\weighted \bar X_C - \bar X_T) / S_T
   if (target == "ATT") {
-    X.stats <- col_stats(X, fit[["W.orig"]], compute_sd = TRUE)
+    X.stats <- col_stats(X, fit[["W.orig"]] * sample.weights, compute_sd = TRUE)
   } else {
-    X.stats <- col_stats(X, compute_sd = TRUE)
+    X.stats <- col_stats(X, sample.weights, compute_sd = TRUE)
   }
   X.stats$scale[X.stats$scale <= 0] <- 1
 
@@ -559,9 +560,9 @@ get_metrics <- function(lambdas, pp, W, groups, fit) {
   if (target == "ATT") {
     ipw <- (1 - pp) * ipw
   }
-  ess <- (colSums(ipw)^2 / colSums(ipw^2)) / sum(W) * 100
+  ess <- (colSums(sample.weights * ipw)^2 / colSums(sample.weights * ipw^2)) / sum(W * sample.weights) * 100
 
-  smd <- col_stats(X, ipw, n_threads = fit[["num.threads"]])$center
+  smd <- col_stats(X, ipw * sample.weights, n_threads = fit[["num.threads"]])$center
   smd <- sweep(smd, 2L, X.stats$center, `-`, check.margin	= FALSE)
   smd <- sweep(smd, 2L, X.stats$scale, `/`, check.margin = FALSE)
   pbr <- (1 - rowSums(abs(smd)) / sum(abs(smd[1, ]))) * 100

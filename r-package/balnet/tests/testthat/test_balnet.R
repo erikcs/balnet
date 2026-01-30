@@ -121,4 +121,12 @@ test_that("sample.weighted balnet identical to duplication", {
     predict(fit.wt, X),
     predict(fit.dupe, X)
   )
+  expect_equal(
+    plot(fit.wt),
+    plot(fit.dupe)
+  )
+  expect_equal(
+    capture.output(print(fit.wt))[-1],
+    capture.output(print(fit.dupe))[-1]
+  )
 })
