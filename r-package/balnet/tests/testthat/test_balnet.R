@@ -98,3 +98,27 @@ test_that("balnet is internally consistent (fits)", {
     predict(balnet(X, W, target = "treated"), X)
   )
 })
+
+test_that("sample.weighted balnet identical to duplication", {
+  n <- 100
+  p <- 21
+  X <- matrix(rnorm(n * p), n, p)
+  W <- rbinom(n, 1, 0.5)
+  to.duplicate <- sample(1:n, 25)
+  XX <- rbind(X, X[to.duplicate, ])
+  WW <- c(W, W[to.duplicate])
+  sample.weights <- rep(1, n)
+  sample.weights[to.duplicate] <- 2
+
+  fit.wt <- balnet(X, W, sample.weights = sample.weights)
+  fit.dupe <- balnet(XX, WW)
+
+  expect_equal(
+    coef(fit.wt),
+    coef(fit.dupe)
+  )
+  expect_equal(
+    predict(fit.wt, X),
+    predict(fit.dupe, X)
+  )
+})
