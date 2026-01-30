@@ -509,7 +509,7 @@ plot.balnet <- function(
 
   lambdas <- x[["lambda"]]
   W.orig <- x[["W.orig"]]
-  pp <- predict(x, x[["X.orig"]], lambda = NULL, type = "response", drop = FALSE)
+  pp <- predict.balnet(x, x[["X.orig"]], lambda = NULL, type = "response", drop = FALSE)
 
   stats0 <- stats1 <- NULL
   if (!is.null(x[["_fit"]]$control)) {
