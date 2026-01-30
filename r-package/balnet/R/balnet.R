@@ -560,8 +560,8 @@ get_metrics <- function(lambdas, pp, W, groups, fit) {
   if (target == "ATT") {
     ipw <- (1 - pp) * ipw
   }
-  ess <- (colSums(sample.weights * ipw)^2 / colSums(sample.weights * ipw^2))
-    / sum(W * sample.weights) * 100
+  ess <- (colSums(sample.weights * ipw)^2 / colSums(sample.weights * ipw^2)) /
+    sum(W * sample.weights) * 100
 
   smd <- col_stats(X, ipw * sample.weights, n_threads = fit[["num.threads"]])$center
   smd <- sweep(smd, 2L, X.stats$center, `-`, check.margin	= FALSE)
