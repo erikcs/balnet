@@ -2,7 +2,7 @@
 
 This project contains third-party material from the projects listed below.
 
-## adelie core
+## adelie
 MIT License
 
 Copyright (c) 2023 James Yang
