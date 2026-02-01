@@ -65,7 +65,7 @@ cv.balnet <- function(
 {
   type.measure <- match.arg(type.measure)
   if (type.measure == "balance.loss") {
-    get_loss <- `get_balance_loss`
+    get_loss <- get_balance_loss
   }
   nfolds <- max(nfolds, 3)
   if (is.null(foldid)) {

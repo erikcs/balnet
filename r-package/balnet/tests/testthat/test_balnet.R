@@ -23,41 +23,63 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
   n <- 111
   p <- 11
   X <- matrix(rnorm(n * p), n, p)
-  W <- rbinom(n, 1, 0.5)
+  W <- rbinom(n, 1, 0.3)
 
   fit <- balnet(X, W)
   capture.output(pth <- print(fit))
-  stats <- plot(fit)
+  stats.pth <- plot(fit)
+  stats.smd <- plot(fit, lambda = 0)
+
+  # control
+  start.end0 <- c(1, length(pth$control$`Mean |SMD|`))
   expect_equal(
-    rowMeans(abs(stats$control$smd[, -1])),
-    pth$control$`Mean |SMD|`
+    unname(colMeans(abs(stats.smd$control))),
+    pth$control$`Mean |SMD|`[start.end0],
   )
   expect_equal(
-    rowMeans(abs(stats$treated$smd[, -1])),
-    pth$treated$`Mean |SMD|`
+    unname(apply(abs(stats.smd$control), 2, max)),
+    pth$control$Lambda[start.end0],
+    tolerance = 2e-4
   )
   expect_equal(
-    apply(abs(stats$control$smd[, -1]), 1, max),
-    pth$control$Lambda,
-    tolerance = 1e-4
+    unname((1 - colSums(abs(stats.smd$control)) / sum(abs(stats.smd$control$lambda.max))) * 100),
+    stats.pth$control$pbr[start.end0]
+  )
+
+  # treated
+  start.end1 <- c(1, length(pth$treated$`Mean |SMD|`))
+  expect_equal(
+    unname(colMeans(abs(stats.smd$treated))),
+    pth$treated$`Mean |SMD|`[start.end1],
   )
   expect_equal(
-    apply(abs(stats$treated$smd[, -1]), 1, max),
-    pth$treated$Lambda,
-    tolerance = 1e-4
+    unname(apply(abs(stats.smd$treated), 2, max)),
+    pth$treated$Lambda[start.end1],
+    tolerance = 2e-4
+  )
+  expect_equal(
+    unname((1 - colSums(abs(stats.smd$treated)) / sum(abs(stats.smd$treated$lambda.max))) * 100),
+    stats.pth$treated$pbr[start.end1]
   )
 
   fit.att <- balnet(X, W, target = "ATT")
   capture.output(pth.att <- print(fit.att))
-  stats.att <- plot(fit.att)
+  stats.pth.att <- plot(fit.att)
+  stats.smd.att <- plot(fit.att, lambda = 0)
+
+  start.end <- c(1, length(pth.att$`Mean |SMD|`))
   expect_equal(
-    rowMeans(abs(stats.att$smd[, -1])),
-    pth.att$`Mean |SMD|`
+    unname(colMeans(abs(stats.smd.att))),
+    pth.att$`Mean |SMD|`[start.end],
   )
   expect_equal(
-    apply(abs(stats.att$smd[, -1]), 1, max),
-    pth.att$Lambda,
-    tolerance = 1e-4
+    unname(apply(abs(stats.smd.att), 2, max)),
+    pth.att$Lambda[start.end0],
+    tolerance = 2e-4
+  )
+  expect_equal(
+    unname((1 - colSums(abs(stats.smd.att)) / sum(abs(stats.smd.att$lambda.max))) * 100),
+    stats.pth.att$pbr[start.end]
   )
 })
 

@@ -497,33 +497,51 @@ plot.balnet <- function(
   old.par <- graphics::par(no.readonly = TRUE)
   on.exit(graphics::par(old.par))
 
-  if (!is.null(lambda) && length(lambda) > 2) {
-    stop("Can only plot for a single value of lambda.")
-  }
-  if (length(lambda) == 1L) {
-    lambda.in <- list(lambda[1], lambda[1])
+  if (is.null(lambda)) {
+    plot_func <- plot_path
+    get_metrics <- get_path
   } else {
-    lambda.in <- lambda
+    if (length(lambda) > 2) {
+      stop("Can only plot for a single value of lambda.")
+    }
+    plot_func <- plot_smd
+    get_metrics <- get_smd
+    if (length(lambda) == 1) {
+      lambda <- list(c(Inf, lambda[[1]]), c(Inf, lambda[[1]]))
+    } else {
+      lambda <- list(c(Inf, lambda[[1]]), c(Inf, lambda[[2]]))
+    }
   }
-  plot_func <- if (is.null(lambda)) `plot_path` else `plot_smd`
 
-  lambdas <- x[["lambda"]]
+  lambda.orig <- x[["lambda"]]
   W.orig <- x[["W.orig"]]
-  pp <- predict.balnet(x, x[["X.orig"]], lambda = NULL, type = "response", drop = FALSE)
+  pp <- predict.balnet(x, x[["X.orig"]], lambda = lambda, type = "response", drop = FALSE)
 
   stats0 <- stats1 <- NULL
   if (!is.null(x[["_fit"]]$control)) {
-    stats0 <- get_metrics(lambdas$control, 1 - pp$control, 1 - W.orig, groups, x)
-    if (!is.null(x[["_fit"]]$treated)) {
-      graphics::par(mfrow = c(1, 2))
-    }
-    plot_func(stats0, lambda.in[[1]], max)
+    stats0 <- get_metrics(
+      x,
+      1 - pp$control,
+      1 - W.orig,
+      lambda = lambda.orig$control,
+      groups = groups,
+      devs = x[["_fit"]]$control$devs
+    )
+    if (!is.null(x[["_fit"]]$treated)) graphics::par(mfrow = c(1, 2))
+    plot_func(stats0, max = max)
     if (x[["target"]] == "ATE") graphics::mtext("Control", side = 3, line = 1, adj = 0)
   }
 
   if (!is.null(x[["_fit"]]$treated)) {
-    stats1 <- get_metrics(lambdas$treated, pp$treated, W.orig, groups, x)
-    plot_func(stats1, lambda.in[[2]], max)
+    stats1 <- get_metrics(
+      x,
+      pp$treated,
+      W.orig,
+      lambda = lambda.orig$treated,
+      devs = x[["_fit"]]$treated$devs,
+      groups = groups
+    )
+    plot_func(stats1, max = max)
     if (x[["target"]] == "ATE") graphics::mtext("Treated", side = 3, line = 1, adj = 0)
   }
   out <- list(control = stats0, treated = stats1)
@@ -536,11 +554,27 @@ plot.balnet <- function(
   }
 }
 
-get_metrics <- function(lambdas, pp, W, groups, fit) {
+get_path <- function(fit, pp, W, ..., lambda, devs) {
   target <- fit[["target"]]
+  sample.weights <- fit[["sample.weights"]]
+
+  ipw <- matrix(0, nrow = nrow(pp), ncol = ncol(pp))
+  ipw[W == 1, ] <- 1 / pp[W == 1, ]
+  if (target == "ATT") {
+    ipw <- (1 - pp) * ipw
+  }
+  ess <- (colSums(sample.weights * ipw)^2 / colSums(sample.weights * ipw^2)) /
+    sum(W * sample.weights) * 100
+  pbr <- (1 - devs / devs[1]) * 100 # "devs" stores mean abs(SMD)
+
+  data.frame(lambda = lambda, ess = ess, pbr = pbr)
+}
+
+get_smd <- function(fit, pp, W, ..., groups) {
+  target <- fit[["target"]]
+  sample.weights <- fit[["sample.weights"]]
   X <- fit[["X.orig"]]
   colnames <- fit[["colnames"]]
-  sample.weights <- fit[["sample.weights"]]
   # if groups present, we calculate SMDs on group-level means
   if (!is.null(groups)) {
     X <- collapse_X(X, groups, colnames)
@@ -560,25 +594,21 @@ get_metrics <- function(lambdas, pp, W, groups, fit) {
   if (target == "ATT") {
     ipw <- (1 - pp) * ipw
   }
-  ess <- (colSums(sample.weights * ipw)^2 / colSums(sample.weights * ipw^2)) /
-    sum(W * sample.weights) * 100
 
   smd <- col_stats(X, ipw * sample.weights, n_threads = fit[["num.threads"]])$center
   smd <- sweep(smd, 2L, X.stats$center, `-`, check.margin	= FALSE)
   smd <- sweep(smd, 2L, X.stats$scale, `/`, check.margin = FALSE)
-  pbr <- (1 - rowSums(abs(smd)) / sum(abs(smd[1, ]))) * 100
-  colnames(smd) <- colnames
 
-  list(
-    pth = cbind(lambda = lambdas, ess = ess, pbr = pbr),
-    smd = cbind(lambda = lambdas, smd)
-  )
+  out <- data.frame(t(smd), row.names = colnames)
+  colnames(out)[1:2] <- c("lambda.max", "lambda")
+
+  out
 }
 
 plot_path <- function(stats, ...) {
-  lambdas <- stats[["pth"]][, "lambda"]
-  pbr <- stats[["pth"]][, "pbr"]
-  ess <- stats[["pth"]][, "ess"]
+  lambdas <- stats$lambda
+  pbr <- stats$pbr
+  ess <- stats$ess
 
   graphics::plot(lambdas[lambdas > 0], pbr[lambdas > 0],
     log = "x",
@@ -594,29 +624,26 @@ plot_path <- function(stats, ...) {
   graphics::abline(h = 0)
 }
 
-plot_smd <- function(stats, lambda, max = NULL, ...) {
-    lambdas <- stats[["smd"]][, "lambda"]
-    smd <- stats[["smd"]][, -1, drop = FALSE]
-    labels <- colnames(smd)
+plot_smd <- function(stats, ..., max = NULL) {
+    labels <- rownames(stats)
     if (is.null(max)) {
       max <- length(labels)
     }
     max <- min(max, length(labels))
-    order <- order(abs(smd[1, ]), decreasing = TRUE)
+    order <- order(abs(stats$lambda.max), decreasing = TRUE)
     display.idx <- rev(order[1:max])
-    lmda.ix <- max(findInterval(-lambda, -lambdas), 1) # find nearest lambda on decreasing path
 
     graphics::plot(
-      smd[1, display.idx],
+      stats$lambda.max[display.idx],
       1:max,
-      xlim = c(min(-0.1, min(smd[1, ])), max(0.1, max(smd[1, ]))),
+      xlim = c(min(-0.1, min(stats$lambda.max)), max(0.1, max(stats$lambda.max))),
       xlab = "Standardized mean diff.",
       ylab = "",
       pch = 20,
       yaxt = "n"
     )
     graphics::axis(2, at = 1:max, labels = labels[display.idx], las = 1, cex.axis = 0.7)
-    graphics::points(smd[lmda.ix, display.idx], 1:max, pch = 20, col = "dodgerblue3")
+    graphics::points(stats$lambda[display.idx], 1:max, pch = 20, col = "dodgerblue3")
     graphics::abline(v = 0)
     graphics::abline(v = c(-0.1, 0.1), lty = 2, col = "gray70")
     graphics::mtext(expression(lambda^{max}), side = 3, adj = 1, line = 1 )
