@@ -498,14 +498,14 @@ plot.balnet <- function(
   on.exit(graphics::par(old.par))
 
   if (is.null(lambda)) {
-    plot_func <- `plot_path`
-    get_metrics <- `get_path`
+    plot_func <- plot_path
+    get_metrics <- get_path
   } else {
     if (length(lambda) > 2) {
       stop("Can only plot for a single value of lambda.")
     }
-    plot_func <- `plot_smd`
-    get_metrics <- `get_smd`
+    plot_func <- plot_smd
+    get_metrics <- get_smd
     if (length(lambda) == 1) {
       lambda <- list(c(Inf, lambda[1]), c(Inf, lambda[1]))
     } else {
@@ -519,17 +519,31 @@ plot.balnet <- function(
 
   stats0 <- stats1 <- NULL
   if (!is.null(x[["_fit"]]$control)) {
-    stats0 <- get_metrics(lambda.orig$control, 1 - pp$control, 1 - W.orig, groups, x, x[["_fit"]]$control$devs)
+    stats0 <- get_metrics(
+      x,
+      1 - pp$control,
+      1 - W.orig,
+      lambda = lambda.orig$control,
+      groups = groups,
+      devs = x[["_fit"]]$control$devs
+    )
     if (!is.null(x[["_fit"]]$treated)) {
       graphics::par(mfrow = c(1, 2))
     }
-    plot_func(stats0, max)
+    plot_func(stats0, max = max)
     if (x[["target"]] == "ATE") graphics::mtext("Control", side = 3, line = 1, adj = 0)
   }
 
   if (!is.null(x[["_fit"]]$treated)) {
-    stats1 <- get_metrics(lambda.orig$treated, pp$treated, W.orig, groups, x, x[["_fit"]]$control$devs)
-    plot_func(stats1, max)
+    stats1 <- get_metrics(
+      x,
+      pp$treated,
+      W.orig,
+      lambda = lambda.orig$treated,
+      groups = groups,
+      devs = x[["_fit"]]$treated$devs
+    )
+    plot_func(stats1, max = max)
     if (x[["target"]] == "ATE") graphics::mtext("Treated", side = 3, line = 1, adj = 0)
   }
   out <- list(control = stats0, treated = stats1)
@@ -542,7 +556,7 @@ plot.balnet <- function(
   }
 }
 
-get_path <- function(lambda, pp, W, groups, fit, devs, ...) {
+get_path <- function(fit, pp, W, ..., lambda, devs) {
   target <- fit[["target"]]
   sample.weights <- fit[["sample.weights"]]
 
@@ -558,7 +572,7 @@ get_path <- function(lambda, pp, W, groups, fit, devs, ...) {
   cbind(lambda = lambda, ess = ess, pbr = pbr)
 }
 
-get_smd <- function(lambda, pp, W, groups, fit, ...) {
+get_smd <- function(fit, pp, W, ..., groups) {
   target <- fit[["target"]]
   X <- fit[["X.orig"]]
   colnames <- fit[["colnames"]]
@@ -610,7 +624,7 @@ plot_path <- function(stats, ...) {
   graphics::abline(h = 0)
 }
 
-plot_smd <- function(stats, max = NULL, ...) {
+plot_smd <- function(stats, ..., max = NULL) {
     lmda.max.ix <- 1
     lmda.ix <- 2
     smd <- stats[, -1, drop = FALSE]
