@@ -599,6 +599,7 @@ get_smd <- function(fit, pp, W, ..., groups) {
   smd <- sweep(smd, 2L, X.stats$center, `-`, check.margin	= FALSE)
   smd <- sweep(smd, 2L, X.stats$scale, `/`, check.margin = FALSE)
   colnames(smd) <- colnames
+  if (nrow(smd) == 2) rownames(smd) <- c("lambda.max", "lambda")
 
   smd
 }
@@ -623,9 +624,9 @@ plot_path <- function(stats, ...) {
 }
 
 plot_smd <- function(stats, ..., max = NULL) {
+    smd <- stats
     lmda.max.ix <- 1
     lmda.ix <- 2
-    smd <- stats[, -1, drop = FALSE]
     labels <- colnames(smd)
     if (is.null(max)) {
       max <- length(labels)
