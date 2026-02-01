@@ -624,28 +624,27 @@ plot_path <- function(stats, ...) {
 }
 
 plot_smd <- function(stats, ..., max = NULL) {
-    smd <- stats
     lmda.max.ix <- 1
     lmda.ix <- 2
-    labels <- colnames(smd)
+    labels <- colnames(stats)
     if (is.null(max)) {
       max <- length(labels)
     }
     max <- min(max, length(labels))
-    order <- order(abs(smd[1, ]), decreasing = TRUE)
+    order <- order(abs(stats[1, ]), decreasing = TRUE)
     display.idx <- rev(order[1:max])
 
     graphics::plot(
-      smd[lmda.max.ix, display.idx],
+      stats[lmda.max.ix, display.idx],
       1:max,
-      xlim = c(min(-0.1, min(smd[lmda.max.ix, ])), max(0.1, max(smd[lmda.max.ix, ]))),
+      xlim = c(min(-0.1, min(stats[lmda.max.ix, ])), max(0.1, max(stats[lmda.max.ix, ]))),
       xlab = "Standardized mean diff.",
       ylab = "",
       pch = 20,
       yaxt = "n"
     )
     graphics::axis(2, at = 1:max, labels = labels[display.idx], las = 1, cex.axis = 0.7)
-    graphics::points(smd[lmda.ix, display.idx], 1:max, pch = 20, col = "dodgerblue3")
+    graphics::points(stats[lmda.ix, display.idx], 1:max, pch = 20, col = "dodgerblue3")
     graphics::abline(v = 0)
     graphics::abline(v = c(-0.1, 0.1), lty = 2, col = "gray70")
     graphics::mtext(expression(lambda^{max}), side = 3, adj = 1, line = 1 )
