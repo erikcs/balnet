@@ -86,7 +86,7 @@ cv.balnet <- function(
     X.train <- X[train, , drop = FALSE]
     W.train <- W[train]
     dot.args[["sample.weights"]] <- sample.weights[train]
-    fit.train <- do.call(balnet, c(list(X = X.train, W = W.train, standardize = "inplace"), dot.args))
+    fit.train <- do.call(balnet, c(list(X = X.train, W = W.train, standardize = ".inplace"), dot.args))
 
     X.test <- X[test, , drop = FALSE]
     W.test <- W[test]

@@ -55,8 +55,7 @@ By default, the \code{lambda} sequence is constructed automatically using \code{
 
 \item{standardize}{Whether to standardize the input matrix. This should only be set to \code{FALSE} if
 \code{X} already has zero-mean columns with unit variance; for \code{target = "ATT"}, standardization
-should be based on the treated group. Alternatively, set to \code{"inplace"} to overwrite \code{X} with
-its standardized version, avoiding an additional copy.}
+should be based on the treated group.}
 
 \item{thresh}{Coordinate descent convergence tolerance, default 1e-7.}
 
