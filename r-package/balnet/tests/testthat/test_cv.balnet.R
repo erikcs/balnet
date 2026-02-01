@@ -67,3 +67,33 @@ test_that("cv.balnet is invariant to sample.weights scale", {
     predict(cv.fit.scaled, X)
   )
 })
+
+test_that("cv.balnet has not changed", {
+  set.seed(42)
+  n <- 111
+  p <- 3
+  X <- matrix(rnorm(n * p), n, p)
+  W <- rbinom(n, 1, 0.3)
+
+  fit <- cv.balnet(X, W, nlambda = 5)
+  fit.att <- cv.balnet(X, W, target = "ATT", nlambda = 5)
+
+  expect_equal(
+    coef(fit),
+    list(control = list(intercepts = 0.680645954386779, betas = new("dgRMatrix",
+      p = c(0L, 3L), j = 0:2, Dim = c(1L, 3L), Dimnames = list(
+          NULL, NULL), x = c(0.0964925117386255, 0.210324237163201,
+      0.145107291953369), factors = list())), treated = list(intercepts = -0.681102012267433,
+      betas = new("dgRMatrix", p = c(0L, 3L), j = 0:2, Dim = c(1L,
+      3L), Dimnames = list(NULL, NULL), x = c(-0.0496225138747977,
+      -0.149449789859248, -0.237897822417655), factors = list())))
+  )
+
+  expect_equal(
+    coef(fit.att),
+    list(intercepts = 0.652873281422005, betas = new("dgRMatrix",
+    p = c(0L, 0L), j = integer(0), Dim = c(1L, 3L), Dimnames = list(
+        NULL, NULL), x = numeric(0), factors = list()))
+  )
+
+})
