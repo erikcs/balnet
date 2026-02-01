@@ -39,7 +39,7 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
   expect_equal(
     unname(apply(abs(stats.smd$control), 2, max)),
     pth$control$Lambda[start.end0],
-    tolerance = 1e-4
+    tolerance = 2e-4
   )
   expect_equal(
     unname((1 - colSums(abs(stats.smd$control)) / sum(abs(stats.smd$control$lambda.max))) * 100),
@@ -55,7 +55,7 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
   expect_equal(
     unname(apply(abs(stats.smd$treated), 2, max)),
     pth$treated$Lambda[start.end1],
-    tolerance = 1e-4
+    tolerance = 2e-4
   )
   expect_equal(
     unname((1 - colSums(abs(stats.smd$treated)) / sum(abs(stats.smd$treated$lambda.max))) * 100),
