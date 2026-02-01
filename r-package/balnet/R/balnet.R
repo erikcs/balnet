@@ -572,9 +572,9 @@ get_path <- function(fit, pp, W, ..., lambda, devs) {
 
 get_smd <- function(fit, pp, W, ..., groups) {
   target <- fit[["target"]]
+  sample.weights <- fit[["sample.weights"]]
   X <- fit[["X.orig"]]
   colnames <- fit[["colnames"]]
-  sample.weights <- fit[["sample.weights"]]
   # if groups present, we calculate SMDs on group-level means
   if (!is.null(groups)) {
     X <- collapse_X(X, groups, colnames)
