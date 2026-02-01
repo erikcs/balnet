@@ -538,8 +538,8 @@ plot.balnet <- function(
       pp$treated,
       W.orig,
       lambda = lambda.orig$treated,
-      groups = groups,
-      devs = x[["_fit"]]$treated$devs
+      devs = x[["_fit"]]$treated$devs,
+      groups = groups
     )
     plot_func(stats1, max = max)
     if (x[["target"]] == "ATE") graphics::mtext("Treated", side = 3, line = 1, adj = 0)
