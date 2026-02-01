@@ -507,9 +507,9 @@ plot.balnet <- function(
     plot_func <- plot_smd
     get_metrics <- get_smd
     if (length(lambda) == 1) {
-      lambda <- list(c(Inf, lambda[1]), c(Inf, lambda[1]))
+      lambda <- list(c(Inf, lambda[[1]]), c(Inf, lambda[[1]]))
     } else {
-      lambda <- list(c(Inf, lambda[1]), c(Inf, lambda[2]))
+      lambda <- list(c(Inf, lambda[[1]]), c(Inf, lambda[[2]]))
     }
   }
 
