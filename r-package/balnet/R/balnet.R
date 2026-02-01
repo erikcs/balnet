@@ -85,7 +85,7 @@ balnet <- function(
       warning("X is not matrix of type 'double', an extra internal copy may occur.", immediate. = TRUE)
     }
     X <- as.matrix(X)
-    if (!is.numeric(X) || anyNA(X)) {
+    if (!is.numeric(X) || anyNA(X) || any(0 %in% dim(X))) {
       stop("X should be numeric with no missing values.")
     }
   } else {
