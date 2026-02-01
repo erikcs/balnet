@@ -515,13 +515,13 @@ plot.balnet <- function(
 
   lambda.orig <- x[["lambda"]]
   W.orig <- x[["W.orig"]]
-  pp <- predict.balnet(x, x[["X.orig"]], lambda = lambda, type = "response", drop = FALSE)
+  W.hat <- predict.balnet(x, x[["X.orig"]], lambda = lambda, type = "response", drop = FALSE)
 
   stats0 <- stats1 <- NULL
   if (!is.null(x[["_fit"]]$control)) {
     stats0 <- get_metrics(
       x,
-      1 - pp$control,
+      1 - W.hat$control,
       1 - W.orig,
       lambda = lambda.orig$control,
       groups = groups,
@@ -535,7 +535,7 @@ plot.balnet <- function(
   if (!is.null(x[["_fit"]]$treated)) {
     stats1 <- get_metrics(
       x,
-      pp$treated,
+      W.hat$treated,
       W.orig,
       lambda = lambda.orig$treated,
       devs = x[["_fit"]]$treated$devs,
@@ -554,14 +554,14 @@ plot.balnet <- function(
   }
 }
 
-get_path <- function(fit, pp, W, ..., lambda, devs) {
+get_path <- function(fit, W.hat, W, ..., lambda, devs) {
   target <- fit[["target"]]
   sample.weights <- fit[["sample.weights"]]
 
-  ipw <- matrix(0, nrow = nrow(pp), ncol = ncol(pp))
-  ipw[W == 1, ] <- 1 / pp[W == 1, ]
+  ipw <- matrix(0, nrow = nrow(W.hat), ncol = ncol(W.hat))
+  ipw[W == 1, ] <- 1 / W.hat[W == 1, ]
   if (target == "ATT") {
-    ipw <- (1 - pp) * ipw
+    ipw <- (1 - W.hat) * ipw
   }
   ess <- (colSums(sample.weights * ipw)^2 / colSums(sample.weights * ipw^2)) /
     sum(W * sample.weights) * 100
@@ -570,7 +570,7 @@ get_path <- function(fit, pp, W, ..., lambda, devs) {
   data.frame(lambda = lambda, ess = ess, pbr = pbr)
 }
 
-get_smd <- function(fit, pp, W, ..., groups) {
+get_smd <- function(fit, W.hat, W, ..., groups) {
   target <- fit[["target"]]
   sample.weights <- fit[["sample.weights"]]
   X <- fit[["X.orig"]]
@@ -589,10 +589,10 @@ get_smd <- function(fit, pp, W, ..., groups) {
   }
   X.stats$scale[X.stats$scale <= 0] <- 1
 
-  ipw <- matrix(0, nrow = nrow(pp), ncol = ncol(pp))
-  ipw[W == 1, ] <- 1 / pp[W == 1, ]
+  ipw <- matrix(0, nrow = nrow(W.hat), ncol = ncol(W.hat))
+  ipw[W == 1, ] <- 1 / W.hat[W == 1, ]
   if (target == "ATT") {
-    ipw <- (1 - pp) * ipw
+    ipw <- (1 - W.hat) * ipw
   }
 
   smd <- col_stats(X, ipw * sample.weights, n_threads = fit[["num.threads"]])$center
