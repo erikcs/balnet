@@ -527,9 +527,7 @@ plot.balnet <- function(
       groups = groups,
       devs = x[["_fit"]]$control$devs
     )
-    if (!is.null(x[["_fit"]]$treated)) {
-      graphics::par(mfrow = c(1, 2))
-    }
+    if (!is.null(x[["_fit"]]$treated)) graphics::par(mfrow = c(1, 2))
     plot_func(stats0, max = max)
     if (x[["target"]] == "ATE") graphics::mtext("Control", side = 3, line = 1, adj = 0)
   }
