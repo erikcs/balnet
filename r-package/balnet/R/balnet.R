@@ -356,8 +356,8 @@ predict.balnet <- function(
   out.nn <- out[!vapply(out, is.null, logical(1))]
 
   dots <- list(...)
-  drop <- is.null(dots[["drop"]])
-  if (length(out.nn) > 1 || !drop) {
+  .drop <- is.null(dots[[".drop"]])
+  if (length(out.nn) > 1 || !.drop) {
     return(out.nn)
   } else {
     return(out.nn[[1]])
@@ -450,8 +450,8 @@ print.balnet <- function(
   out.nn <- out[vapply(out, length, integer(1)) > 0]
 
   dots <- list(...)
-  drop <- is.null(dots[["drop"]])
-  if (length(out.nn) > 1 || !drop) {
+  .drop <- is.null(dots[[".drop"]])
+  if (length(out.nn) > 1 || !.drop) {
     invisible(out.nn)
   } else {
     invisible(out.nn[[1]])
@@ -515,7 +515,7 @@ plot.balnet <- function(
 
   lambda.orig <- x[["lambda"]]
   W.orig <- x[["W.orig"]]
-  W.hat <- predict.balnet(x, x[["X.orig"]], lambda = lambda, type = "response", drop = FALSE)
+  W.hat <- predict.balnet(x, x[["X.orig"]], lambda = lambda, type = "response", .drop = FALSE)
 
   stats0 <- stats1 <- NULL
   if (!is.null(x[["_fit"]]$control)) {
