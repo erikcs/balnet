@@ -33,33 +33,33 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
   # control
   start.end0 <- c(1, length(pth$control$`Mean |SMD|`))
   expect_equal(
-    unname(rowMeans(abs(stats.smd$control))),
+    unname(colMeans(abs(stats.smd$control))),
     pth$control$`Mean |SMD|`[start.end0],
   )
   expect_equal(
-    unname(apply(abs(stats.smd$control), 1, max)),
+    unname(apply(abs(stats.smd$control), 2, max)),
     pth$control$Lambda[start.end0],
     tolerance = 1e-4
   )
   expect_equal(
-    unname((1 - rowSums(abs(stats.smd$control)) / sum(abs(stats.smd$control["lambda.max", ]))) * 100),
-    stats.pth$control[start.end0, "pbr"]
+    unname((1 - colSums(abs(stats.smd$control)) / sum(abs(stats.smd$control$lambda.max))) * 100),
+    stats.pth$control$pbr[start.end0]
   )
 
   # treated
   start.end1 <- c(1, length(pth$treated$`Mean |SMD|`))
   expect_equal(
-    unname(rowMeans(abs(stats.smd$treated))),
+    unname(colMeans(abs(stats.smd$treated))),
     pth$treated$`Mean |SMD|`[start.end1],
   )
   expect_equal(
-    unname(apply(abs(stats.smd$treated), 1, max)),
+    unname(apply(abs(stats.smd$treated), 2, max)),
     pth$treated$Lambda[start.end1],
     tolerance = 1e-4
   )
   expect_equal(
-    unname((1 - rowSums(abs(stats.smd$treated)) / sum(abs(stats.smd$treated["lambda.max", ]))) * 100),
-    stats.pth$treated[start.end1, "pbr"]
+    unname((1 - colSums(abs(stats.smd$treated)) / sum(abs(stats.smd$treated$lambda.max))) * 100),
+    stats.pth$treated$pbr[start.end1]
   )
 
   fit.att <- balnet(X, W, target = "ATT")
@@ -69,17 +69,17 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
 
   start.end <- c(1, length(pth.att$`Mean |SMD|`))
   expect_equal(
-    unname(rowMeans(abs(stats.smd.att))),
+    unname(colMeans(abs(stats.smd.att))),
     pth.att$`Mean |SMD|`[start.end],
   )
   expect_equal(
-    unname(apply(abs(stats.smd.att), 1, max)),
+    unname(apply(abs(stats.smd.att), 2, max)),
     pth.att$Lambda[start.end0],
     tolerance = 1e-4
   )
   expect_equal(
-    unname((1 - rowSums(abs(stats.smd.att)) / sum(abs(stats.smd.att["lambda.max", ]))) * 100),
-    stats.pth.att[start.end, "pbr"]
+    unname((1 - colSums(abs(stats.smd.att)) / sum(abs(stats.smd.att$lambda.max))) * 100),
+    stats.pth.att$pbr[start.end]
   )
 })
 
