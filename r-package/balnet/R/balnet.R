@@ -107,7 +107,7 @@ balnet <- function(
   } else {
     stop("Invalid standardize option.")
   }
-  lambda.in <- validate_lambda(lambda)
+  lambda <- validate_lambda(lambda)
   colnames <- if (is.null(colnames(X))) make.names(1:ncol(X)) else colnames(X)
   validate_groups(groups, ncol(X), colnames)
 
@@ -135,7 +135,7 @@ balnet <- function(
       y = 1 - W,
       weights = sample.weights,
       target_scale = target_scale,
-      lambda = lambda.in[[1]],
+      lambda = lambda[[1]],
       lmda_path_size = nlambda,
       min_ratio = lambda.min.ratio[[1]],
       penalty = penalty.factor,
@@ -156,7 +156,7 @@ balnet <- function(
       y = W,
       weights = sample.weights,
       target_scale = target_scale,
-      lambda = lambda.in[[2]],
+      lambda = lambda[[2]],
       lmda_path_size = nlambda,
       min_ratio = lambda.min.ratio[[2]],
       penalty = penalty.factor,
@@ -183,7 +183,7 @@ balnet <- function(
   out[["num.threads"]] <- num.threads
   out[["colnames"]] <- colnames
   out[["groups"]] <- groups
-  out[["lambda"]] <- lambda <- list(control = lmdas0, treated = lmdas1)
+  out[["lambda"]] <- list(control = lmdas0, treated = lmdas1)
   out[["_fit"]] <- list(control = fit0, treated = fit1)
 
   out
@@ -270,14 +270,14 @@ coef.balnet <- function(
   ...
 )
 {
-  lambda.in <- validate_lambda(lambda)
+  lambda <- validate_lambda(lambda)
 
   coef1 <- coef0 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
-    coef0 <- coef(object[["_fit"]]$control, lambda = lambda.in[[1]])
+    coef0 <- coef(object[["_fit"]]$control, lambda = lambda[[1]])
   }
   if (!is.null(object[["_fit"]]$treated)) {
-    coef1 <- coef(object[["_fit"]]$treated, lambda = lambda.in[[2]])
+    coef1 <- coef(object[["_fit"]]$treated, lambda = lambda[[2]])
   }
   out <- list(control = coef0, treated = coef1)
   out.nn <- out[!vapply(out, is.null, logical(1))]
@@ -330,7 +330,7 @@ predict.balnet <- function(
   ...
 )
 {
-  lambda.in <- validate_lambda(lambda)
+  lambda <- validate_lambda(lambda)
   type <- match.arg(type)
   if (missing(newx)) {
     stop("newx required for predictions.")
@@ -346,10 +346,10 @@ predict.balnet <- function(
 
   pred0 <- pred1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
-    pred0 <- 1 - predict(object[["_fit"]]$control, newx, lambda = lambda.in[[1]], type = type)
+    pred0 <- 1 - predict(object[["_fit"]]$control, newx, lambda = lambda[[1]], type = type)
   }
   if (!is.null(object[["_fit"]]$treated)) {
-    pred1 <- predict(object[["_fit"]]$treated, newx, lambda = lambda.in[[2]], type = type)
+    pred1 <- predict(object[["_fit"]]$treated, newx, lambda = lambda[[2]], type = type)
   }
   out <- list(control = pred0, treated = pred1)
   out.nn <- out[!vapply(out, is.null, logical(1))]
