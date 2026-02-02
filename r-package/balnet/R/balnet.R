@@ -109,6 +109,9 @@ balnet <- function(
   }
   lambda <- validate_lambda(lambda)
   colnames <- if (is.null(colnames(X))) make.names(1:ncol(X)) else colnames(X)
+  if (anyDuplicated(colnames)) {
+    stop("Duplicate colnames detected in X.") # ensure colnames are valid as they are used later
+  }
   validate_groups(groups, ncol(X), colnames)
 
   stan <- standardize(
