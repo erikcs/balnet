@@ -231,7 +231,7 @@ coef.balnet <- function(
 {
   lambda <- validate_lambda(lambda)
 
-  coef1 <- coef0 <- NULL
+  coef0 <- coef1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
     coef0 <- coef(object[["_fit"]]$control, lambda = lambda[[1]])
   }
@@ -593,20 +593,46 @@ weights.balnet <- function(
   W = NULL,
   lambda = NULL,
   sample.weights = NULL,
+  simplify = TRUE,
   ...
 )
 {
   lambda <- validate_lambda(lambda)
+  if (xor(is.null(X), is.null(W))) {
+    stop("Both X and W required.")
+  }
+  if (is.null(X)) {
+    X <- object[["X.orig"]]
+    W <- object[["W.orig"]]
+  }
+  if (is.null(sample.weights)) {
+    sample.weights <- object[["sample.weights"]]
+  }
+  if (is.matrix(X) || is.data.frame(X)) {
+    X <- as.matrix(X)
+    if (!is.numeric(X) || anyNA(X) || ncol(X) != object[["X.dim"]][2]) {
+    stop("X should be a numeric with same columns as training data, with no missing values.")
+    }
+  } else {
+    stop("Invalid X input: should be a numeric matrix.")
+  }
+  if (!is.numeric(W) || length(W) != nrow(X) || anyNA(W) || any(W != 0 & W != 1)) {
+    stop("W should be {0, 1} with length = nrow(X), with no missing values.")
+  }
+  if (!is.numeric(sample.weights) || length(sample.weights) != nrow(X) || anyNA(sample.weights)) {
+    stop("Invalid sample weights.")
+  }
 
-  ipw1 <- ipw0 <- NULL
-  W.hat <-
+  W.hat <- predict.balnet(object, X, lambda = lambda, type = "response", .simplify = FALSE)
+
+  ipw0 <- ipw1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
-    ipa <- coef(object[["_fit"]]$control, lambda = lambda[[1]])
+    ipw0 <- coef(object[["_fit"]]$control, lambda = lambda[[1]])
   }
   if (!is.null(object[["_fit"]]$treated)) {
-    coef1 <- coef(object[["_fit"]]$treated, lambda = lambda[[2]])
+    ipw1 <- coef(object[["_fit"]]$treated, lambda = lambda[[2]])
   }
-  out <- list(control = coef0, treated = coef1)
+  out <- list(control = ipw0, treated = ipw1)
   out.nn <- out[!vapply(out, is.null, logical(1))]
 
   if (length(out.nn) > 1) {
