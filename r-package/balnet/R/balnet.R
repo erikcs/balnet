@@ -178,6 +178,7 @@ balnet <- function(
   class(out) <- "balnet"
 
   out[["call"]] <- call
+  out[["X.dim"]] <- dim(X)
   out[["X.orig"]] <- X
   out[["W.orig"]] <- W
   out[["sample.weights"]] <- sample.weights
@@ -340,7 +341,7 @@ predict.balnet <- function(
   }
   if (is.matrix(newx) || is.data.frame(newx)) {
     newx <- as.matrix(newx)
-    if (!is.numeric(newx) || anyNA(newx) || ncol(newx) != ncol(object[["X.orig"]])) {
+    if (!is.numeric(newx) || anyNA(newx) || ncol(newx) != object[["X.dim"]][2]) {
       stop("X should be a numeric with same columns as training data, with no missing values.")
     }
   } else {
