@@ -7,4 +7,4 @@ gr <- list(5:15, 17:19)
 
 fit1 <- balnet(X, W, penalty.factor = runif(ncol(X)))
 
-fit2 <- balnet(X, W, groups = gr, alpha = 0.5, standardize = "inplace")
+fit2 <- balnet(X, W, groups = gr, alpha = 0.5, standardize = ".inplace")
