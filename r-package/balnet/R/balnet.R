@@ -296,7 +296,7 @@ lambda.balnet <- function(
 #' Predict using a balnet object.
 #'
 #' @param object A `balnet` object.
-#' @param newx A numeric matrix.
+#' @param X A numeric matrix.
 #' @param lambda Value(s) of the penalty parameter `lambda` at which coefficients
 #'   are required.
 #'   * If `NULL` (default), the full lambda path from the fit is used
@@ -328,7 +328,7 @@ lambda.balnet <- function(
 #' @export
 predict.balnet <- function(
   object,
-  newx,
+  X,
   lambda = NULL,
   type = c("response"),
   ...
@@ -336,12 +336,12 @@ predict.balnet <- function(
 {
   lambda <- validate_lambda(lambda)
   type <- match.arg(type)
-  if (missing(newx)) {
-    stop("newx required for predictions.")
+  if (missing(X)) {
+    stop("X required for predictions.")
   }
-  if (is.matrix(newx) || is.data.frame(newx)) {
-    newx <- as.matrix(newx)
-    if (!is.numeric(newx) || anyNA(newx) || ncol(newx) != object[["X.dim"]][2]) {
+  if (is.matrix(X) || is.data.frame(X)) {
+    X <- as.matrix(X)
+    if (!is.numeric(X) || anyNA(X) || ncol(X) != object[["X.dim"]][2]) {
       stop("X should be a numeric with same columns as training data, with no missing values.")
     }
   } else {
@@ -350,10 +350,10 @@ predict.balnet <- function(
 
   pred0 <- pred1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
-    pred0 <- 1 - predict(object[["_fit"]]$control, newx, lambda = lambda[[1]], type = type)
+    pred0 <- 1 - predict(object[["_fit"]]$control, X, lambda = lambda[[1]], type = type)
   }
   if (!is.null(object[["_fit"]]$treated)) {
-    pred1 <- predict(object[["_fit"]]$treated, newx, lambda = lambda[[2]], type = type)
+    pred1 <- predict(object[["_fit"]]$treated, X, lambda = lambda[[2]], type = type)
   }
   out <- list(control = pred0, treated = pred1)
   out.nn <- out[!vapply(out, is.null, logical(1))]

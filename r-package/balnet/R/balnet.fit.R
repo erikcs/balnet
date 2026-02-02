@@ -273,7 +273,7 @@ coef.balnet.fit <- function(
 #' Predict using a balnet.fit object.
 #'
 #' @param object A balnet.fit object.
-#' @param newx A numeric matrix.
+#' @param X A numeric matrix.
 #' @param lambda Value(s) for the penalty parameter. If NULL (default), the
 #'   lambda path on which `object` was fit is used. If different lambda values
 #'   are supplied, linear interpolation is used, as in `glmnet`. Note: no
@@ -287,7 +287,7 @@ coef.balnet.fit <- function(
 #' @export
 predict.balnet.fit <- function(
   object,
-  newx,
+  X,
   lambda = NULL,
   type = c("response", "link"),
   ...
@@ -298,7 +298,7 @@ predict.balnet.fit <- function(
   coefs <- coef(object, lambda = lambda)
   intercepts <- coefs[["intercepts"]]
   betas <- coefs[["betas"]]
-  eta <- sp_tcrossprod_plus(newx, betas, intercepts, object[["n_threads"]])
+  eta <- sp_tcrossprod_plus(X, betas, intercepts, object[["n_threads"]])
 
   if (type == "response") {
     out <- 1 / (1 + exp(-eta))

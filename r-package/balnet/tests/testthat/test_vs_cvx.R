@@ -74,7 +74,7 @@ test_that("works as expected vs CVXR", {
   fit = balnet.fit(standardize(X), y)
   for (lambda in get_example_lambdas(fit)) {
     test_that(paste("setup =", setup, "lambda =", lambda), {
-      pp = predict(fit, newx = X, type = "response", lambda = lambda)[, ]
+      pp = predict(fit, X, type = "response", lambda = lambda)[, ]
       fit.cvx = cvx_mu1_lasso(y, X, lambda)
 
       expect_lt(max(abs(pp - fit.cvx$ps)), 1e-3)
@@ -91,7 +91,7 @@ test_that("works as expected vs CVXR", {
   fit = balnet.fit(standardize(X), y)
   for (lambda in get_example_lambdas(fit)) {
     test_that(paste("setup =", setup, "lambda =", lambda), {
-      pp = predict(fit, newx = X, type = "response", lambda = lambda)[, ]
+      pp = predict(fit, X, type = "response", lambda = lambda)[, ]
       fit.cvx = cvx_mu1_lasso(y, X, lambda)
 
       expect_lt(max(abs(pp - fit.cvx$ps)), 1e-4)
@@ -109,7 +109,7 @@ test_that("works as expected vs CVXR", {
   fit = balnet.fit(standardize(X), y)
   for (lambda in get_example_lambdas(fit)[1:2]) {
     test_that(paste("setup =", setup, "lambda =", lambda), {
-      pp = predict(fit, newx = X, type = "response", lambda = lambda)[, ]
+      pp = predict(fit, X, type = "response", lambda = lambda)[, ]
       fit.cvx = cvx_mu1_lasso(y, X, lambda)
 
       expect_lt(max(abs(pp - fit.cvx$ps)), 1e-4)
@@ -127,7 +127,7 @@ test_that("works as expected vs CVXR", {
   fit = balnet.fit(standardize(X), y)
   for (lambda in get_example_lambdas(fit)[1:2]) {
     test_that(paste("setup =", setup, "lambda =", lambda), {
-      pp = predict(fit, newx = X, type = "response", lambda = lambda)[, ]
+      pp = predict(fit, X, type = "response", lambda = lambda)[, ]
       fit.cvx = cvx_mu1_lasso(y, X, lambda)
 
       expect_lt(max(abs(pp - fit.cvx$ps)), 1e-4)
@@ -145,7 +145,7 @@ test_that("works as expected vs CVXR", {
   fit = balnet.fit(standardize(X), y)
   for (lambda in get_example_lambdas(fit)[1:2]) {
     test_that(paste("setup =", setup, "lambda =", lambda), {
-      pp = predict(fit, newx = X, type = "response", lambda = lambda)[, ]
+      pp = predict(fit, X, type = "response", lambda = lambda)[, ]
       fit.cvx = cvx_mu1_lasso(y, X, lambda)
 
       expect_lt(max(abs(pp - fit.cvx$ps)), 1e-4)
