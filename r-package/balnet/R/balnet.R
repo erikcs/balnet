@@ -557,6 +557,65 @@ plot.balnet <- function(
   }
 }
 
+#' Extract weights from a balnet object.
+#'
+#' @param object A `balnet` object.
+#' @param lambda Value(s) of the penalty parameter `lambda` at which coefficients
+#'   are required.
+#'   * If `NULL` (default), the full lambda path from the fit is used
+#'    (if new values are supplied, linear interpolation is performed).
+#'   * For dual-arm fits (control and treatment), `lambda` can be a `list` or
+#'     two-column `matrix`: the first element/column corresponds to the control
+#'     arm and the second to the treatment arm.
+#' @param ... Additional arguments (currently ignored).
+#'
+#' @return IPW
+#'
+#' @examples
+#' \donttest{
+#' n <- 100
+#' p <- 25
+#' X <- matrix(rnorm(n * p), n, p)
+#' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
+#'
+#' # Fit an ATE model.
+#' fit <- balnet(X, W)
+#'
+#' # Extract coefficients.
+#' coefs <- coef(fit)
+#' }
+#'
+#' @method weights balnet
+#' @export
+weights.balnet <- function(
+  object,
+  X = NULL,
+  W = NULL,
+  lambda = NULL,
+  sample.weights = NULL,
+  ...
+)
+{
+  lambda <- validate_lambda(lambda)
+
+  ipw1 <- ipw0 <- NULL
+  W.hat <-
+  if (!is.null(object[["_fit"]]$control)) {
+    ipa <- coef(object[["_fit"]]$control, lambda = lambda[[1]])
+  }
+  if (!is.null(object[["_fit"]]$treated)) {
+    coef1 <- coef(object[["_fit"]]$treated, lambda = lambda[[2]])
+  }
+  out <- list(control = coef0, treated = coef1)
+  out.nn <- out[!vapply(out, is.null, logical(1))]
+
+  if (length(out.nn) > 1) {
+    return(out.nn)
+  } else {
+    return(out.nn[[1]])
+  }
+}
+
 get_path <- function(fit, W.hat, W, ..., lambda, devs) {
   target <- fit[["target"]]
   sample.weights <- fit[["sample.weights"]]
