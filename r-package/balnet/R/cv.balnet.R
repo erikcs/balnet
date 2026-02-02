@@ -121,31 +121,6 @@ cv.balnet <- function(
   fit.full
 }
 
-#' @rdname lambda
-#' @method lambda cv.balnet
-#' @export
-lambda.cv.balnet <- function(
-  object,
-  lambda = "lambda.min",
-  ...
-)
-{
-  if (identical(lambda, "lambda.min")) {
-    out <- object[["cv.info"]]$lambda.min
-  } else if (is.null(lambda)) {
-    return(lambda.balnet(object))
-  } else {
-    stop("Invalid lambda.")
-  }
-  out.nn <- out[!vapply(out, is.null, logical(1))]
-
-  if (length(out.nn) > 1) {
-    return(out.nn)
-  } else {
-    return(out.nn[[1]])
-  }
-}
-
 #' Extract coefficients from a cv.balnet object.
 #'
 #' @param object A `cv.balnet` object.
@@ -181,6 +156,31 @@ coef.cv.balnet <- function(
   }
 
   coef.balnet(object, lambda = lambda)
+}
+
+#' @rdname lambda
+#' @method lambda cv.balnet
+#' @export
+lambda.cv.balnet <- function(
+  object,
+  lambda = "lambda.min",
+  ...
+)
+{
+  if (identical(lambda, "lambda.min")) {
+    out <- object[["cv.info"]]$lambda.min
+  } else if (is.null(lambda)) {
+    return(lambda.balnet(object))
+  } else {
+    stop("Invalid lambda.")
+  }
+  out.nn <- out[!vapply(out, is.null, logical(1))]
+
+  if (length(out.nn) > 1) {
+    return(out.nn)
+  } else {
+    return(out.nn[[1]])
+  }
 }
 
 #' Predict using a cv.balnet object.

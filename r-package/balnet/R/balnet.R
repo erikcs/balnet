@@ -193,51 +193,6 @@ balnet <- function(
   out
 }
 
-#' Extract lambda sequence from a fit.
-#'
-#' @param object A `balnet` type object.
-#' @param lambda For `cv.balnet`, which lambda to extract.
-#' @param ... Additional arguments (currently ignored).
-#'
-#' @return The lambda sequence.
-#'
-#' @examples
-#' \donttest{
-#' n <- 100
-#' p <- 25
-#' X <- matrix(rnorm(n * p), n, p)
-#' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
-#'
-#' fit <- balnet(X, W)
-#' lambda <- lambda(fit)
-#'
-#' fit.cv <- cv.balnet(X, W, target = "ATT")
-#' lambda.min <- lambda(fit)
-#' }
-#'
-#' @export
-lambda <- function(object, lambda = NULL, ...) {
-  UseMethod("lambda")
-}
-
-#' @rdname lambda
-#' @method lambda balnet
-#' @export
-lambda.balnet <- function(
-  object,
-  ...
-)
-{
-  out <- object[["lambda"]]
-  out.nn <- out[!vapply(out, is.null, logical(1))]
-
-  if (length(out.nn) > 1) {
-    return(out.nn)
-  } else {
-    return(out.nn[[1]])
-  }
-}
-
 #' Extract coefficients from a balnet object.
 #'
 #' @param object A `balnet` object.
@@ -284,6 +239,51 @@ coef.balnet <- function(
     coef1 <- coef(object[["_fit"]]$treated, lambda = lambda[[2]])
   }
   out <- list(control = coef0, treated = coef1)
+  out.nn <- out[!vapply(out, is.null, logical(1))]
+
+  if (length(out.nn) > 1) {
+    return(out.nn)
+  } else {
+    return(out.nn[[1]])
+  }
+}
+
+#' Extract lambda sequence from a fit.
+#'
+#' @param object A `balnet` type object.
+#' @param lambda For `cv.balnet`, which lambda to extract.
+#' @param ... Additional arguments (currently ignored).
+#'
+#' @return The lambda sequence.
+#'
+#' @examples
+#' \donttest{
+#' n <- 100
+#' p <- 25
+#' X <- matrix(rnorm(n * p), n, p)
+#' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
+#'
+#' fit <- balnet(X, W)
+#' lambda <- lambda(fit)
+#'
+#' fit.cv <- cv.balnet(X, W, target = "ATT")
+#' lambda.min <- lambda(fit)
+#' }
+#'
+#' @export
+lambda <- function(object, lambda = NULL, ...) {
+  UseMethod("lambda")
+}
+
+#' @rdname lambda
+#' @method lambda balnet
+#' @export
+lambda.balnet <- function(
+  object,
+  ...
+)
+{
+  out <- object[["lambda"]]
   out.nn <- out[!vapply(out, is.null, logical(1))]
 
   if (length(out.nn) > 1) {
