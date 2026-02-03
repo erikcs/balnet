@@ -600,7 +600,6 @@ weights.balnet <- function(
   target <- object[["target"]]
 
   W.hat <- predict.balnet(object, X.orig, lambda = lambda, type = "response", .simplify = FALSE)
-  # sample.weights TODO
 
   ipw0 <- ipw1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
@@ -610,10 +609,12 @@ weights.balnet <- function(
       ipw0[W == 0, ] <- ipw0[W == 0, ] * W.hat$control[W == 0, ]
       ipw0[W == 1, ] <- 1
     }
+    ipw0 <- ipw0 * sample.weights
   }
   if (!is.null(object[["_fit"]]$treated)) {
     ipw1 <- matrix(0, nrow = nrow(W.hat$treated), ncol = ncol(W.hat$treated))
     ipw1[W == 1, ] <- 1 / W.hat$treated[W == 1, ]
+    ipw1 <- ipw1 * sample.weights
   }
   out <- list(control = ipw0, treated = ipw1)
   out.nn <- out[!vapply(out, is.null, logical(1))]
