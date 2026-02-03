@@ -287,10 +287,10 @@ plot.cv.balnet <- function(
   plot.balnet(x, lambda = lambda, ...)
 }
 
-#' @rdname weights
-#' @method weights cv.balnet
+#' @rdname ipw
+#' @method ipw cv.balnet
 #' @export
-weights.cv.balnet <- function(
+ipw.cv.balnet <- function(
   object,
   lambda = "lambda.min",
   ...

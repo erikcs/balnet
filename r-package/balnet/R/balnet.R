@@ -584,23 +584,23 @@ plot.balnet <- function(
 #' fit <- balnet(X, W)
 #'
 #' # Extract IPW weights.
-#' ipw <- weights(fit, lambda = 0)
+#' wts <- ipw(fit, lambda = 0)
 #' }
 #'
 #' @export
-weights <- function(
+ipw <- function(
   object,
   lambda = NULL,
   ...
 )
 {
-  UseMethod("weights")
+  UseMethod("ipw")
 }
 
-#' @rdname weights
-#' @method weights balnet
+#' @rdname ipw
+#' @method ipw balnet
 #' @export
-weights.balnet <- function(
+ipw.balnet <- function(
   object,
   lambda = NULL,
   ...
