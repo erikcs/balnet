@@ -560,7 +560,7 @@ plot.balnet <- function(
 #' Extract weights from a balnet object.
 #'
 #' @param object A `balnet` object.
-#' @param lambda Value(s) of the penalty parameter `lambda` at which coefficients
+#' @param lambda Value(s) of the penalty parameter `lambda` at which weights
 #'   are required.
 #'   * If `NULL` (default), the full lambda path from the fit is used
 #'    (if new values are supplied, linear interpolation is performed).
@@ -581,10 +581,21 @@ plot.balnet <- function(
 #' # Fit an ATE model.
 #' fit <- balnet(X, W)
 #'
-#' # Extract coefficients.
-#' coefs <- coef(fit)
+#' # Extract IPW weights.
+#' ipw <- weights(fit, lambda = 0)
 #' }
 #'
+#' @export
+weights <- function(
+  object,
+  lambda = NULL,
+  ...
+)
+{
+  UseMethod("weights")
+}
+
+#' @rdname weights
 #' @method weights balnet
 #' @export
 weights.balnet <- function(
