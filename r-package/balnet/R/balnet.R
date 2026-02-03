@@ -620,7 +620,8 @@ ipw.balnet <- function(
     ipw0[W.orig == 0, ] <- 1 / (1 - W.hat$control[W.orig == 0, ])
     if (target == "ATT") {
       ipw0[W.orig == 0, ] <- ipw0[W.orig == 0, ] * W.hat$control[W.orig == 0, ]
-      ipw0[W.orig == 1, ] <- 1
+      ipw1 <- matrix(0, nrow = nrow(W.hat$control), ncol = ncol(W.hat$control))
+      ipw1[W.orig == 1, ] <- sample.weights[W.orig == 1]
     }
     ipw0 <- ipw0 * sample.weights
   }
