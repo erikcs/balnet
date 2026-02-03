@@ -655,7 +655,7 @@ get_path <- function(fit, W.hat, W, ..., lambda, devs) {
   data.frame(lambda = lambda, ess = ess, pbr = pbr)
 }
 
-get_smd <- function(fit, W.hat, W, ..., groups) {
+get_smd <- function(fit, W.hat, W, ..., groups = NULL) {
   target <- fit[["target"]]
   sample.weights <- fit[["sample.weights"]]
   X <- fit[["X.orig"]]
