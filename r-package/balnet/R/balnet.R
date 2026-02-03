@@ -193,6 +193,62 @@ balnet <- function(
   out
 }
 
+#' Extract coefficients from a balnet object.
+#'
+#' @param object A `balnet` object.
+#' @param lambda Value(s) of the penalty parameter `lambda` at which coefficients
+#'   are required.
+#'   * If `NULL` (default), the full lambda path from the fit is used
+#'    (if new values are supplied, linear interpolation is performed).
+#'   * For dual-arm fits (control and treatment), `lambda` can be a `list` or
+#'     two-column `matrix`: the first element/column corresponds to the control
+#'     arm and the second to the treatment arm.
+#' @param ... Additional arguments (currently ignored).
+#'
+#' @return Estimated coefficients For dual-arm fits (control and treatment),
+#'   returns a list containing coefficients for each arm.
+#'
+#' @examples
+#' \donttest{
+#' n <- 100
+#' p <- 25
+#' X <- matrix(rnorm(n * p), n, p)
+#' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
+#'
+#' # Fit an ATE model.
+#' fit <- balnet(X, W)
+#'
+#' # Extract coefficients.
+#' coefs <- coef(fit)
+#' }
+#'
+#' @method coef balnet
+#' @export
+coef.balnet <- function(
+  object,
+  lambda = NULL,
+  ...
+)
+{
+  lambda <- validate_lambda(lambda)
+
+  coef0 <- coef1 <- NULL
+  if (!is.null(object[["_fit"]]$control)) {
+    coef0 <- coef(object[["_fit"]]$control, lambda = lambda[[1]])
+  }
+  if (!is.null(object[["_fit"]]$treated)) {
+    coef1 <- coef(object[["_fit"]]$treated, lambda = lambda[[2]])
+  }
+  out <- list(control = coef0, treated = coef1)
+  out.nn <- out[!vapply(out, is.null, logical(1))]
+
+  if (length(out.nn) > 1) {
+    return(out.nn)
+  } else {
+    return(out.nn[[1]])
+  }
+}
+
 #' Extract lambda sequence from a fit.
 #'
 #' @param object A `balnet` type object.
@@ -238,65 +294,10 @@ lambda.balnet <- function(
   }
 }
 
-#' Extract coefficients from a balnet object.
-#'
-#' @param object A `balnet` object.
-#' @param lambda Value(s) of the penalty parameter `lambda` at which coefficients
-#'   are required.
-#'   * If `NULL` (default), the full lambda path from the fit is used
-#'    (if new values are supplied, linear interpolation is performed).
-#'   * For dual-arm fits (control and treatment), `lambda` can be a `list` or
-#'     two-column `matrix`: the first element/column corresponds to the control
-#'     arm and the second to the treatment arm.
-#' @param ... Additional arguments (currently ignored).
-#'
-#' @return The estimated coefficients.
-#'
-#' @examples
-#' \donttest{
-#' n <- 100
-#' p <- 25
-#' X <- matrix(rnorm(n * p), n, p)
-#' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
-#'
-#' # Fit an ATE model.
-#' fit <- balnet(X, W)
-#'
-#' # Extract coefficients.
-#' coefs <- coef(fit)
-#' }
-#'
-#' @method coef balnet
-#' @export
-coef.balnet <- function(
-  object,
-  lambda = NULL,
-  ...
-)
-{
-  lambda <- validate_lambda(lambda)
-
-  coef1 <- coef0 <- NULL
-  if (!is.null(object[["_fit"]]$control)) {
-    coef0 <- coef(object[["_fit"]]$control, lambda = lambda[[1]])
-  }
-  if (!is.null(object[["_fit"]]$treated)) {
-    coef1 <- coef(object[["_fit"]]$treated, lambda = lambda[[2]])
-  }
-  out <- list(control = coef0, treated = coef1)
-  out.nn <- out[!vapply(out, is.null, logical(1))]
-
-  if (length(out.nn) > 1) {
-    return(out.nn)
-  } else {
-    return(out.nn[[1]])
-  }
-}
-
 #' Predict using a balnet object.
 #'
 #' @param object A `balnet` object.
-#' @param newx A numeric matrix.
+#' @param X A numeric matrix.
 #' @param lambda Value(s) of the penalty parameter `lambda` at which coefficients
 #'   are required.
 #'   * If `NULL` (default), the full lambda path from the fit is used
@@ -328,7 +329,7 @@ coef.balnet <- function(
 #' @export
 predict.balnet <- function(
   object,
-  newx,
+  X,
   lambda = NULL,
   type = c("response"),
   ...
@@ -336,13 +337,13 @@ predict.balnet <- function(
 {
   lambda <- validate_lambda(lambda)
   type <- match.arg(type)
-  if (missing(newx)) {
-    stop("newx required for predictions.")
+  if (missing(X)) {
+    stop("X required for predictions.")
   }
-  if (is.matrix(newx) || is.data.frame(newx)) {
-    newx <- as.matrix(newx)
-    if (!is.numeric(newx) || anyNA(newx) || ncol(newx) != object[["X.dim"]][2]) {
-      stop("X should be a numeric with same columns as training data, with no missing values.")
+  if (is.matrix(X) || is.data.frame(X)) {
+    X <- as.matrix(X)
+    if (!is.numeric(X) || anyNA(X) || ncol(X) != object[["X.dim"]][2]) {
+      stop("X should be a numeric matrix with same columns as training data, with no missing values.")
     }
   } else {
     stop("Invalid X input: should be a numeric matrix.")
@@ -350,17 +351,17 @@ predict.balnet <- function(
 
   pred0 <- pred1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
-    pred0 <- 1 - predict(object[["_fit"]]$control, newx, lambda = lambda[[1]], type = type)
+    pred0 <- 1 - predict(object[["_fit"]]$control, X, lambda = lambda[[1]], type = type)
   }
   if (!is.null(object[["_fit"]]$treated)) {
-    pred1 <- predict(object[["_fit"]]$treated, newx, lambda = lambda[[2]], type = type)
+    pred1 <- predict(object[["_fit"]]$treated, X, lambda = lambda[[2]], type = type)
   }
   out <- list(control = pred0, treated = pred1)
   out.nn <- out[!vapply(out, is.null, logical(1))]
 
   dots <- list(...)
-  .drop <- is.null(dots[[".drop"]])
-  if (length(out.nn) > 1 || !.drop) {
+  .simplify <- is.null(dots[[".simplify"]])
+  if (length(out.nn) > 1 || !.simplify) {
     return(out.nn)
   } else {
     return(out.nn[[1]])
@@ -453,8 +454,8 @@ print.balnet <- function(
   out.nn <- out[vapply(out, length, integer(1)) > 0]
 
   dots <- list(...)
-  .drop <- is.null(dots[[".drop"]])
-  if (length(out.nn) > 1 || !.drop) {
+  .simplify <- is.null(dots[[".simplify"]])
+  if (length(out.nn) > 1 || !.simplify) {
     invisible(out.nn)
   } else {
     invisible(out.nn[[1]])
@@ -518,7 +519,7 @@ plot.balnet <- function(
 
   lambda.orig <- x[["lambda"]]
   W.orig <- x[["W.orig"]]
-  W.hat <- predict.balnet(x, x[["X.orig"]], lambda = lambda, type = "response", .drop = FALSE)
+  W.hat <- predict.balnet(x, x[["X.orig"]], lambda = lambda, type = "response", .simplify = FALSE)
 
   stats0 <- stats1 <- NULL
   if (!is.null(x[["_fit"]]$control)) {
@@ -557,6 +558,87 @@ plot.balnet <- function(
   }
 }
 
+#' Extract IPW weights from a balnet object.
+#'
+#' @param object A `balnet` object.
+#' @param lambda Value(s) of the penalty parameter `lambda` at which weights
+#'   are required.
+#'   * If `NULL` (default), the full lambda path from the fit is used
+#'    (if new values are supplied, linear interpolation is performed).
+#'   * For dual-arm fits (control and treatment), `lambda` can be a `list` or
+#'     two-column `matrix`: the first element/column corresponds to the control
+#'     arm and the second to the treatment arm.
+#' @param ... Additional arguments (currently ignored).
+#'
+#' @return Estimated IPW weights. For dual-arm fits (control and treatment),
+#'   returns a list containing IPW weights for each arm.
+#'
+#' @examples
+#' \donttest{
+#' n <- 100
+#' p <- 25
+#' X <- matrix(rnorm(n * p), n, p)
+#' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
+#'
+#' # Fit an ATE model.
+#' fit <- balnet(X, W)
+#'
+#' # Extract IPW weights.
+#' ipw <- weights(fit, lambda = 0)
+#' }
+#'
+#' @export
+weights <- function(
+  object,
+  lambda = NULL,
+  ...
+)
+{
+  UseMethod("weights")
+}
+
+#' @rdname weights
+#' @method weights balnet
+#' @export
+weights.balnet <- function(
+  object,
+  lambda = NULL,
+  ...
+)
+{
+  lambda <- validate_lambda(lambda)
+  X.orig <- object[["X.orig"]]
+  W.orig <- object[["W.orig"]]
+  sample.weights <- object[["sample.weights"]]
+  target <- object[["target"]]
+
+  W.hat <- predict.balnet(object, X.orig, lambda = lambda, type = "response", .simplify = FALSE)
+
+  ipw0 <- ipw1 <- NULL
+  if (!is.null(object[["_fit"]]$control)) {
+    ipw0 <- matrix(0, nrow = nrow(W.hat$control), ncol = ncol(W.hat$control))
+    ipw0[W.orig == 0, ] <- 1 / (1 - W.hat$control[W.orig == 0, ])
+    if (target == "ATT") {
+      ipw0[W.orig == 0, ] <- ipw0[W.orig == 0, ] * W.hat$control[W.orig == 0, ]
+      ipw0[W.orig == 1, ] <- 1
+    }
+    ipw0 <- ipw0 * sample.weights
+  }
+  if (!is.null(object[["_fit"]]$treated)) {
+    ipw1 <- matrix(0, nrow = nrow(W.hat$treated), ncol = ncol(W.hat$treated))
+    ipw1[W.orig == 1, ] <- 1 / W.hat$treated[W.orig == 1, ]
+    ipw1 <- ipw1 * sample.weights
+  }
+  out <- list(control = ipw0, treated = ipw1)
+  out.nn <- out[!vapply(out, is.null, logical(1))]
+
+  if (length(out.nn) > 1) {
+    return(out.nn)
+  } else {
+    return(out.nn[[1]])
+  }
+}
+
 get_path <- function(fit, W.hat, W, ..., lambda, devs) {
   target <- fit[["target"]]
   sample.weights <- fit[["sample.weights"]]
@@ -573,7 +655,7 @@ get_path <- function(fit, W.hat, W, ..., lambda, devs) {
   data.frame(lambda = lambda, ess = ess, pbr = pbr)
 }
 
-get_smd <- function(fit, W.hat, W, ..., groups) {
+get_smd <- function(fit, W.hat, W, ..., groups = NULL) {
   target <- fit[["target"]]
   sample.weights <- fit[["sample.weights"]]
   X <- fit[["X.orig"]]

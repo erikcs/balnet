@@ -1,23 +1,3 @@
-get_balance_loss <- function(object, X, W, sample.weights, lambda) {
-  .balance_loss <- function(W) {
-    colSums(sample.weights * (W * exp(-eta) + (1 - W) * eta)) / sum(sample.weights)
-  }
-
-  lambda <- validate_lambda(lambda)
-  loss0 <- loss1 <- NULL
-  if (!is.null(object[["_fit"]]$control)) {
-    eta <- predict(object[["_fit"]]$control, X, lambda = lambda[[1]], type = "link")
-    loss0 <- .balance_loss(1 - W)
-  }
-  if (!is.null(object[["_fit"]]$treated)) {
-    eta <- predict(object[["_fit"]]$treated, X, lambda = lambda[[2]], type = "link")
-    loss1 <- .balance_loss(W)
-  }
-  out <- list(control = loss0, treated = loss1)
-
-  out[!vapply(out, is.null, logical(1))]
-}
-
 #' Cross-validation for balnet.
 #'
 #' @param X A numeric matrix or data frame with pre-treatment covariates.
@@ -121,38 +101,14 @@ cv.balnet <- function(
   fit.full
 }
 
-#' @rdname lambda
-#' @method lambda cv.balnet
-#' @export
-lambda.cv.balnet <- function(
-  object,
-  lambda = "lambda.min",
-  ...
-)
-{
-  if (identical(lambda, "lambda.min")) {
-    out <- object[["cv.info"]]$lambda.min
-  } else if (is.null(lambda)) {
-    return(lambda.balnet(object))
-  } else {
-    stop("Invalid lambda.")
-  }
-  out.nn <- out[!vapply(out, is.null, logical(1))]
-
-  if (length(out.nn) > 1) {
-    return(out.nn)
-  } else {
-    return(out.nn[[1]])
-  }
-}
-
 #' Extract coefficients from a cv.balnet object.
 #'
 #' @param object A `cv.balnet` object.
 #' @param lambda The lambda to use. Defaults to the cross-validated lambda.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return The estimated coefficients.
+#' @return Estimated coefficients For dual-arm fits (control and treatment),
+#'   returns a list containing coefficients for each arm.
 #'
 #' @examples
 #' \donttest{
@@ -183,10 +139,35 @@ coef.cv.balnet <- function(
   coef.balnet(object, lambda = lambda)
 }
 
+#' @rdname lambda
+#' @method lambda cv.balnet
+#' @export
+lambda.cv.balnet <- function(
+  object,
+  lambda = "lambda.min",
+  ...
+)
+{
+  if (identical(lambda, "lambda.min")) {
+    out <- object[["cv.info"]]$lambda.min
+  } else if (is.null(lambda)) {
+    return(lambda.balnet(object))
+  } else {
+    stop("Invalid lambda.")
+  }
+  out.nn <- out[!vapply(out, is.null, logical(1))]
+
+  if (length(out.nn) > 1) {
+    return(out.nn)
+  } else {
+    return(out.nn[[1]])
+  }
+}
+
 #' Predict using a cv.balnet object.
 #'
 #' @param object A `cv.balnet` object.
-#' @param newx A numeric matrix.
+#' @param X A numeric matrix.
 #' @param lambda The lambda to use. Defaults to the cross-validated lambda.
 #' @param type The type of predictions. Default is "response" (propensity scores).
 #' @param ... Additional arguments (currently ignored).
@@ -212,7 +193,7 @@ coef.cv.balnet <- function(
 #' @export
 predict.cv.balnet <- function(
   object,
-  newx,
+  X,
   lambda = "lambda.min",
   type = c("response"),
   ...
@@ -222,7 +203,7 @@ predict.cv.balnet <- function(
     lambda <- object[["cv.info"]]$lambda.min
   }
 
-  predict.balnet(object, newx, lambda = lambda, type = type)
+  predict.balnet(object, X, lambda = lambda, type = type)
 }
 
 #' Print a cv.balnet object.
@@ -255,7 +236,7 @@ print.cv.balnet <- function(
 {
   cat("Call: ", paste(deparse(x$call), collapse = "\n"), "\n\n")
 
-  utils::capture.output(out <- print.balnet(x, digits = digits, drop = FALSE, ...))
+  utils::capture.output(out <- print.balnet(x, digits = digits, .simplify = FALSE, ...))
   df0 <- df1 <- data.frame()
   if (!is.null(x[["_fit"]]$control)) {
     idx.min0 <- x[["cv.info"]]$idx.min[[1]]
@@ -304,4 +285,40 @@ plot.cv.balnet <- function(
   }
 
   plot.balnet(x, lambda = lambda, ...)
+}
+
+#' @rdname weights
+#' @method weights cv.balnet
+#' @export
+weights.cv.balnet <- function(
+  object,
+  lambda = "lambda.min",
+  ...
+)
+{
+  if (identical(lambda, "lambda.min")) {
+    lambda <- object[["cv.info"]]$lambda.min
+  }
+
+  weights.balnet(object, lambda = lambda)
+}
+
+get_balance_loss <- function(object, X, W, sample.weights, lambda) {
+  .balance_loss <- function(W) {
+    colSums(sample.weights * (W * exp(-eta) + (1 - W) * eta)) / sum(sample.weights)
+  }
+
+  lambda <- validate_lambda(lambda)
+  loss0 <- loss1 <- NULL
+  if (!is.null(object[["_fit"]]$control)) {
+    eta <- predict(object[["_fit"]]$control, X, lambda = lambda[[1]], type = "link")
+    loss0 <- .balance_loss(1 - W)
+  }
+  if (!is.null(object[["_fit"]]$treated)) {
+    eta <- predict(object[["_fit"]]$treated, X, lambda = lambda[[2]], type = "link")
+    loss1 <- .balance_loss(W)
+  }
+  out <- list(control = loss0, treated = loss1)
+
+  out[!vapply(out, is.null, logical(1))]
 }

@@ -4,12 +4,12 @@
 \alias{predict.balnet}
 \title{Predict using a balnet object.}
 \usage{
-\method{predict}{balnet}(object, newx, lambda = NULL, type = c("response"), ...)
+\method{predict}{balnet}(object, X, lambda = NULL, type = c("response"), ...)
 }
 \arguments{
 \item{object}{A \code{balnet} object.}
 
-\item{newx}{A numeric matrix.}
+\item{X}{A numeric matrix.}
 
 \item{lambda}{Value(s) of the penalty parameter \code{lambda} at which coefficients
 are required.
