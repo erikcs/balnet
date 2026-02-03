@@ -286,6 +286,22 @@ plot.cv.balnet <- function(
   plot.balnet(x, lambda = lambda, ...)
 }
 
+#' @rdname weights
+#' @method weights cv.balnet
+#' @export
+weights.cv.balnet <- function(
+  object,
+  lambda = "lambda.min",
+  ...
+)
+{
+  if (identical(lambda, "lambda.min")) {
+    lambda <- object[["cv.info"]]$lambda.min
+  }
+
+  weights.balnet(object, lambda = lambda)
+}
+
 get_balance_loss <- function(object, X, W, sample.weights, lambda) {
   .balance_loss <- function(W) {
     colSums(sample.weights * (W * exp(-eta) + (1 - W) * eta)) / sum(sample.weights)
