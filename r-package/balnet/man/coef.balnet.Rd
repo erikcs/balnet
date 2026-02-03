@@ -22,7 +22,8 @@ arm and the second to the treatment arm.
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-The estimated coefficients.
+Estimated coefficients For dual-arm fits (control and treatment),
+returns a list containing coefficients for each arm.
 }
 \description{
 Extract coefficients from a balnet object.

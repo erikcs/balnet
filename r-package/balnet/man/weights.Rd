@@ -4,7 +4,7 @@
 \alias{weights}
 \alias{weights.balnet}
 \alias{weights.cv.balnet}
-\title{Extract weights from a balnet object.}
+\title{Extract IPW weights from a balnet object.}
 \usage{
 weights(object, lambda = NULL, ...)
 
@@ -28,10 +28,11 @@ arm and the second to the treatment arm.
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-IPW
+Estimated IPW weights. For dual-arm fits (control and treatment),
+returns a list containing IPW weights for each arm.
 }
 \description{
-Extract weights from a balnet object.
+Extract IPW weights from a balnet object.
 }
 \examples{
 \donttest{

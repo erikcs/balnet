@@ -107,7 +107,8 @@ cv.balnet <- function(
 #' @param lambda The lambda to use. Defaults to the cross-validated lambda.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return The estimated coefficients.
+#' @return Estimated coefficients For dual-arm fits (control and treatment),
+#'   returns a list containing coefficients for each arm.
 #'
 #' @examples
 #' \donttest{

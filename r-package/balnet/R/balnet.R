@@ -205,7 +205,8 @@ balnet <- function(
 #'     arm and the second to the treatment arm.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return The estimated coefficients.
+#' @return Estimated coefficients For dual-arm fits (control and treatment),
+#'   returns a list containing coefficients for each arm.
 #'
 #' @examples
 #' \donttest{
@@ -557,7 +558,7 @@ plot.balnet <- function(
   }
 }
 
-#' Extract weights from a balnet object.
+#' Extract IPW weights from a balnet object.
 #'
 #' @param object A `balnet` object.
 #' @param lambda Value(s) of the penalty parameter `lambda` at which weights
@@ -569,7 +570,8 @@ plot.balnet <- function(
 #'     arm and the second to the treatment arm.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return IPW
+#' @return Estimated IPW weights. For dual-arm fits (control and treatment),
+#'   returns a list containing IPW weights for each arm.
 #'
 #' @examples
 #' \donttest{
