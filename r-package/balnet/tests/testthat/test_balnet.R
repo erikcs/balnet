@@ -151,6 +151,17 @@ test_that("sample.weighted balnet identical to duplication", {
     capture.output(print(fit.wt))[-1],
     capture.output(print(fit.dupe))[-1]
   )
+
+  Y <- runif(n)
+  YY <- c(Y, Y[to.duplicate])
+  expect_equal(
+    apply(weights(fit.wt)$control, 2, function(x) weighted.mean(Y, x)),
+    apply(weights(fit.dupe)$control, 2, function(x) weighted.mean(YY, x))
+  )
+  expect_equal(
+    apply(weights(fit.wt)$treated, 2, function(x) weighted.mean(Y, x)),
+    apply(weights(fit.dupe)$treated, 2, function(x) weighted.mean(YY, x))
+  )
 })
 
 test_that("balnet has not changed", {
