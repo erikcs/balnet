@@ -4,7 +4,7 @@
 \alias{weights.balnet}
 \title{Extract weights from a balnet object.}
 \usage{
-\method{weights}{balnet}(object, X = NULL, W = NULL, lambda = NULL, sample.weights = NULL, ...)
+\method{weights}{balnet}(object, lambda = NULL, ...)
 }
 \arguments{
 \item{object}{A \code{balnet} object.}
