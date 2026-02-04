@@ -47,7 +47,7 @@ In this simulated example, it is not possible to find weights that *exactly* bal
 
 ## The role of λ
 
-For lasso-regularized generalized linear models, $\lambda$ is often interpreted as a budget on the overall magnitude of the coefficients. In the covariate balancing framework, the interpretation is different. Covariate balancing loss functions arise as the primal formulation of an optimization problem that minimizes imbalance subject to constraints on balance. For the lasso case, $\lambda$ can be interpreted as the maximum allowable absolute SMD across covariates.
+For lasso-regularized generalized linear models, $\lambda$ is often interpreted as a budget on the overall magnitude of the coefficients. In the covariate balancing framework, the interpretation is different. Covariate balancing loss functions arise as the primal formulation of an optimization problem that constrains imbalance. In the lasso case, $\lambda$ directly controls balance: it equals the _maximum allowable absolute standardized mean difference_ (SMD) across covariates (since `balnet` standardizes covariates by default).
 
 To illustrate this, consider $\lambda^{\max} \approx 0.62$ for the treated arm in the printed output. This value corresponds to the imbalance in the unweighted treatment arm data and can be verified directly:
 
