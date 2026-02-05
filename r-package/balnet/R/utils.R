@@ -264,7 +264,7 @@ interpolate_lambda <- function(lambda, s) {
   s <- pmax(pmin(s, max(lambda)), min(lambda))
 
   # Map s to fractional indices
-  coord <- approx(x = lambda, y = seq_along(lambda), xout = s, rule = 2)$y
+  coord <- stats::approx(x = lambda, y = seq_along(lambda), xout = s, rule = 2)$y
   left  <- floor(coord)
   right <- ceiling(coord)
 
