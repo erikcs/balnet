@@ -4,12 +4,12 @@
 \alias{predict.cv.balnet}
 \title{Predict using a cv.balnet object.}
 \usage{
-\method{predict}{cv.balnet}(object, X, lambda = "lambda.min", type = c("response"), ...)
+\method{predict}{cv.balnet}(object, newdata, lambda = "lambda.min", type = c("response"), ...)
 }
 \arguments{
 \item{object}{A \code{cv.balnet} object.}
 
-\item{X}{A numeric matrix.}
+\item{newdata}{A numeric matrix.}
 
 \item{lambda}{The lambda to use. Defaults to the cross-validated lambda.}
 

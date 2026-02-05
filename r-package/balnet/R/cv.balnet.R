@@ -145,7 +145,7 @@ coef.cv.balnet <- function(
 #' Predict using a cv.balnet object.
 #'
 #' @param object A `cv.balnet` object.
-#' @param X A numeric matrix.
+#' @param newdata A numeric matrix.
 #' @param lambda The lambda to use. Defaults to the cross-validated lambda.
 #' @param type The type of predictions. Default is "response" (propensity scores).
 #' @param ... Additional arguments (currently ignored).
@@ -171,7 +171,7 @@ coef.cv.balnet <- function(
 #' @export
 predict.cv.balnet <- function(
   object,
-  X,
+  newdata,
   lambda = "lambda.min",
   type = c("response"),
   ...
@@ -181,7 +181,7 @@ predict.cv.balnet <- function(
     lambda <- object[["_cv.info"]]$lambda.min
   }
 
-  predict.balnet(object, X, lambda = lambda, type = type)
+  predict.balnet(object, newdata, lambda = lambda, type = type)
 }
 
 #' Print a cv.balnet object.

@@ -4,12 +4,12 @@
 \alias{predict.balnet.fit}
 \title{Predict using a balnet.fit object.}
 \usage{
-\method{predict}{balnet.fit}(object, X, lambda = NULL, type = c("response", "link"), ...)
+\method{predict}{balnet.fit}(object, newdata, lambda = NULL, type = c("response", "link"), ...)
 }
 \arguments{
 \item{object}{A balnet.fit object.}
 
-\item{X}{A numeric matrix.}
+\item{newdata}{A numeric matrix.}
 
 \item{lambda}{Value(s) for the penalty parameter. If NULL (default), the
 lambda path on which \code{object} was fit is used. If different lambda values
