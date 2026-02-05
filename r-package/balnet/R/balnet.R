@@ -3,6 +3,45 @@
 #' Fits regularized logistic regression models using covariate balancing loss
 #' functions, targeting the ATE, ATT, or treated/control means.
 #'
+#' This function finds weights \eqn{\hat\gamma_i(w)} that approximately
+#' balance covariate means to a target vector:
+#' \deqn{
+#'   \frac{1}{n} \sum_{i=1}^n \hat\gamma_i(W_i) X_i
+#'   = \bar X_{\mathrm{target}}.
+#' }
+#' With lasso regularization (`alpha = 1`), imbalance is controlled in the
+#' \eqn{\ell_\infty} sense, allowing absolute slack of at most
+#' \eqn{\lambda} per covariate.
+#'
+#' For `target = "ATE"`, two logistic models are fit to construct separate
+#' weights for the treated and control means. The arm-specific weights are
+#' \deqn{
+#'   \hat\gamma_i(1)
+#'   = \frac{W_i}{\hat e^{(1)}(X_i)},
+#'   \qquad
+#'   \hat\gamma_i(0)
+#'   = \frac{1 - W_i}{1 - \hat e^{(0)}(X_i)},
+#' }
+#' with target mean
+#' \deqn{
+#'   \bar X_{\mathrm{target}}
+#'   = \frac{1}{n} \sum_{i=1}^n X_i,
+#' }
+#' where \eqn{\hat e^{(w)}(X_i)} denotes the fitted logistic propensity
+#' score model for arm \eqn{w}.
+#'
+#' For `target = "ATT"`, the weights aim to balance the control means:
+#' \deqn{
+#'   \hat\gamma_i
+#'   = (1 - W_i)
+#'     \frac{\hat e^{(0)}(X_i)}{1 - \hat e^{(0)}(X_i)},
+#' }
+#' with target mean
+#' \deqn{
+#'   \bar X_{\mathrm{target}}
+#'   = \frac{1}{n} \sum_{i=1}^n W_i X_i.
+#' }
+#'
 #' @param X A numeric matrix or data frame with pre-treatment covariates.
 #' @param W Treatment vector (0: control, 1: treated).
 #' @param target The target estimand. Default is ATE.
@@ -537,7 +576,7 @@ plot.balnet <- function(
 #' @param ... Additional arguments (currently ignored).
 #'
 #' @return Estimated IPW weights.
-#'  (for contrast fits `target` = "ATE" or "ATT", returns a list with entries for each arm).
+#'  (for contrast fits, `target` = "ATE" or "ATT", returns a list with entries for each arm).
 #'
 #' @examples
 #' \donttest{

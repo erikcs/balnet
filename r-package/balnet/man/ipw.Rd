@@ -29,7 +29,7 @@ arm and the second to the treatment.
 }
 \value{
 Estimated IPW weights.
-(for contrast fits \code{target} = "ATE" or "ATT", returns a list with entries for each arm).
+(for contrast fits, \code{target} = "ATE" or "ATT", returns a list with entries for each arm).
 }
 \description{
 Extract IPW weights from a balnet object.
