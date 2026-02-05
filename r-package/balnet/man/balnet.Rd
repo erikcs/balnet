@@ -27,66 +27,62 @@ balnet(
 \arguments{
 \item{X}{A numeric matrix or data frame with pre-treatment covariates.}
 
-\item{W}{Treatment vector (0: control, 1: treated).}
+\item{W}{Treatment vector (0 = control, 1 = treated).}
 
-\item{target}{The target estimand. Default is ATE.}
+\item{target}{The target estimand. Default is "ATE".}
 
-\item{sample.weights}{Optional sample weights. If \code{NULL} (default), then each unit receives the same weight.}
+\item{sample.weights}{Optional sample weights. If \code{NULL} (default), each unit receives the same weight.}
 
-\item{max.imbalance}{Optional upper bound on the covariate imbalance.
-For lasso penalization (\code{alpha = 1}), there is a one-to-one correspondence between the penalty parameter
-\eqn{\lambda} and the maximum allowable covariate imbalance.
-When supplied, \code{max.imbalance} is used to adjust the lambda sequence (via \code{lambda.min.ratio}) so that the
-generated lambda sequence ends at the specified imbalance level.}
+\item{max.imbalance}{Optional upper bound on the covariate imbalance. For lasso penalization
+(\code{alpha = 1}), there is a one-to-one correspondence between the penalty parameter \eqn{\lambda} and
+the maximum allowable covariate imbalance. When supplied, \code{max.imbalance} is used to adjust the lambda
+sequence (via \code{lambda.min.ratio}) so that the generated sequence ends at the specified imbalance level.}
 
-\item{nlambda}{Number of values for \code{lambda}, if generated automatically. Default is 100.}
+\item{nlambda}{Number of values for \code{lambda} if generated automatically. Default is 100.}
 
-\item{lambda.min.ratio}{Ratio between smallest and largest value of lambda. Default is 1e-2.}
+\item{lambda.min.ratio}{Ratio of smallest to largest lambda. Default is 1e-2.}
 
-\item{lambda}{Optional \code{lambda} sequence.
-By default, the \code{lambda} sequence is constructed automatically using \code{nlambda} and \code{lambda.min.ratio}
-(or \code{max.imbalance}, if specified).}
+\item{lambda}{Optional \code{lambda} sequence. By default, it is constructed automatically using \code{nlambda}
+and \code{lambda.min.ratio} (or \code{max.imbalance}, if specified).}
 
-\item{penalty.factor}{Penalty factor per feature. Default is 1 (i.e, each feature recieves the same penalty).}
+\item{penalty.factor}{Penalty factor per feature. Default is 1 (i.e., each feature receives the same penalty).}
 
-\item{groups}{An optional list of group indices for group penalization.}
+\item{groups}{Optional list of group indices for group penalization.}
 
-\item{alpha}{Elastic net mixing parameter. Default is 1 (lasso). 0 is ridge.}
+\item{alpha}{Elastic net mixing parameter. Default is 1 (lasso), 0 corresponds to ridge.}
 
-\item{standardize}{Whether to standardize the input matrix. This should only be set to \code{FALSE} if
-\code{X} already has zero-mean columns with unit variance; for \code{target = "ATT"}, standardization
-should be based on the treated group.}
+\item{standardize}{Whether to standardize the input matrix. Should only be \code{FALSE} if \code{X} already has
+zero-mean columns with unit variance. For \code{target = "ATT"}, standardization should be based on the treated group.}
 
-\item{thresh}{Coordinate descent convergence tolerance, default 1e-7.}
+\item{thresh}{Coordinate descent convergence tolerance. Default is 1e-7.}
 
-\item{maxit}{Maximum total number of coordinate descent iterations, default is 1e5.}
+\item{maxit}{Maximum number of coordinate descent iterations. Default is 1e5.}
 
 \item{verbose}{Whether to display information during fitting. Default is \code{FALSE}.}
 
-\item{num.threads}{Number of threads, default is 1.}
+\item{num.threads}{Number of threads to use. Default is 1.}
 
-\item{...}{Additional internal arguments passed to solver.}
+\item{...}{Additional internal arguments passed to the solver.}
 }
 \value{
 A fit balnet object.
 }
 \description{
-Fits regularized logistic regression models using covariate balancing loss
-functions, targeting the ATE, ATT, or treated/control means.
+Fits regularized logistic regression models using covariate balancing loss functions, targeting
+the ATE, ATT, or treated/control means.
 }
 \details{
-This function finds weights \eqn{\hat\gamma_i(w)} that approximately
-balance covariate means to a target vector:
+This function finds weights \eqn{\hat\gamma_i(w)} that approximately balance covariate means to a
+target vector:
 \deqn{
   \frac{1}{n} \sum_{i=1}^n \hat\gamma_i(W_i) X_i
   = \bar X_{\mathrm{target}}.
 }
-With lasso regularization (\code{alpha = 1}), imbalance is controlled in the
-\eqn{\ell_\infty} sense, allowing absolute slack of at most
-\eqn{\lambda} per covariate.
+With lasso regularization (\code{alpha = 1}), imbalance is controlled in the \eqn{\ell_\infty} sense,
+allowing absolute slack of at most \eqn{\lambda} per covariate.
 
-For \code{target = "ATE"}, two logistic models are fit to construct separate
-weights for the treated and control means. The arm-specific weights are
+For \code{target = "ATE"}, two logistic models are fit to construct separate weights for the treated and
+control means. The arm-specific weights are
 \deqn{
   \hat\gamma_i(1)
   = \frac{W_i}{\hat e^{(1)}(X_i)},
@@ -99,8 +95,7 @@ with target mean
   \bar X_{\mathrm{target}}
   = \frac{1}{n} \sum_{i=1}^n X_i,
 }
-where \eqn{\hat e^{(w)}(X_i)} denotes the fitted logistic propensity
-score model for arm \eqn{w}.
+where \eqn{\hat e^{(w)}(X_i)} denotes the fitted logistic propensity score model for arm \eqn{w}.
 
 For \code{target = "ATT"}, the weights aim to balance the control means:
 \deqn{

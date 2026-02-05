@@ -1,20 +1,19 @@
 #' Pathwise estimation of covariate balancing propensity scores.
 #'
-#' Fits regularized logistic regression models using covariate balancing loss
-#' functions, targeting the ATE, ATT, or treated/control means.
+#' Fits regularized logistic regression models using covariate balancing loss functions, targeting
+#' the ATE, ATT, or treated/control means.
 #'
-#' This function finds weights \eqn{\hat\gamma_i(w)} that approximately
-#' balance covariate means to a target vector:
+#' This function finds weights \eqn{\hat\gamma_i(w)} that approximately balance covariate means to a
+#' target vector:
 #' \deqn{
 #'   \frac{1}{n} \sum_{i=1}^n \hat\gamma_i(W_i) X_i
 #'   = \bar X_{\mathrm{target}}.
 #' }
-#' With lasso regularization (`alpha = 1`), imbalance is controlled in the
-#' \eqn{\ell_\infty} sense, allowing absolute slack of at most
-#' \eqn{\lambda} per covariate.
+#' With lasso regularization (`alpha = 1`), imbalance is controlled in the \eqn{\ell_\infty} sense,
+#' allowing absolute slack of at most \eqn{\lambda} per covariate.
 #'
-#' For `target = "ATE"`, two logistic models are fit to construct separate
-#' weights for the treated and control means. The arm-specific weights are
+#' For `target = "ATE"`, two logistic models are fit to construct separate weights for the treated and
+#' control means. The arm-specific weights are
 #' \deqn{
 #'   \hat\gamma_i(1)
 #'   = \frac{W_i}{\hat e^{(1)}(X_i)},
@@ -27,8 +26,7 @@
 #'   \bar X_{\mathrm{target}}
 #'   = \frac{1}{n} \sum_{i=1}^n X_i,
 #' }
-#' where \eqn{\hat e^{(w)}(X_i)} denotes the fitted logistic propensity
-#' score model for arm \eqn{w}.
+#' where \eqn{\hat e^{(w)}(X_i)} denotes the fitted logistic propensity score model for arm \eqn{w}.
 #'
 #' For `target = "ATT"`, the weights aim to balance the control means:
 #' \deqn{
@@ -43,30 +41,27 @@
 #' }
 #'
 #' @param X A numeric matrix or data frame with pre-treatment covariates.
-#' @param W Treatment vector (0: control, 1: treated).
-#' @param target The target estimand. Default is ATE.
-#' @param sample.weights Optional sample weights. If `NULL` (default), then each unit receives the same weight.
-#' @param max.imbalance Optional upper bound on the covariate imbalance.
-#'  For lasso penalization (`alpha = 1`), there is a one-to-one correspondence between the penalty parameter
-#'  \eqn{\lambda} and the maximum allowable covariate imbalance.
-#'  When supplied, `max.imbalance` is used to adjust the lambda sequence (via `lambda.min.ratio`) so that the
-#'  generated lambda sequence ends at the specified imbalance level.
-#' @param nlambda Number of values for `lambda`, if generated automatically. Default is 100.
-#' @param lambda.min.ratio Ratio between smallest and largest value of lambda. Default is 1e-2.
-#' @param lambda Optional `lambda` sequence.
-#'  By default, the `lambda` sequence is constructed automatically using `nlambda` and `lambda.min.ratio`
-#'  (or `max.imbalance`, if specified).
-#' @param penalty.factor Penalty factor per feature. Default is 1 (i.e, each feature recieves the same penalty).
-#' @param groups An optional list of group indices for group penalization.
-#' @param alpha Elastic net mixing parameter. Default is 1 (lasso). 0 is ridge.
-#' @param standardize Whether to standardize the input matrix. This should only be set to `FALSE` if
-#'  `X` already has zero-mean columns with unit variance; for `target = "ATT"`, standardization
-#'  should be based on the treated group.
-#' @param thresh Coordinate descent convergence tolerance, default 1e-7.
-#' @param maxit Maximum total number of coordinate descent iterations, default is 1e5.
+#' @param W Treatment vector (0 = control, 1 = treated).
+#' @param target The target estimand. Default is "ATE".
+#' @param sample.weights Optional sample weights. If `NULL` (default), each unit receives the same weight.
+#' @param max.imbalance Optional upper bound on the covariate imbalance. For lasso penalization
+#'   (`alpha = 1`), there is a one-to-one correspondence between the penalty parameter \eqn{\lambda} and
+#'   the maximum allowable covariate imbalance. When supplied, `max.imbalance` is used to adjust the lambda
+#'   sequence (via `lambda.min.ratio`) so that the generated sequence ends at the specified imbalance level.
+#' @param nlambda Number of values for `lambda` if generated automatically. Default is 100.
+#' @param lambda.min.ratio Ratio of smallest to largest lambda. Default is 1e-2.
+#' @param lambda Optional `lambda` sequence. By default, it is constructed automatically using `nlambda`
+#'   and `lambda.min.ratio` (or `max.imbalance`, if specified).
+#' @param penalty.factor Penalty factor per feature. Default is 1 (i.e., each feature receives the same penalty).
+#' @param groups Optional list of group indices for group penalization.
+#' @param alpha Elastic net mixing parameter. Default is 1 (lasso), 0 corresponds to ridge.
+#' @param standardize Whether to standardize the input matrix. Should only be `FALSE` if `X` already has
+#'   zero-mean columns with unit variance. For `target = "ATT"`, standardization should be based on the treated group.
+#' @param thresh Coordinate descent convergence tolerance. Default is 1e-7.
+#' @param maxit Maximum number of coordinate descent iterations. Default is 1e5.
 #' @param verbose Whether to display information during fitting. Default is `FALSE`.
-#' @param num.threads Number of threads, default is 1.
-#' @param ... Additional internal arguments passed to solver.
+#' @param num.threads Number of threads to use. Default is 1.
+#' @param ... Additional internal arguments passed to the solver.
 #'
 #' @return A fit balnet object.
 #'
@@ -247,7 +242,7 @@ balnet <- function(
 #'     arm and the second to the treatment.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return Estimated coefficients
+#' @return Estimated logistic coefficients
 #'  (for dual-arm fits, returns a list with entries for each arm).
 #'
 #'

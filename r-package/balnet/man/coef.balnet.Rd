@@ -22,7 +22,7 @@ arm and the second to the treatment.
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-Estimated coefficients
+Estimated logistic coefficients
 (for dual-arm fits, returns a list with entries for each arm).
 }
 \description{
