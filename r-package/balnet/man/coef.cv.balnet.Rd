@@ -14,8 +14,8 @@
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-Estimated coefficients For dual-arm fits (control and treatment),
-returns a list containing coefficients for each arm.
+Estimated coefficients.
+(for dual-arm fits, returns a list with entries for each arm).
 }
 \description{
 Extract coefficients from a cv.balnet object.

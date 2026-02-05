@@ -18,8 +18,8 @@
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-Estimated predictions. For dual-arm fits (control and treatment),
-returns a list containing predictions for each arm.
+Estimated predictions.
+(for dual-arm fits, returns a list with entries for each arm).
 }
 \description{
 Predict using a cv.balnet object.

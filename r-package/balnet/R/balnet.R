@@ -201,15 +201,16 @@ balnet <- function(
 #' @param object A `balnet` object.
 #' @param lambda Value(s) of the penalty parameter `lambda` at which coefficients
 #'   are required.
-#'   * If `NULL` (default), the full lambda path from the fit is used
-#'    (if new values are supplied, linear interpolation is performed).
-#'   * For dual-arm fits (control and treatment), `lambda` can be a `list` or
+#'   * If `NULL` (default), the full lambda path from the fit is used.
+#'   * If new values are supplied, linear interpolation is performed.
+#'     For dual-arm fits (`target` = "ATE"), `lambda` can be a `list` or
 #'     two-column `matrix`: the first element/column corresponds to the control
-#'     arm and the second to the treatment arm.
+#'     arm and the second to the treatment.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return Estimated coefficients For dual-arm fits (control and treatment),
-#'   returns a list containing coefficients for each arm.
+#' @return Estimated coefficients
+#'  (for dual-arm fits, returns a list with entries for each arm).
+#'
 #'
 #' @examples
 #' \donttest{
@@ -258,16 +259,16 @@ coef.balnet <- function(
 #' @param newdata A numeric matrix.
 #' @param lambda Value(s) of the penalty parameter `lambda` at which coefficients
 #'   are required.
-#'   * If `NULL` (default), the full lambda path from the fit is used
-#'    (if new values are supplied, linear interpolation is performed).
-#'   * For dual-arm fits (control and treatment), `lambda` can be a `list` or
+#'   * If `NULL` (default), the full lambda path from the fit is used.
+#'   * If new values are supplied, linear interpolation is performed.
+#'     For dual-arm fits (`target` = "ATE"), `lambda` can be a `list` or
 #'     two-column `matrix`: the first element/column corresponds to the control
-#'     arm and the second to the treatment arm.
+#'     arm and the second to the treatment.
 #' @param type The type of predictions. Default is "response" (propensity scores).
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return Estimated predictions. For dual-arm fits (control and treatment),
-#'   returns a list containing predictions for each arm.
+#' @return Estimated predictions
+#'  (for dual-arm fits, returns a list with entries for each arm).
 #'
 #' @examples
 #' \donttest{
@@ -519,17 +520,17 @@ plot.balnet <- function(
 #' Extract IPW weights from a balnet object.
 #'
 #' @param object A `balnet` object.
-#' @param lambda Value(s) of the penalty parameter `lambda` at which weights
+#' @param lambda Value(s) of the penalty parameter `lambda` at which coefficients
 #'   are required.
-#'   * If `NULL` (default), the full lambda path from the fit is used
-#'    (if new values are supplied, linear interpolation is performed).
-#'   * For dual-arm fits (control and treatment), `lambda` can be a `list` or
+#'   * If `NULL` (default), the full lambda path from the fit is used.
+#'   * If new values are supplied, linear interpolation is performed.
+#'     For dual-arm fits (`target` = "ATE"), `lambda` can be a `list` or
 #'     two-column `matrix`: the first element/column corresponds to the control
-#'     arm and the second to the treatment arm.
+#'     arm and the second to the treatment.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return Estimated IPW weights. For contrast fits (ATE and ATT),
-#'   returns a list containing IPW weights for each arm.
+#' @return Estimated IPW weights.
+#'  (for contrast fits `target` = "ATE" or "ATT", returns a list with entries for each arm).
 #'
 #' @examples
 #' \donttest{

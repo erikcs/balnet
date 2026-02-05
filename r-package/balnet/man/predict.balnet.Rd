@@ -14,11 +14,11 @@
 \item{lambda}{Value(s) of the penalty parameter \code{lambda} at which coefficients
 are required.
 \itemize{
-\item If \code{NULL} (default), the full lambda path from the fit is used
-(if new values are supplied, linear interpolation is performed).
-\item For dual-arm fits (control and treatment), \code{lambda} can be a \code{list} or
+\item If \code{NULL} (default), the full lambda path from the fit is used.
+\item If new values are supplied, linear interpolation is performed.
+For dual-arm fits (\code{target} = "ATE"), \code{lambda} can be a \code{list} or
 two-column \code{matrix}: the first element/column corresponds to the control
-arm and the second to the treatment arm.
+arm and the second to the treatment.
 }}
 
 \item{type}{The type of predictions. Default is "response" (propensity scores).}
@@ -26,8 +26,8 @@ arm and the second to the treatment arm.
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-Estimated predictions. For dual-arm fits (control and treatment),
-returns a list containing predictions for each arm.
+Estimated predictions
+(for dual-arm fits, returns a list with entries for each arm).
 }
 \description{
 Predict using a balnet object.
