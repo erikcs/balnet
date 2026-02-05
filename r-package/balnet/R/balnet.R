@@ -423,12 +423,19 @@ print.balnet <- function(
 
 #' Plot diagnostics for a `balnet` object.
 #'
+#' Shows effective sample size (ESS) and percent bias reduction (PBR; reduction
+#' in mean absolute imbalance) along the regularization path, computed from IPW
+#' weights and normalized to percentages. The right-hand axis maps these values
+#' to the coefficient of variation (CV) of the weights.
+#'
 #' @param x A `balnet` object.
 #' @param lambda If NULL (default) diagnostics over the lambda path is shown.
-#' Otherwise, diagnostics for a single lambda value is shown.
+#' Otherwise, covariate balance at provided lambda value is shown
 #' (if target = "ATE", lambda can be a 2-vector, arm 0 and arm 1.)
-#' @param groups A list of group indices.
-#' @param max The number of covariates to display in balance plot. Defaults to all covariates.
+#' @param groups Optional named list of contiguous covariate index ranges to
+#'   aggregate into a single variable before computing covariate imbalance
+#'   (e.g., `list(demographics = 4:12)`).
+#' @param max The number of covariates to display in covariate balance plot. Defaults to all covariates.
 #' @param ... Additional arguments.
 #'
 #' @return Invisibly returns a list with the information underlying the plot.
@@ -661,12 +668,16 @@ plot_path <- function(stats, ...) {
     xlim = rev(range(lambdas[lambdas > 0])),
     ylim = c(min(0, min(pbr)), 100),
     xlab = expression(Log(lambda)),
-    ylab = "percent"
+    ylab = "Percent  (CV of weights)"
   )
   graphics::points(lambdas[lambdas > 0], ess[lambdas > 0], type = "l", col = "dodgerblue3")
   graphics::mtext("PBR", side = 3, adj = 1, line = 1 )
   graphics::mtext("ESS", side = 3, adj = 1, line = 0, col = "dodgerblue3")
   graphics::abline(h = 0)
+  # coeff of variation of weights is sqrt(100 / ESS%  - 1)
+  cv.ticks <- c(0, 0.5, 1, 1.5, 2, 3)
+  ess.pos <- 100 / (1 + cv.ticks^2)
+  graphics::axis(side = 4, at = ess.pos, labels = cv.ticks, las = 0, cex.axis = 0.8)
 }
 
 plot_smd <- function(stats, ..., max = NULL) {

@@ -10,12 +10,14 @@
 \item{x}{A \code{balnet} object.}
 
 \item{lambda}{If NULL (default) diagnostics over the lambda path is shown.
-Otherwise, diagnostics for a single lambda value is shown.
+Otherwise, covariate balance at provided lambda value is shown
 (if target = "ATE", lambda can be a 2-vector, arm 0 and arm 1.)}
 
-\item{groups}{A list of group indices.}
+\item{groups}{Optional named list of contiguous covariate index ranges to
+aggregate into a single variable before computing covariate imbalance
+(e.g., \code{list(demographics = 4:12)}).}
 
-\item{max}{The number of covariates to display in balance plot. Defaults to all covariates.}
+\item{max}{The number of covariates to display in covariate balance plot. Defaults to all covariates.}
 
 \item{...}{Additional arguments.}
 }
@@ -23,7 +25,10 @@ Otherwise, diagnostics for a single lambda value is shown.
 Invisibly returns a list with the information underlying the plot.
 }
 \description{
-Plot diagnostics for a \code{balnet} object.
+Shows effective sample size (ESS) and percent bias reduction (PBR; reduction
+in mean absolute imbalance) along the regularization path, computed from IPW
+weights and normalized to percentages. The right-hand axis maps these values
+to the coefficient of variation (CV) of the weights.
 }
 \examples{
 \donttest{
