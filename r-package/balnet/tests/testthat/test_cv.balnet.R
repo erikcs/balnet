@@ -27,7 +27,7 @@ test_that("cv.balnet is internally consistent", {
 
   expect_equal(
     coef(cv.fit),
-    coef(fit, lambda = cv.fit$cv.info$lambda.min)
+    coef(fit, lambda = cv.fit$`_cv.info`$lambda.min)
   )
   expect_equal(
     coef(cv.fit, lambda = list(0, 42)),
@@ -35,7 +35,7 @@ test_that("cv.balnet is internally consistent", {
   )
   expect_equal(
     predict(cv.fit, X),
-    predict(fit, X, lambda = cv.fit$cv.info$lambda.min)
+    predict(fit, X, lambda = cv.fit$`_cv.info`$lambda.min)
   )
   expect_equal(
     predict(cv.fit, X, lambda = list(0, 42)),

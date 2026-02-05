@@ -55,7 +55,7 @@ cv.balnet <- function(
 
   if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]]) message("Fitting full model")
   fit.full <- balnet(X, W, ...)
-  lambda.full <- fit.full[["lambda"]]
+  lambda.full <- fit.full[["_lambda"]]
   sample.weights <- fit.full[["sample.weights"]]
 
   cv.list <- list()
@@ -87,14 +87,17 @@ cv.balnet <- function(
     idx.min1 <- which.min(cv.mean1)
     lambda.min1 <- lambda.full[["treated"]][idx.min1]
   }
+  lambda.min <- list(control = lambda.min0, treated = lambda.min1)
+  lambda.min.out <- lambda.min[!vapply(lambda.min, is.null, logical(1))]
   cv.info <- list(
     "cv.mean" = list(control = cv.mean0, treated = cv.mean1),
     "idx.min" = list(control = idx.min0, treated = idx.min1),
-    "lambda.min" = list(control = lambda.min0, treated = lambda.min1),
+    "lambda.min" = lambda.min,
     "type.measure" = type.measure
   )
 
-  fit.full[["cv.info"]] <- cv.info # TODO-balnet: store "keep"-like entry like glmnet?
+  fit.full[["lambda.min"]] <- if (length(lambda.min.out) > 1) lambda.min.out else lambda.min.out[[1]]
+  fit.full[["_cv.info"]] <- cv.info
   fit.full[["call"]] <- match.call()
   class(fit.full) <- c("cv.balnet", class(fit.full))
 
@@ -133,35 +136,10 @@ coef.cv.balnet <- function(
 )
 {
   if (identical(lambda, "lambda.min")) {
-    lambda <- object[["cv.info"]]$lambda.min
+    lambda <- object[["_cv.info"]]$lambda.min
   }
 
   coef.balnet(object, lambda = lambda)
-}
-
-#' @rdname lambda
-#' @method lambda cv.balnet
-#' @export
-lambda.cv.balnet <- function(
-  object,
-  lambda = "lambda.min",
-  ...
-)
-{
-  if (identical(lambda, "lambda.min")) {
-    out <- object[["cv.info"]]$lambda.min
-  } else if (is.null(lambda)) {
-    return(lambda.balnet(object))
-  } else {
-    stop("Invalid lambda.")
-  }
-  out.nn <- out[!vapply(out, is.null, logical(1))]
-
-  if (length(out.nn) > 1) {
-    return(out.nn)
-  } else {
-    return(out.nn[[1]])
-  }
 }
 
 #' Predict using a cv.balnet object.
@@ -200,7 +178,7 @@ predict.cv.balnet <- function(
 )
 {
   if (identical(lambda, "lambda.min")) {
-    lambda <- object[["cv.info"]]$lambda.min
+    lambda <- object[["_cv.info"]]$lambda.min
   }
 
   predict.balnet(object, X, lambda = lambda, type = type)
@@ -239,15 +217,15 @@ print.cv.balnet <- function(
   utils::capture.output(out <- print.balnet(x, digits = digits, .simplify = FALSE, ...))
   df0 <- df1 <- data.frame()
   if (!is.null(x[["_fit"]]$control)) {
-    idx.min0 <- x[["cv.info"]]$idx.min[[1]]
+    idx.min0 <- x[["_cv.info"]]$idx.min[[1]]
     df0 <- cbind(Arm = "Control", out$control[idx.min0, ], Index = idx.min0)
   }
   if (!is.null(x[["_fit"]]$treated)) {
-    idx.min1 <- x[["cv.info"]]$idx.min[[2]]
+    idx.min1 <- x[["_cv.info"]]$idx.min[[2]]
     df1 <- cbind(Arm = "Treated", out$treated[idx.min1, ], Index = idx.min1)
   }
 
-  type.measure <- paste0("type.measure = ", x[["cv.info"]]$type.measure)
+  type.measure <- paste0("type.measure = ", x[["_cv.info"]]$type.measure)
   cat("Cross-validated lambda minimizing ", type.measure, ":\n", sep = "")
   print(rbind(df0, df1), digits = digits, row.names = FALSE, right = FALSE)
 }
@@ -281,7 +259,7 @@ plot.cv.balnet <- function(
 )
 {
   if (identical(lambda, "lambda.min")) {
-    lambda <- x[["cv.info"]]$lambda.min
+    lambda <- x[["_cv.info"]]$lambda.min
   }
 
   plot.balnet(x, lambda = lambda, ...)
@@ -297,7 +275,7 @@ ipw.cv.balnet <- function(
 )
 {
   if (identical(lambda, "lambda.min")) {
-    lambda <- object[["cv.info"]]$lambda.min
+    lambda <- object[["_cv.info"]]$lambda.min
   }
 
   ipw.balnet(object, lambda = lambda)
