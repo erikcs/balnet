@@ -28,7 +28,7 @@ arm and the second to the treatment arm.
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-Estimated IPW weights. For dual-arm fits (control and treatment),
+Estimated IPW weights. For contrast fits (ATE and ATT),
 returns a list containing IPW weights for each arm.
 }
 \description{

@@ -528,7 +528,7 @@ plot.balnet <- function(
 #'     arm and the second to the treatment arm.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return Estimated IPW weights. For dual-arm fits (control and treatment),
+#' @return Estimated IPW weights. For contrast fits (ATE and ATT),
 #'   returns a list containing IPW weights for each arm.
 #'
 #' @examples
