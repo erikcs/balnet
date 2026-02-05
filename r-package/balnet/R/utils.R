@@ -265,12 +265,12 @@ interpolate_lambda <- function(lambda, s) {
 
   # Map s to fractional indices
   coord <- stats::approx(x = lambda, y = seq_along(lambda), xout = s, rule = 2)$y
-  left  <- floor(coord)
+  left <- floor(coord)
   right <- ceiling(coord)
 
   # Calculate weight: 1 at the left index, 0 at the right index
   # If left == right, weight is 1
-  frac <- rep_len(1.0, length(s))
+  frac <- rep_len(1, length(s))
   diff_mask <- left != right
   if (any(diff_mask)) {
     frac[diff_mask] <- (s[diff_mask] - lambda[right[diff_mask]]) /
