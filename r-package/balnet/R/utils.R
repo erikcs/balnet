@@ -256,36 +256,26 @@ collapse_X <- function(X, groups, colnames) {
   as.matrix(X %*% M)
 }
 
-# From glmnet: linear interpolation of lambda values
-lambda_interp = function(lambda, s) {
-  ### lambda is the index sequence that is produced by the model
-  ### s is the new vector at which evaluations are required.
-  ### the value is a vector of left and right indices, and a vector of fractions.
-  ### the new values are interpolated bewteen the two using the fraction
-  ### Note: lambda decreases. you take:
-  ### sfrac*left+(1-sfrac*right)
-
-  if (length(lambda) == 1) { # degenerate case of only one lambda
-    nums = length(s)
-    left = rep(1, nums)
-    right = left
-    sfrac = rep(1, nums)
+interpolate_lambda <- function(lambda, s) {
+  if (length(lambda) == 1) {
+    return(list(left = rep(1, length(s)), right = rep(1, length(s)), frac = rep(1, length(s))))
   }
-  else {
-    ## s[s > max(lambda)] = max(lambda)
-    ## s[s < min(lambda)] = min(lambda)
-    k = length(lambda)
-    sfrac <- (lambda[1] - s) / (lambda[1] - lambda[k])
-    lambda <- (lambda[1] - lambda) / (lambda[1] - lambda[k])
-    sfrac[sfrac < min(lambda)] <- min(lambda)
-    sfrac[sfrac > max(lambda)] <- max(lambda)
-    coord <- stats::approx(lambda, seq(lambda), sfrac)$y
-    left <- floor(coord)
-    right <- ceiling(coord)
-    sfrac = (sfrac - lambda[right]) / (lambda[left] - lambda[right])
-    sfrac[left == right] = 1
-    sfrac[abs(lambda[left] - lambda[right]) < .Machine$double.eps] = 1
+  # Clamp s to the lambda range
+  s <- pmax(pmin(s, max(lambda)), min(lambda))
 
+  # Map s to fractional indices
+  coord <- approx(x = lambda, y = seq_along(lambda), xout = s, rule = 2)$y
+  left  <- floor(coord)
+  right <- ceiling(coord)
+
+  # Calculate weight: 1 at the left index, 0 at the right index
+  # If left == right, weight is 1
+  frac <- rep_len(1.0, length(s))
+  diff_mask <- left != right
+  if (any(diff_mask)) {
+    frac[diff_mask] <- (s[diff_mask] - lambda[right[diff_mask]]) /
+                       (lambda[left[diff_mask]] - lambda[right[diff_mask]])
   }
-  list(left = left, right = right, frac = sfrac)
+
+  list(left = left, right = right, frac = frac)
 }

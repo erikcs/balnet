@@ -111,7 +111,7 @@ balnet.fit <- function(
 
   # GLM args
   if (is.null(weights)) {
-    weights <- rep_len(1 / length(y), length(y))
+    weights <- rep_len(1.0 / length(y), length(y))
   } else {
     weights <- weights / sum(weights)
   }
@@ -254,7 +254,7 @@ coef.balnet.fit <- function(
   if (is.null(lambda)) {
     lambda <- object[["lmdas"]]
   } else {
-    lamlist <- lambda_interp(object[["lmdas"]], lambda)
+    lamlist <- interpolate_lambda(object[["lmdas"]], lambda)
 
     betas <- Matrix::Diagonal(x = lamlist$frac) %*% betas[lamlist$left, , drop = FALSE] +
       Matrix::Diagonal(x = 1 - lamlist$frac) %*% betas[lamlist$right, , drop = FALSE]
