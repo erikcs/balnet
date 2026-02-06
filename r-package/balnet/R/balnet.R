@@ -67,28 +67,36 @@
 #'
 #' @examples
 #' \donttest{
-#' n <- 100
-#' p <- 25
+#' # Simulate data with confounding.
+#' n <- 2000
+#' p <- 10
 #' X <- matrix(rnorm(n * p), n, p)
-#' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
+#' W <- rbinom(n, 1, 1 / (1.5 + exp(X[, 2] + X[, 3])))
+#' Y <- W + 2 * log(1 + exp(X[, 1] + X[, 2] + X[, 3])) + rnorm(n)
 #'
-#' # Fit an ATE model.
-#' fit <- balnet(X, W)
+#' # Fit model targeting the ATE = E[Y(1)] - E[Y(0)].
+#' # Two logistic models are fit: one for treated, one for control.
+#' fit <- balnet(X, W, target = "ATE")
 #'
 #' # Print path summary.
 #' print(fit)
 #'
-#' # Plot path diagnostics.
+#' # Visualize the path.
 #' plot(fit)
 #'
-#' # Plot covariate imbalance at the end of the path (closest to lambda = 0).
+#' # Plot the covariate imbalance at given lambda.
+#' # Note: lambda = 0 selects the final lambda in the sequence. Scalar values
+#' # are applied to both arms.
 #' plot(fit, lambda = 0)
 #'
-#' # Predict propensity scores.
-#' pp <- predict(fit, X)
+#' # Predict propensity scores at end of lambda path.
+#' W.hat <- predict(fit, X, lambda = 0)
 #'
-#' # Extract coefficients.
-#' coefs <- coef(fit)
+#' # Get weights at end of lambda path.
+#' ipw.weights <- ipw(fit, lambda = 0)
+#'
+#' # Estimate ATE using IPW weights.
+#' mean(Y * (ipw.weights$treated - ipw.weights$control))
 #' }
 #'
 #' @export
