@@ -32,7 +32,7 @@ X <- matrix(rnorm(n * p), n, p)
 W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 
 # Fit an ATT model.
-fit <- balnet(X, W, target = "ATT")
+cv.fit <- cv.balnet(X, W, target = "ATT")
 
 # Predict propensity scores at cross-validated lambda.
 W.hat <- predict(cv.fit, X)

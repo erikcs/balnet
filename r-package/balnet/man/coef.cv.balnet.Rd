@@ -28,7 +28,7 @@ X <- matrix(rnorm(n * p), n, p)
 W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 
 # Fit an ATT model.
-fit <- balnet(X, W, target = "ATT")
+cv.fit <- cv.balnet(X, W, target = "ATT")
 
 # Extract coefficients at cross-validated lambda.
 coefs <- coef(cv.fit)
