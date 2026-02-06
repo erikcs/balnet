@@ -447,6 +447,9 @@ print.balnet <- function(
 #' in mean absolute imbalance) along the regularization path, computed from IPW
 #' weights and normalized to percentages. The right-hand axis maps these values
 #' to the coefficient of variation (CV) of the weights.
+#' Supplying the `lambda` argument displays the covariate imbalance
+#' \eqn{(\bar X_{\mathrm{weighted}} - \bar X_{\mathrm{target}}) / \sigma_{\mathrm{target}}},
+#' computed using the IPW weights at the specified `lambda`.
 #'
 #' @param x A `balnet` object.
 #' @param lambda If NULL (default) diagnostics over the lambda path is shown.

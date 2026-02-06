@@ -29,6 +29,9 @@ Shows effective sample size (ESS) and percent bias reduction (PBR; reduction
 in mean absolute imbalance) along the regularization path, computed from IPW
 weights and normalized to percentages. The right-hand axis maps these values
 to the coefficient of variation (CV) of the weights.
+Supplying the \code{lambda} argument displays the covariate imbalance
+\eqn{(\bar X_{\mathrm{weighted}} - \bar X_{\mathrm{target}}) / \sigma_{\mathrm{target}}},
+computed using the IPW weights at the specified \code{lambda}.
 }
 \examples{
 \donttest{
