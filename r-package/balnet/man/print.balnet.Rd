@@ -16,7 +16,7 @@
 \item{...}{Additional print arguments.}
 }
 \value{
-Invisibly returns a data.frame with the printed information.
+Invisibly returns the printed information.
 }
 \description{
 Print a balnet object.
@@ -28,8 +28,8 @@ p <- 25
 X <- matrix(rnorm(n * p), n, p)
 W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 
-# Fit an ATE model.
-fit <- balnet(X, W)
+# Fit an ATT model.
+fit <- balnet(X, W, target = "ATT")
 
 # Print path summary.
 print(fit)

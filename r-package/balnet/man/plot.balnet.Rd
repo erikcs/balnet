@@ -22,7 +22,7 @@ aggregate into a single variable before computing covariate imbalance
 \item{...}{Additional arguments.}
 }
 \value{
-Invisibly returns a list with the information underlying the plot.
+Invisibly returns the information underlying the plot.
 }
 \description{
 Shows effective sample size (ESS) and percent bias reduction (PBR; reduction
@@ -40,11 +40,11 @@ p <- 25
 X <- matrix(rnorm(n * p), n, p)
 W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 
-# Fit an ATE model.
-fit <- balnet(X, W)
+# Fit an ATT model.
+fit <- balnet(X, W, target = "ATT")
 
-# Plot path diagnostics.
-plot(fit)
+# Plot the five covariates with the largest unweighted imbalance
+plot(fit, lambda = 0, max = 5)
 }
 
 }

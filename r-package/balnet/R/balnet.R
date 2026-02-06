@@ -239,8 +239,8 @@ balnet <- function(
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
-#' # Fit an ATE model.
-#' fit <- balnet(X, W)
+#' # Fit an ATT model.
+#' fit <- balnet(X, W, target = "ATT")
 #'
 #' # Extract coefficients.
 #' coefs <- coef(fit)
@@ -297,11 +297,11 @@ coef.balnet <- function(
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
-#' # Fit an ATE model.
-#' fit <- balnet(X, W)
+#' # Fit an ATT model.
+#' fit <- balnet(X, W, target = "ATT")
 #'
 #' # Predict propensity scores.
-#' pp <- predict(fit, X)
+#' W.hat <- predict(fit, X)
 #' }
 #'
 #' @method predict balnet
@@ -354,7 +354,7 @@ predict.balnet <- function(
 #' @param max Total number of rows to show from the beginning and end of the path
 #' @param ... Additional print arguments.
 #'
-#' @return Invisibly returns a data.frame with the printed information.
+#' @return Invisibly returns the printed information.
 #'
 #' @examples
 #' \donttest{
@@ -363,8 +363,8 @@ predict.balnet <- function(
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
-#' # Fit an ATE model.
-#' fit <- balnet(X, W)
+#' # Fit an ATT model.
+#' fit <- balnet(X, W, target = "ATT")
 #'
 #' # Print path summary.
 #' print(fit)
@@ -461,7 +461,7 @@ print.balnet <- function(
 #' @param max The number of covariates to display in covariate balance plot. Defaults to all covariates.
 #' @param ... Additional arguments.
 #'
-#' @return Invisibly returns a list with the information underlying the plot.
+#' @return Invisibly returns the information underlying the plot.
 #'
 #' @examples
 #' \donttest{
@@ -470,11 +470,11 @@ print.balnet <- function(
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
-#' # Fit an ATE model.
-#' fit <- balnet(X, W)
+#' # Fit an ATT model.
+#' fit <- balnet(X, W, target = "ATT")
 #'
-#' # Plot path diagnostics.
-#' plot(fit)
+#' # Plot the five covariates with the largest unweighted imbalance
+#' plot(fit, lambda = 0, max = 5)
 #' }
 #'
 #' @method plot balnet
@@ -569,8 +569,8 @@ plot.balnet <- function(
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
-#' # Fit an ATE model.
-#' fit <- balnet(X, W)
+#' # Fit an ATT model.
+#' fit <- balnet(X, W, target = "ATT")
 #'
 #' # Extract IPW weights.
 #' wts <- ipw(fit, lambda = 0)

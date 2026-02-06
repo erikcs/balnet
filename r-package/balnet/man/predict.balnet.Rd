@@ -39,11 +39,11 @@ p <- 25
 X <- matrix(rnorm(n * p), n, p)
 W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 
-# Fit an ATE model.
-fit <- balnet(X, W)
+# Fit an ATT model.
+fit <- balnet(X, W, target = "ATT")
 
 # Predict propensity scores.
-pp <- predict(fit, X)
+W.hat <- predict(fit, X)
 }
 
 }
