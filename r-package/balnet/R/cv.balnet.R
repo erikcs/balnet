@@ -27,10 +27,8 @@
 #' plot(cv.fit)
 #'
 #' # Predict at cross-validated lambda.
-#' pp <- predict(cv.fit, X)
+#' W.hat <- predict(cv.fit, X)
 #'
-#' # Extract coefficients at cross-validated lambda.
-#' coefs <- coef(cv.fit)
 #' }
 #'
 #' @export
@@ -120,8 +118,8 @@ cv.balnet <- function(
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
-#' # Fit an ATE model.
-#' cv.fit <- cv.balnet(X, W)
+#' # Fit an ATT model.
+#' fit <- balnet(X, W, target = "ATT")
 #'
 #' # Extract coefficients at cross-validated lambda.
 #' coefs <- coef(cv.fit)
@@ -160,11 +158,11 @@ coef.cv.balnet <- function(
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
-#' # Fit an ATE model.
-#' cv.fit <- cv.balnet(X, W)
+#' # Fit an ATT model.
+#' fit <- balnet(X, W, target = "ATT")
 #'
-#' # Predict at cross-validated lambda.
-#' pp <- predict(cv.fit, X)
+#' # Predict propensity scores at cross-validated lambda.
+#' W.hat <- predict(cv.fit, X)
 #' }
 #'
 #' @method predict cv.balnet
@@ -197,8 +195,8 @@ predict.cv.balnet <- function(
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
-#' # Fit an ATE model.
-#' cv.fit <- cv.balnet(X, W)
+#' # Fit an ATT model.
+#' fit <- balnet(X, W, target = "ATT")
 #'
 #' # Print CV summary.
 #' print(cv.fit)
@@ -243,8 +241,8 @@ print.cv.balnet <- function(
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
-#' # Fit an ATE model.
-#' cv.fit <- cv.balnet(X, W)
+#' # Fit an ATT model.
+#' fit <- balnet(X, W, target = "ATT")
 #'
 #' # Plot at cross-validated lambda.
 #' plot(cv.fit)

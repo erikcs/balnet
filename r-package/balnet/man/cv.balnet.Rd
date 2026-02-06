@@ -50,10 +50,8 @@ print(cv.fit)
 plot(cv.fit)
 
 # Predict at cross-validated lambda.
-pp <- predict(cv.fit, X)
+W.hat <- predict(cv.fit, X)
 
-# Extract coefficients at cross-validated lambda.
-coefs <- coef(cv.fit)
 }
 
 }
