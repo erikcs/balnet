@@ -30,7 +30,6 @@ EXPECTED_AD_ERROR <- "adelie_core solver: max coordinate descents reached at lam
 #' @return A balnet.fit object.
 #'
 #' @keywords internal
-#' @export
 balnet.fit <- function(
   stan,
   y,
