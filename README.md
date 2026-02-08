@@ -2,7 +2,7 @@
 
 🚧 Work in progress 🚧
 
-A package for pathwise estimation of regularized logistic propensity score models using covariate balancing loss functions rather than maximum likelihood. Regularization paths are fit via the [adelie](https://jamesyang007.github.io/adelie/) elastic-net solver with a `glmnet`-like interface and objectives that directly target covariate balance for the ATE and ATT.
+A package for pathwise estimation of regularized logistic propensity score models using covariate balancing loss functions rather than maximum likelihood. Regularization paths are fit via the [adelie](https://jamesyang007.github.io/adelie/) elastic-net solver with a *glmnet*-like interface and objectives that directly target covariate balance for the ATE and ATT.
 
 Some helpful links for getting started:
 
