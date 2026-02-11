@@ -51,14 +51,14 @@ cv.balnet <- function(
   }
   dot.args <- list(...)
 
-  if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]]) message("Fitting full model")
+  if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]]) cat("Fitting full model\n")
   fit.full <- balnet(X, W, ...)
   lambda.full <- fit.full[["_lambda"]]
   sample.weights <- fit.full[["sample.weights"]]
 
   cv.list <- list()
   for (k in 1:nfolds) {
-    if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]]) message(sprintf("\nFold: %d/%d", k, nfolds))
+    if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]]) cat(sprintf("\nFold: %d/%d\n", k, nfolds))
     test <- foldid == k
     train <- !test
     X.train <- X[train, , drop = FALSE]
