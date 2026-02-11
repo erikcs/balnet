@@ -166,6 +166,7 @@ balnet <- function(
       max_iters = maxit,
       tol = thresh,
       progress_bar = verbose,
+      progress_bar_prefix = if (target == "ATE") "Arm 0: " else "",
       n_threads = num.threads,
       ...
     )
@@ -186,6 +187,7 @@ balnet <- function(
       max_iters = maxit,
       tol = thresh,
       progress_bar = verbose,
+      progress_bar_prefix = if (target == "ATE") "Arm 1: " else "",
       n_threads = num.threads,
       ...
     )

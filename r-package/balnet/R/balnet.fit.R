@@ -54,6 +54,7 @@ balnet.fit <- function(
   pivot_subset_min = 1L,
   pivot_slack_ratio = 1.25,
   progress_bar = FALSE,
+  progress_bar_prefix = "",
   n_threads = 1L
 )
 {
@@ -201,7 +202,8 @@ balnet.fit <- function(
     "weights" = weights,
     "target_scale" = target_scale,
     # Solver args
-    "progress_bar" = progress_bar
+    "progress_bar" = progress_bar,
+    "progress_bar_prefix" = progress_bar_prefix
   )
   fit <- rcpp_solver(args)
   class(fit) <- "balnet.fit"
