@@ -152,7 +152,6 @@ balnet <- function(
   fit0 <- fit1 <- NULL
   lmdas0 <- lmdas1 <- NULL
   if (target %in% c("ATE", "ATT", "control")) {
-    if (verbose) message("Fitting arm: 0")
     fit0 <- balnet.fit(
       stan = stan,
       y = 1 - W,
@@ -173,7 +172,6 @@ balnet <- function(
     lmdas0 <- fit0$lmdas
   }
   if (target %in% c("ATE", "treated")) {
-    if (verbose) message("Fitting arm: 1")
     fit1 <- balnet.fit(
       stan = stan,
       y = W,

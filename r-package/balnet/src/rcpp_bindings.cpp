@@ -29,7 +29,7 @@ Rcpp::List rcpp_solver(
     bool progress_bar = args["progress_bar"];
     auto pb = ad::util::tq::trange(0);
     pb.set_display(progress_bar);
-    pb.set_ostream(Rcpp::Rcerr);
+    pb.set_ostream(Rcpp::Rcout);
     const auto check_user_interrupt = [&]() {
         Rcpp::checkUserInterrupt();
     };
