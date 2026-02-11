@@ -27,9 +27,11 @@ Rcpp::List rcpp_solver(
     // Invoke solver
     ad::Configs::pb_symbol = "\U0001F428";
     bool progress_bar = args["progress_bar"];
+    std::string progress_bar_prefix = args["progress_bar_prefix"];
     auto pb = ad::util::tq::trange(0);
     pb.set_display(progress_bar);
-    pb.set_ostream(Rcpp::Rcerr);
+    pb.set_ostream(Rcpp::Rcout);
+    pb.set_prefix(progress_bar_prefix);
     const auto check_user_interrupt = [&]() {
         Rcpp::checkUserInterrupt();
     };

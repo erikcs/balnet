@@ -25,6 +25,7 @@ EXPECTED_AD_ERROR <- "adelie_core solver: max coordinate descents reached at lam
 #' @param pivot_subset_min Minimum subset of pivot rule.
 #' @param pivot_slack_ratio Slack ratio of pivot rule.
 #' @param progress_bar Progress bar. Default is `FALSE`.
+#' @param progress_bar_prefix Progress bar prefix. Default is none.
 #' @param n_threads Number of threads, default 1.
 #'
 #' @return A balnet.fit object.
@@ -54,6 +55,7 @@ balnet.fit <- function(
   pivot_subset_min = 1L,
   pivot_slack_ratio = 1.25,
   progress_bar = FALSE,
+  progress_bar_prefix = "",
   n_threads = 1L
 )
 {
@@ -201,7 +203,8 @@ balnet.fit <- function(
     "weights" = weights,
     "target_scale" = target_scale,
     # Solver args
-    "progress_bar" = progress_bar
+    "progress_bar" = progress_bar,
+    "progress_bar_prefix" = progress_bar_prefix
   )
   fit <- rcpp_solver(args)
   class(fit) <- "balnet.fit"

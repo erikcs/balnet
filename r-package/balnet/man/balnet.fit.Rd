@@ -28,6 +28,7 @@ balnet.fit(
   pivot_subset_min = 1L,
   pivot_slack_ratio = 1.25,
   progress_bar = FALSE,
+  progress_bar_prefix = "",
   n_threads = 1L
 )
 }
@@ -77,6 +78,8 @@ balnet.fit(
 \item{pivot_slack_ratio}{Slack ratio of pivot rule.}
 
 \item{progress_bar}{Progress bar. Default is \code{FALSE}.}
+
+\item{progress_bar_prefix}{Progress bar prefix. Default is none.}
 
 \item{n_threads}{Number of threads, default 1.}
 }
