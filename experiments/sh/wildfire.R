@@ -65,7 +65,7 @@ hist(ipw[W==0], breaks = 150, prob = TRUE,
      main = "ATT weights",
      xlab = "")
 rug(ipw[W==0], col = rgb(0,0,0,0.4))
-abline(v=ipw.ml[W==0], col = rgb(1,0,0,0.4), lwd = 2)
+abline(v = ipw.ml[W==0], col = rgb(1,0,0,0.4), lwd = 2)
 legend("topright", legend = c("balance loss", "maximum likelihood"),
        lty = c(NA, 1),
        col = c(rgb(0,0,0,0.4), rgb(1,0,0,0.4)),
