@@ -1,4 +1,4 @@
-This folder contains replication material for the paper _balnet: Pathwise Estimation of Covariate Balancing Propensity Scores***_.
+This folder contains replication material for the paper _balnet: Pathwise Estimation of Covariate Balancing Propensity Scores_.
 
 Example data from [Wu et al. (2023)](https://doi.org/10.1126/sciadv.adi4123) are available at the links below:
 
