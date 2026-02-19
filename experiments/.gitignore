@@ -1,0 +1,5 @@
+*.csv.gz
+*.csv
+*.pdf
+*.png
+_*
