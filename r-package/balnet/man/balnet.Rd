@@ -33,7 +33,7 @@ balnet(
 
 \item{sample.weights}{Optional sample weights. If \code{NULL} (default), each unit receives the same weight.}
 
-\item{max.imbalance}{Optional upper bound on the covariate imbalance. For lasso penalization
+\item{max.imbalance}{Optional upper bound on the standardized covariate imbalance. For lasso penalization
 (\code{alpha = 1}), there is a one-to-one correspondence between the penalty parameter \eqn{\lambda} and
 the maximum allowable covariate imbalance. When supplied, \code{max.imbalance} is used to adjust the lambda
 sequence (via \code{lambda.min.ratio}) so that the generated sequence ends at the specified imbalance level.}
@@ -106,7 +106,7 @@ print(fit)
 # Visualize the path.
 plot(fit)
 
-# Plot the covariate imbalance at given lambda.
+# Plot the standardized covariate imbalance at given lambda.
 # Note: lambda = 0 selects the final lambda in the sequence. Scalar values
 # are applied to both arms.
 plot(fit, lambda = 0)

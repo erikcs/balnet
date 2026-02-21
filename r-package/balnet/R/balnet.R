@@ -22,7 +22,7 @@
 #' @param W Treatment vector (0 = control, 1 = treated).
 #' @param target The target estimand. Default is "ATE".
 #' @param sample.weights Optional sample weights. If `NULL` (default), each unit receives the same weight.
-#' @param max.imbalance Optional upper bound on the covariate imbalance. For lasso penalization
+#' @param max.imbalance Optional upper bound on the standardized covariate imbalance. For lasso penalization
 #'   (`alpha = 1`), there is a one-to-one correspondence between the penalty parameter \eqn{\lambda} and
 #'   the maximum allowable covariate imbalance. When supplied, `max.imbalance` is used to adjust the lambda
 #'   sequence (via `lambda.min.ratio`) so that the generated sequence ends at the specified imbalance level.
@@ -62,7 +62,7 @@
 #' # Visualize the path.
 #' plot(fit)
 #'
-#' # Plot the covariate imbalance at given lambda.
+#' # Plot the standardized covariate imbalance at given lambda.
 #' # Note: lambda = 0 selects the final lambda in the sequence. Scalar values
 #' # are applied to both arms.
 #' plot(fit, lambda = 0)
@@ -447,7 +447,7 @@ print.balnet <- function(
 #' in mean absolute imbalance) along the regularization path, computed from IPW
 #' weights and normalized to percentages. The right-hand axis maps these values
 #' to the coefficient of variation (CV) of the weights.
-#' Supplying the `lambda` argument displays the covariate imbalance
+#' Supplying the `lambda` argument displays the standardized covariate imbalance
 #' \eqn{(\bar X_{\mathrm{weighted}} - \bar X_{\mathrm{target}}) / \sigma_{\mathrm{target}}},
 #' computed using the IPW weights at the specified `lambda`.
 #'
