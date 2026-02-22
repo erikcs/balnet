@@ -53,3 +53,7 @@ ipw.weights <- ipw(fit, lambda = 0)
 # Estimate ATE using IPW weights.
 mean(Y * (ipw.weights$treated - ipw.weights$control))
 ```
+
+Setting `verbose = TRUE` shows a koala balancing progress bar during fitting.
+
+![pb_trimmed](https://github.com/user-attachments/assets/62504beb-6054-4441-925c-a5913a09d907)
