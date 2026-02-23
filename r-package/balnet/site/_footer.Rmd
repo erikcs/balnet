@@ -1,3 +1,21 @@
+<style>
+  /* White background */
+  html, body, .body, .frontmatter, footer, nav {
+    background-color: #ffffff !important;
+    background: white !important;
+  }
+
+  .body, .frontmatter {
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  #TOC a.active {
+    color: #3f76a8 !important;
+    font-weight: 700 !important;
+  }
+</style>
+
 ```{r, include = FALSE}
 get_authors = function() {
   d = packageDescription(litedown:::detect_pkg())

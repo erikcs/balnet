@@ -2,13 +2,6 @@
 title: Changelog
 ---
 
-```{css, echo = FALSE}
-#TOC a.active {
-  color: #3f76a8 !important;
-  font-weight: 700;
-}
-```
-
 ```{r, echo = FALSE, results = 'asis'}
 path = file.path('../../../CHANGELOG.md')
 x = xfun::read_utf8(path)

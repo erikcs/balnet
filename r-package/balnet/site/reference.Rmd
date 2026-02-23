@@ -9,11 +9,4 @@ h2 {
 }
 ```
 
-```{css, echo = FALSE}
-#TOC a.active {
-  color: #3f76a8 !important;
-  font-weight: 700;
-}
-```
-
 `{r} litedown::pkg_manual()`
