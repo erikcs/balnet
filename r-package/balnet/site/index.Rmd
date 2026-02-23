@@ -8,15 +8,3 @@ x = xfun::read_utf8(path)
 x = sub("^###\\s*(.*)$", "**\\1**", x) # get rid of TOC sections
 xfun::raw_string(x[-1]) # -1: zap title
 ```
-
----
-
-```{r, echo = FALSE, results = 'asis'}
-desc = packageDescription(litedown:::detect_pkg())
-cat(
-  "**Version:** ", desc$Version,
-  paste0(" - [Source code](", strsplit(desc$URL, ",\\s*")[[1]][1], ")"),
-  paste0(" - [Bug reports](", desc$BugReports, ")"),
-  sep = ""
-)
-```

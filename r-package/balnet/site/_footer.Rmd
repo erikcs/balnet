@@ -27,5 +27,9 @@ get_authors = function() {
 ::: flex-col
 Developed by `{r} get_authors()`
 
+**Version:** `{r} desc <- packageDescription(litedown:::detect_pkg()); desc$Version`
+• [Source code](`{r} strsplit(desc$URL, ",\\s*")[[1]][1]`)
+• [Bug reports](`{r} desc$BugReports`)
+
 Site built with [litedown](https://github.com/yihui/litedown) v`{r} packageVersion('litedown')`
 :::
