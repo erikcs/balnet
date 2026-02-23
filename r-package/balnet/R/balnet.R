@@ -35,7 +35,7 @@
 #' @param alpha Elastic net mixing parameter. Default is 1 (lasso), 0 corresponds to ridge.
 #' @param standardize Whether to standardize the input matrix. Should only be `FALSE` if `X` already has
 #'   zero-mean columns with unit variance. For `target = "ATT"`, standardization should be based on the treated group.
-#' @param thresh Coordinate descent convergence tolerance. Default is 1e-7.
+#' @param tol Coordinate descent convergence tolerance. Default is 1e-7.
 #' @param maxit Maximum number of coordinate descent iterations. Default is 1e5.
 #' @param verbose Whether to display information during fitting. Default is `FALSE`.
 #' @param num.threads Number of threads to use. Default is 1.
@@ -91,7 +91,7 @@ balnet <- function(
   groups = NULL,
   alpha = 1.0,
   standardize = TRUE,
-  thresh = 1e-7,
+  tol = 1e-7,
   maxit = as.integer(1e5),
   verbose = FALSE,
   num.threads = 1L,
@@ -164,7 +164,7 @@ balnet <- function(
       groups = groups,
       alpha = alpha,
       max_iters = maxit,
-      tol = thresh,
+      tol = tol,
       progress_bar = verbose,
       progress_bar_prefix = if (target == "ATE") "Arm 0: " else "",
       n_threads = num.threads,
@@ -185,7 +185,7 @@ balnet <- function(
       groups = groups,
       alpha = alpha,
       max_iters = maxit,
-      tol = thresh,
+      tol = tol,
       progress_bar = verbose,
       progress_bar_prefix = if (target == "ATE") "Arm 1: " else "",
       n_threads = num.threads,

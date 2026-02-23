@@ -17,7 +17,7 @@ balnet(
   groups = NULL,
   alpha = 1,
   standardize = TRUE,
-  thresh = 1e-07,
+  tol = 1e-07,
   maxit = as.integer(1e+05),
   verbose = FALSE,
   num.threads = 1L,
@@ -54,7 +54,7 @@ and \code{lambda.min.ratio} (or \code{max.imbalance}, if specified).}
 \item{standardize}{Whether to standardize the input matrix. Should only be \code{FALSE} if \code{X} already has
 zero-mean columns with unit variance. For \code{target = "ATT"}, standardization should be based on the treated group.}
 
-\item{thresh}{Coordinate descent convergence tolerance. Default is 1e-7.}
+\item{tol}{Coordinate descent convergence tolerance. Default is 1e-7.}
 
 \item{maxit}{Maximum number of coordinate descent iterations. Default is 1e5.}
 
