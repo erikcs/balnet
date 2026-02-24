@@ -1,7 +1,5 @@
 ## Pathwise Estimation of Covariate Balancing Propensity Scores
 
-🚧 Work in progress 🚧
-
 A package for pathwise estimation of regularized logistic propensity score models using covariate balancing loss functions rather than maximum likelihood. Regularization paths are fit via the [adelie](https://jamesyang007.github.io/adelie/) elastic-net solver with a *glmnet*-like interface and objectives that directly target covariate balance for the ATE and ATT.
 
 Some helpful links for getting started:
@@ -57,3 +55,10 @@ mean(Y * (ipw.weights$treated - ipw.weights$control))
 Setting `verbose = TRUE` displays a progress bar tracking the fit (by default, with a koala balancing indicator)
 
 ![pb_trimmed](https://github.com/user-attachments/assets/62504beb-6054-4441-925c-a5913a09d907)
+
+
+### References
+
+Erik Sverdrup and Trevor Hastie.
+<b>balnet: Pathwise Estimation of Covariate Balancing Propensity Scores.</b> 2026.
+[<a href="https://arxiv.org/pdf/2602.18577">arxiv</a>]

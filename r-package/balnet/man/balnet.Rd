@@ -122,3 +122,8 @@ mean(Y * (ipw.weights$treated - ipw.weights$control))
 }
 
 }
+\references{
+Sverdrup, Erik and Trevor Hastie.
+"balnet: Pathwise Estimation of Covariate Balancing Propensity Scores".
+arXiv preprint, arXiv:2602.18577, 2026.
+}
