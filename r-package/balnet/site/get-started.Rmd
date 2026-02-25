@@ -4,7 +4,7 @@ set.seed(42)
 
 # Introduction to `balnet`
 
-This vignette provides a brief introduction to the `balnet` package. For additional details, see [this paper](https://arxiv.org/pdf/2602.18577).
+This vignette provides a brief introduction to the `balnet` package. For additional details, see [this paper](https://arxiv.org/abs/2602.18577).
 
 A commonly used approach for estimating propensity scores in observational studies is logistic regression, often combined with regularization when the number of covariates is large or when overfitting is a concern. The `balnet` package also fits regularized logistic regression models, but replaces the traditional maximum likelihood loss with *covariate balancing loss functions* paired with a logistic link.
 

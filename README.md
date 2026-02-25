@@ -61,4 +61,4 @@ Setting `verbose = TRUE` displays a progress bar tracking the fit (by default, w
 
 Erik Sverdrup and Trevor Hastie.
 <b>balnet: Pathwise Estimation of Covariate Balancing Propensity Scores.</b> 2026.
-[<a href="https://arxiv.org/pdf/2602.18577">arxiv</a>]
+[<a href="https://arxiv.org/abs/2602.18577">arxiv</a>]
