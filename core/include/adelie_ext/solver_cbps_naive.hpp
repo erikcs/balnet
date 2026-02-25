@@ -529,7 +529,7 @@ inline void solve(
     // balnet NOTE: pb suffix updated to track calibration metric
     const auto pb_add_suffix_f = [&](const auto& state, auto& pb) {
         const auto& devs = state.devs;
-        pb << " [mean|SMD|:"
+        pb << " [avg|SMD|:"
             << std::setprecision(2)
             << ((devs.size() == 0) ? 0.0 : devs.back())
             << "]"
