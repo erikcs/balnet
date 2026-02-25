@@ -1,4 +1,4 @@
-/* Calibration loss for mu_1 = E[Y(1)] with logit link.
+/* Balancing loss for mu_1 = E[Y(1)] with logit link.
  * The loss is:
  * l(eta) = sum_{i=1}^{n} w_i (y * exp(-eta) + (1 - y) * eta), where y is 0 or 1
  * with (negative) gradient: -w_i * (-y * exp(-eta) + (1 - y))
