@@ -52,10 +52,9 @@ ipw.weights <- ipw(fit, lambda = 0)
 mean(Y * (ipw.weights$treated - ipw.weights$control))
 ```
 
-Setting `verbose = TRUE` displays a progress bar tracking the fit (by default, with a koala balancing indicator)
+Setting `verbose = TRUE` displays a progress bar tracking the fit.
 
-![pb_trimmed](https://github.com/user-attachments/assets/62504beb-6054-4441-925c-a5913a09d907)
-
+![pb](https://github.com/user-attachments/assets/6bfaf868-9af7-4a4c-9783-b63c3a68409d)
 
 ### References
 
