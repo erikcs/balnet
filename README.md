@@ -53,8 +53,7 @@ mean(Y * (ipw.weights$treated - ipw.weights$control))
 ```
 
 Setting `verbose = TRUE` displays a progress bar tracking the fit.
-
-![pb](https://github.com/user-attachments/assets/6bfaf868-9af7-4a4c-9783-b63c3a68409d)
+<p align="left"><img src="https://github.com/user-attachments/assets/6bfaf868-9af7-4a4c-9783-b63c3a68409d" width="600"></p>
 
 ### References
 
