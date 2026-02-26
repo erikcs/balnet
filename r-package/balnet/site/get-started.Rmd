@@ -92,4 +92,5 @@ plot(fit.att, lambda = 0)
 
 Here, the resulting IPW weights achieve substantially improved balance.
 
-For additional functionality, users are encouraged to consult the documentation for the standard S3 methods provided by `balnet`, including `predict` for propensity score prediction and `coef` for extracting estimated coefficients. On large datasets, we recommend calling `balnet` with `verbose = TRUE` to interactively print balance metrics during fitting.
+For additional functionality, users are encouraged to consult the documentation for the standard S3 methods provided by `balnet`, including `predict` for propensity score prediction and `ipw` for extracting weights. On large datasets, we recommend calling `balnet` with `verbose = TRUE` to interactively print balance metrics during fitting, as illustrated below.
+<p align="left"><img src="https://github.com/user-attachments/assets/6bfaf868-9af7-4a4c-9783-b63c3a68409d" width="600"></p>
