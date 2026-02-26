@@ -25,7 +25,7 @@ Rcpp::List rcpp_solver(
     auto glm = std::unique_ptr<glm_cbps_64_t>(new glm_cbps_64_t(y, weights, target_scale));
 
     // Invoke solver
-    ad::Configs::pb_symbol = "\U0001F428";
+    ad::Configs::pb_symbol = "\033[38;5;26m\u2588\033[0m";
     bool progress_bar = args["progress_bar"];
     std::string progress_bar_prefix = args["progress_bar_prefix"];
     auto pb = ad::util::tq::trange(0);
