@@ -406,7 +406,7 @@ print.balnet <- function(
       lmdas <- fit$lmdas
       out <- data.frame(
         `Nonzero` = non.zero,
-        `Mean |SMD|` = metric,
+        `Avg|SMD|` = metric,
         Lambda = lmdas,
         check.names = FALSE
       )
