@@ -31,10 +31,10 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
   stats.smd <- plot(fit, lambda = 0)
 
   # control
-  start.end0 <- c(1, length(pth$control$`Mean |SMD|`))
+  start.end0 <- c(1, length(pth$control$`Avg|SMD|`))
   expect_equal(
     unname(colMeans(abs(stats.smd$control))),
-    pth$control$`Mean |SMD|`[start.end0],
+    pth$control$`Avg|SMD|`[start.end0],
   )
   expect_equal(
     unname(apply(abs(stats.smd$control), 2, max)),
@@ -47,10 +47,10 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
   )
 
   # treated
-  start.end1 <- c(1, length(pth$treated$`Mean |SMD|`))
+  start.end1 <- c(1, length(pth$treated$`Avg|SMD|`))
   expect_equal(
     unname(colMeans(abs(stats.smd$treated))),
-    pth$treated$`Mean |SMD|`[start.end1],
+    pth$treated$`Avg|SMD|`[start.end1],
   )
   expect_equal(
     unname(apply(abs(stats.smd$treated), 2, max)),
@@ -67,10 +67,10 @@ test_that("balnet is internally consistent (SMD/dev/lmbda)", {
   stats.pth.att <- plot(fit.att)
   stats.smd.att <- plot(fit.att, lambda = 0)
 
-  start.end <- c(1, length(pth.att$`Mean |SMD|`))
+  start.end <- c(1, length(pth.att$`Avg|SMD|`))
   expect_equal(
     unname(colMeans(abs(stats.smd.att))),
-    pth.att$`Mean |SMD|`[start.end],
+    pth.att$`Avg|SMD|`[start.end],
   )
   expect_equal(
     unname(apply(abs(stats.smd.att), 2, max)),
