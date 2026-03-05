@@ -4,8 +4,8 @@ A package for pathwise estimation of regularized logistic propensity score model
 
 Some useful links:
 
-* [An introduction to balnet](https://erikcs.github.io/balnet/get-started.html)
-* [Package docs](https://erikcs.github.io/balnet/reference.html)
+* [An introduction to balnet](https://erikcs.github.io/balnet/balnet.html)
+* [Package manual](https://erikcs.github.io/balnet/reference.html)
 
 ### Installation
 
