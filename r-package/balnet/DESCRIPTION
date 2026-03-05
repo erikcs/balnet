@@ -25,5 +25,8 @@ Imports:
     methods
 Suggests:
     testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
 URL: https://github.com/erikcs/balnet
 BugReports: https://github.com/erikcs/balnet/issues
+VignetteBuilder: knitr
