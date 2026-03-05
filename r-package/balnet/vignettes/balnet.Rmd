@@ -1,8 +1,24 @@
-```{r, echo=FALSE}
-set.seed(42)
-```
+---
+title: "An introduction to `balnet`"
+output:
+  rmarkdown::html_vignette:
+    math_method: katex
+vignette: >
+  %\VignetteIndexEntry{An introduction to balnet}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
-# Introduction to `balnet`
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 6
+)
+set.seed(42)
+library(balnet)
+```
 
 This vignette provides a brief introduction to the `balnet` package. For additional details, see [this paper](https://arxiv.org/abs/2602.18577).
 
@@ -15,8 +31,6 @@ A key property of these loss functions is that they directly target covariate ba
 We begin by simulating a small example in which treatment assignment depends on a single pre-treatment covariate. In particular, units with certain values of $X_1$ are less likely to receive treatment.
 
 ```{r}
-library(balnet)
-
 n <- 100
 p <- 25
 X <- matrix(rnorm(n * p), n, p)
@@ -93,4 +107,6 @@ plot(fit.att, lambda = 0)
 Here, the resulting IPW weights achieve substantially improved balance.
 
 For additional functionality, users are encouraged to consult the documentation for the standard S3 methods provided by `balnet`, including `predict` for propensity score prediction and `ipw` for extracting weights. On large datasets, we recommend calling `balnet` with `verbose = TRUE` to interactively print balance metrics during fitting, as illustrated below.
-<p align="left"><img src="pb.gif" width="600"></p>
+<video autoplay loop muted playsinline width="600">
+  <source src="https://raw.githubusercontent.com/erikcs/balnet/master/r-package/balnet/site/pb.mp4" type="video/mp4">
+</video>
