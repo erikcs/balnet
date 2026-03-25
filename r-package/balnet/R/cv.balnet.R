@@ -108,7 +108,7 @@ cv.balnet <- function(
 #' @param lambda The lambda to use. Defaults to the cross-validated lambda.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return Estimated logistic coefficients.
+#' @return Estimated logistic coefficients
 #'  (for dual-arm fits, returns a list with entries for each arm).
 #'
 #' @examples
@@ -148,7 +148,7 @@ coef.cv.balnet <- function(
 #' @param type The type of predictions. Default is "response" (propensity scores).
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return Estimated predictions.
+#' @return Estimated predictions
 #'  (for dual-arm fits, returns a list with entries for each arm).
 #'
 #' @examples

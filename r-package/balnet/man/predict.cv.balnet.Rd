@@ -18,7 +18,7 @@
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-Estimated predictions.
+Estimated predictions
 (for dual-arm fits, returns a list with entries for each arm).
 }
 \description{
