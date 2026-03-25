@@ -34,8 +34,8 @@ cvx_mu1_lasso = function(y, X, lambda, standardize = TRUE) {
   problem <- Problem(Minimize(objective))
   result <- solve(problem)
 
-  beta_std  <- as.numeric(result$getValue(beta))
-  beta0_std <- as.numeric(result$getValue(beta0))
+  beta_std  <- as.numeric(value(beta))
+  beta0_std <- as.numeric(value(beta0))
 
   # Convert back to original scale
   beta_orig  <- beta_std / xs
