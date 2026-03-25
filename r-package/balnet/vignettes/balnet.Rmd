@@ -24,7 +24,10 @@ This vignette provides a brief introduction to the `balnet` package. For additio
 
 A commonly used approach for estimating propensity scores in observational studies is logistic regression, often combined with regularization when the number of covariates is large or when overfitting is a concern. The `balnet` package also fits regularized logistic regression models, but replaces the traditional maximum likelihood loss with *covariate balancing loss functions* paired with a logistic link.
 
-A key property of these loss functions is that they directly target covariate balance for inverse probability weighting (IPW) estimators. As a result, the fitted propensity score models are explicitly tailored to the causal estimand of interest. The example below illustrates these ideas in a simple simulated setting.
+A key feature of this approach is that it directly produces *balancing weights*, weights that approximately equalize covariate distributions between treatment arms.
+These weights can be used as plug-in components in inverse probability weighting (IPW) estimators, or combined with outcome models in doubly robust procedures such as AIPW and debiased machine learning.
+
+By targeting covariate balance directly, the fitted propensity models are explicitly tailored to the causal estimand of interest. The example below illustrates these ideas in a simple simulated setting.
 
 ## A toy example
 
