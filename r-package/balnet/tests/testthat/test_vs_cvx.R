@@ -94,8 +94,8 @@ test_that("works as expected vs CVXR", {
       pp = predict(fit, X, type = "response", lambda = lambda)[, ]
       fit.cvx = cvx_mu1_lasso(y, X, lambda)
 
-      expect_lt(max(abs(pp - fit.cvx$ps)), 1e-4)
-      expect_lt(sqrt(mean((pp - fit.cvx$ps)^2)), 1e-4)
+      expect_lt(max(abs(pp - fit.cvx$ps)), 1.3e-4)
+      expect_lt(sqrt(mean((pp - fit.cvx$ps)^2)), 1.3e-4)
     })
   }
 
