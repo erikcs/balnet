@@ -4,7 +4,7 @@
 \alias{ipw}
 \alias{ipw.balnet}
 \alias{ipw.cv.balnet}
-\title{Extract IPW weights from a balnet object.}
+\title{Extract balancing weights from a balnet object.}
 \usage{
 ipw(object, lambda = NULL, ...)
 
@@ -15,7 +15,7 @@ ipw(object, lambda = NULL, ...)
 \arguments{
 \item{object}{A \code{balnet} object.}
 
-\item{lambda}{Value(s) of the penalty parameter \code{lambda} at which coefficients
+\item{lambda}{Value(s) of the penalty parameter \code{lambda} at which weights
 are required.
 \itemize{
 \item If \code{NULL} (default), the full lambda path from the fit is used.
@@ -28,11 +28,11 @@ arm and the second to the treatment.
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-Estimated IPW weights.
+Estimated IPW weights
 (for contrast fits, \code{target} = "ATE" or "ATT", returns a list with entries for each arm).
 }
 \description{
-Extract IPW weights from a balnet object.
+Retrieves the estimated inverse probability weights \eqn{\hat{\gamma}}.
 }
 \examples{
 \donttest{

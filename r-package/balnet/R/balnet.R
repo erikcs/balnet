@@ -3,7 +3,7 @@
 #' Fits regularized logistic regression models using covariate balancing loss functions, targeting
 #' the ATE, ATT, or treated/control means.
 #'
-#' This function aims to find weights \eqn{\hat\gamma_i(w)}, using logistic propensity scores,
+#' This function aims to find balancing weights \eqn{\hat\gamma_i(w)}, using logistic propensity scores,
 #' that balance covariate means to a target vector, i.e.,
 #' \deqn{\frac{1}{n} \sum_{i=1}^n \hat\gamma_i(W_i) X_i = \bar X_{\mathrm{target}}.}
 #' With lasso regularization (`alpha = 1`), imbalance is controlled in the \eqn{\ell_\infty} sense,
@@ -551,10 +551,12 @@ plot.balnet <- function(
   }
 }
 
-#' Extract IPW weights from a balnet object.
+#' Extract balancing weights from a balnet object.
+#'
+#' Retrieves the estimated inverse probability weights \eqn{\hat{\gamma}}.
 #'
 #' @param object A `balnet` object.
-#' @param lambda Value(s) of the penalty parameter `lambda` at which coefficients
+#' @param lambda Value(s) of the penalty parameter `lambda` at which weights
 #'   are required.
 #'   * If `NULL` (default), the full lambda path from the fit is used.
 #'   * If new values are supplied, linear interpolation is performed.
@@ -563,7 +565,7 @@ plot.balnet <- function(
 #'     arm and the second to the treatment.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return Estimated IPW weights.
+#' @return Estimated IPW weights
 #'  (for contrast fits, `target` = "ATE" or "ATT", returns a list with entries for each arm).
 #'
 #' @examples
