@@ -15,7 +15,7 @@
 #'       \bar X_{\mathrm{target}} = \frac{1}{n} \sum_{i=1}^n X_i.}
 #' \eqn{\hat e^{(w)}(X_i)} is the fitted propensity score for arm \eqn{w}.
 #' For `target = "ATT"`, weights balance the control means:
-#' \deqn{\hat\gamma_i = (1 - W_i) \frac{\hat e^{(0)}(X_i)}{1 - \hat e^{(0)}(X_i)}, \quad
+#' \deqn{\hat\gamma_i(0) = (1 - W_i) \frac{\hat e^{(0)}(X_i)}{1 - \hat e^{(0)}(X_i)}, \quad
 #'       \bar X_{\mathrm{target}} = \frac{1}{\sum W_i} \sum_{i=1}^n W_i X_i.}
 #'
 #' @param X A numeric matrix or data frame with pre-treatment covariates.
