@@ -114,7 +114,7 @@ plot(fit, lambda = 0)
 # Predict propensity scores at end of lambda path.
 W.hat <- predict(fit, X, lambda = 0)
 
-# Get weights at end of lambda path.
+# Get balancing weights at end of lambda path.
 ipw.weights <- ipw(fit, lambda = 0)
 
 # Estimate ATE using IPW weights.

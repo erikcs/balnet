@@ -74,7 +74,7 @@
 #' # Predict propensity scores at end of lambda path.
 #' W.hat <- predict(fit, X, lambda = 0)
 #'
-#' # Get weights at end of lambda path.
+#' # Get balancing weights at end of lambda path.
 #' ipw.weights <- ipw(fit, lambda = 0)
 #'
 #' # Estimate ATE using IPW weights.
@@ -578,7 +578,7 @@ plot.balnet <- function(
 #' # Fit an ATT model.
 #' fit <- balnet(X, W, target = "ATT")
 #'
-#' # Extract IPW weights.
+#' # Extract balancing weights.
 #' wts <- ipw(fit, lambda = 0)
 #' }
 #'

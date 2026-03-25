@@ -44,7 +44,7 @@ W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 # Fit an ATT model.
 fit <- balnet(X, W, target = "ATT")
 
-# Extract IPW weights.
+# Extract balancing weights.
 wts <- ipw(fit, lambda = 0)
 }
 
