@@ -72,7 +72,7 @@ Fits regularized logistic regression models using covariate balancing loss funct
 the ATE, ATT, or treated/control means.
 }
 \details{
-This function aims to find weights \eqn{\hat\gamma_i(w)}, using logistic propensity scores,
+This function aims to find balancing weights \eqn{\hat\gamma_i(w)}, using logistic propensity scores,
 that balance covariate means to a target vector, i.e.,
 \deqn{\frac{1}{n} \sum_{i=1}^n \hat\gamma_i(W_i) X_i = \bar X_{\mathrm{target}}.}
 With lasso regularization (\code{alpha = 1}), imbalance is controlled in the \eqn{\ell_\infty} sense,
