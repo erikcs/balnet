@@ -48,7 +48,7 @@ fit <- balnet(X, W)
 
 By default, this fits a lasso-regularized path of logistic models, with tuning parameters and path construction chosen to mirror common `glmnet` usage.
 
-A few details are worth highlighting. When propensity scores are estimated using covariate balancing loss functions, the fitted models depend on the target estimand. For the ATE, `balnet` fits two propensity score models: one for the control arm and one for the treated arm. When forming IPW estimators, the control-arm model is used to estimate $E[Y_i(0)]$, while the treated-arm model is used to estimate $E[Y_i(1)]$.
+A few details are worth highlighting. When propensity scores are estimated using covariate balancing loss functions, the fitted models depend on the target estimand. For the ATE, `balnet` fits two propensity score models: one for the control arm and one for the treated arm. The control-arm model is used to estimate $E[Y_i(0)]$, while the treated-arm model is used to estimate $E[Y_i(1)]$.
 
 Printing the fitted object shows summary information for both arms. By default, the output is truncated to display only the beginning and end of the regularization path, the full path can be displayed by increasing the `max` argument in `print`.
 
