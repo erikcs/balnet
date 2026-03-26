@@ -72,19 +72,19 @@ Fits regularized logistic regression models using covariate balancing loss funct
 the ATE, ATT, or treated/control means.
 }
 \details{
-This function aims to find balancing weights \eqn{\hat\gamma_i(w)}, using logistic propensity scores,
+This function aims to find balancing weights \eqn{\hat\gamma_i}, using logistic propensity scores,
 that balance covariate means to a target vector, i.e.,
-\deqn{\frac{1}{n} \sum_{i=1}^n \hat\gamma_i(W_i) X_i = \bar X_{\mathrm{target}}.}
+\deqn{\frac{1}{n} \sum_{i=1}^n \hat\gamma_i X_i = \bar X_{\mathrm{target}}.}
 With lasso regularization (\code{alpha = 1}), imbalance is controlled in the \eqn{\ell_\infty} sense,
 allowing absolute slack of at most \eqn{\lambda} per covariate.
 
 For \code{target = "ATE"}, two logistic models are fit, one per arm, with
-\deqn{\hat\gamma_i(1) = \frac{W_i}{\hat e^{(1)}(X_i)}, \quad
-      \hat\gamma_i(0) = \frac{1 - W_i}{1 - \hat e^{(0)}(X_i)}, \quad
+\deqn{\hat\gamma_i^{(1)} = \frac{W_i}{\hat e^{(1)}(X_i)}, \quad
+      \hat\gamma_i^{(0)} = \frac{1 - W_i}{1 - \hat e^{(0)}(X_i)}, \quad
       \bar X_{\mathrm{target}} = \frac{1}{n} \sum_{i=1}^n X_i.}
 \eqn{\hat e^{(w)}(X_i)} is the fitted propensity score for arm \eqn{w}.
 For \code{target = "ATT"}, weights balance the control means:
-\deqn{\hat\gamma_i(0) = (1 - W_i) \frac{\hat e^{(0)}(X_i)}{1 - \hat e^{(0)}(X_i)}, \quad
+\deqn{\hat\gamma_i = (1 - W_i) \frac{\hat e^{(0)}(X_i)}{1 - \hat e^{(0)}(X_i)}, \quad
       \bar X_{\mathrm{target}} = \frac{1}{\sum W_i} \sum_{i=1}^n W_i X_i.}
 }
 \examples{
