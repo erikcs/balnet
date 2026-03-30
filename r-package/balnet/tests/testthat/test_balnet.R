@@ -155,12 +155,12 @@ test_that("sample.weighted balnet identical to duplication", {
   Y <- runif(n)
   YY <- c(Y, Y[to.duplicate])
   expect_equal(
-    apply(ipw(fit.wt)$control, 2, function(x) weighted.mean(Y, x)),
-    apply(ipw(fit.dupe)$control, 2, function(x) weighted.mean(YY, x))
+    apply(balweights(fit.wt)$control, 2, function(x) weighted.mean(Y, x)),
+    apply(balweights(fit.dupe)$control, 2, function(x) weighted.mean(YY, x))
   )
   expect_equal(
-    apply(ipw(fit.wt)$treated, 2, function(x) weighted.mean(Y, x)),
-    apply(ipw(fit.dupe)$treated, 2, function(x) weighted.mean(YY, x))
+    apply(balweights(fit.wt)$treated, 2, function(x) weighted.mean(Y, x)),
+    apply(balweights(fit.dupe)$treated, 2, function(x) weighted.mean(YY, x))
   )
 })
 
