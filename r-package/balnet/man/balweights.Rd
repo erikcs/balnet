@@ -33,7 +33,7 @@ Estimated balancing weights
 }
 \description{
 Retrieves the estimated balancing weights \eqn{\hat{\gamma}}.
-Under unconfoundedness, these correspond to inverse propensity weights (IPW)
+Under unconfoundedness, these correspond to inverse probability weights (IPW)
 for standard treatment effect estimands.
 }
 \examples{
