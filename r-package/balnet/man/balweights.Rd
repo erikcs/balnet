@@ -32,7 +32,9 @@ Estimated balancing weights
 (for contrast fits, \code{target} = "ATE" or "ATT", returns a list with entries for each arm).
 }
 \description{
-Retrieves the estimated inverse probability weights \eqn{\hat{\gamma}}.
+Retrieves the estimated balancing weights \eqn{\hat{\gamma}}.
+Under unconfoundedness, these correspond to inverse probability weights (IPW)
+for standard treatment effect estimands.
 }
 \examples{
 \donttest{
