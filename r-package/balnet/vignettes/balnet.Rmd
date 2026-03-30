@@ -107,6 +107,6 @@ fit.att <- balnet(X, W, target = "ATT")
 plot(fit.att, lambda = 0)
 ```
 
-Here, the resulting IPW weights achieve substantially improved balance.
+Here, the resulting weights achieve substantially improved balance.
 
 For additional functionality, users are encouraged to consult the documentation for the standard S3 methods provided by `balnet`, including `predict` for propensity score prediction and `balweights` for extracting balancing weights. On large datasets, we recommend calling `balnet` with `verbose = TRUE` to interactively print balance metrics during fitting.

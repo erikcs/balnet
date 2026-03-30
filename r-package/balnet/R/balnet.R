@@ -77,7 +77,7 @@
 #' # Get balancing weights at end of lambda path.
 #' ipw.weights <- balweights(fit, lambda = 0)
 #'
-#' # Estimate ATE using IPW weights.
+#' # Estimate ATE using balancing weights.
 #' mean(Y * (ipw.weights$treated - ipw.weights$control))
 #' }
 #'
