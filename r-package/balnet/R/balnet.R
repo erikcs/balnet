@@ -554,7 +554,7 @@ plot.balnet <- function(
 #' Extract balancing weights from a balnet object.
 #'
 #' Retrieves the estimated balancing weights \eqn{\hat{\gamma}}.
-#' Under unconfoundedness, these correspond to inverse probability weights (IPW)
+#' Under unconfoundedness, these correspond to inverse propensity weights (IPW)
 #' for standard treatment effect estimands.
 #'
 #' @param object A `balnet` object.
