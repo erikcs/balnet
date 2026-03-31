@@ -188,6 +188,8 @@ predict.cv.balnet <- function(
 #' @param digits Number of digits to print.
 #' @param ... Additional print arguments.
 #'
+#' @return Invisibly returns the printed information.
+#'
 #' @examples
 #' \donttest{
 #' n <- 100
@@ -233,6 +235,8 @@ print.cv.balnet <- function(
 #' @param x A `cv.balnet` object.
 #' @param lambda The lambda to use. Defaults to the cross-validated lambda.
 #' @param ... Additional arguments.
+#'
+#' @return Invisibly returns the information underlying the plot.
 #'
 #' @examples
 #' \donttest{
