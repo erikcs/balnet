@@ -1,5 +1,7 @@
 ## Pathwise Estimation of Covariate Balancing Propensity Scores
 
+[![CRANstatus](https://www.r-pkg.org/badges/version/balnet)](https://cran.r-project.org/package=balnet)
+
 A package for pathwise estimation of regularized logistic propensity score models using covariate balancing loss functions rather than maximum likelihood. Regularization paths are fit via the [adelie](https://jamesyang007.github.io/adelie/) elastic-net solver with a *glmnet*-like interface and objectives that directly target covariate balance for the ATE and ATT.
 
 Some useful links:
@@ -9,7 +11,13 @@ Some useful links:
 
 ### Installation
 
-The development version can be installed via
+The latest release of the package can be installed through CRAN:
+
+```R
+install.packages("balnet")
+```
+
+The development version can be installed via:
 
 ```R
 devtools::install_github("erikcs/balnet", subdir = "r-package/balnet")
