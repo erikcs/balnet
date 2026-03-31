@@ -88,7 +88,7 @@ This interpretation of $\lambda$ provides a convenient way to target a desired l
 plot(fit)
 ```
 
-Two quantities are shown, both normalized to percentages. The first is the percent bias reduction (PBR), which measures the reduction in absolute SMD after weighting relative to the unweighted data. The second is the effective sample size (ESS), defined as the squared sum of IPW weights divided by the sum of squared weights, normalized to sum to 100.
+Two quantities are shown, both normalized to percentages. The first is the percent bias reduction (PBR), which measures the reduction in absolute SMD after weighting relative to the unweighted data. The second is the effective sample size (ESS), defined as the squared sum of weights divided by the sum of squared weights, normalized to sum to 100.
 
 Recall that $\lambda^{\max}$ corresponds to the intercept-only (unweighted) fit. As $\lambda$ decreases, covariate imbalance is reduced, but at the cost of a smaller effective sample size, reflecting increased concentration of weights on a subset of units.
 
@@ -107,6 +107,6 @@ fit.att <- balnet(X, W, target = "ATT")
 plot(fit.att, lambda = 0)
 ```
 
-Here, the resulting IPW weights achieve substantially improved balance.
+Here, the resulting weights achieve substantially improved balance.
 
-For additional functionality, users are encouraged to consult the documentation for the standard S3 methods provided by `balnet`, including `predict` for propensity score prediction and `ipw` for extracting balancing weights. On large datasets, we recommend calling `balnet` with `verbose = TRUE` to interactively print balance metrics during fitting.
+For additional functionality, users are encouraged to consult the documentation for the standard S3 methods provided by `balnet`, including `predict` for propensity score prediction and `balweights` for extracting balancing weights. On large datasets, we recommend calling `balnet` with `verbose = TRUE` to interactively print balance metrics during fitting.

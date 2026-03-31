@@ -46,9 +46,9 @@ plot(fit, lambda = 0)
 W.hat <- predict(fit, X, lambda = 0)
 
 # Get balancing weights at end of lambda path.
-ipw.weights <- ipw(fit, lambda = 0)
+ipw.weights <- balweights(fit, lambda = 0)
 
-# Estimate ATE using IPW weights.
+# Estimate ATE using balancing weights.
 mean(Y * (ipw.weights$treated - ipw.weights$control))
 ```
 

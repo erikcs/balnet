@@ -263,10 +263,10 @@ plot.cv.balnet <- function(
   plot.balnet(x, lambda = lambda, ...)
 }
 
-#' @rdname ipw
-#' @method ipw cv.balnet
+#' @rdname balweights
+#' @method balweights cv.balnet
 #' @export
-ipw.cv.balnet <- function(
+balweights.cv.balnet <- function(
   object,
   lambda = "lambda.min",
   ...
@@ -276,7 +276,7 @@ ipw.cv.balnet <- function(
     lambda <- object[["_cv.info"]]$lambda.min
   }
 
-  ipw.balnet(object, lambda = lambda)
+  balweights.balnet(object, lambda = lambda)
 }
 
 get_balance_loss <- function(object, X, W, sample.weights, lambda) {
