@@ -75,9 +75,9 @@
 #' W.hat <- predict(fit, X, lambda = 0)
 #'
 #' # Get balancing weights at end of lambda path.
-#' ipw.weights <- ipw(fit, lambda = 0)
+#' ipw.weights <- balweights(fit, lambda = 0)
 #'
-#' # Estimate ATE using IPW weights.
+#' # Estimate ATE using balancing weights.
 #' mean(Y * (ipw.weights$treated - ipw.weights$control))
 #' }
 #'
@@ -448,12 +448,12 @@ print.balnet <- function(
 #' Plot diagnostics for a `balnet` object.
 #'
 #' Shows effective sample size (ESS) and percent bias reduction (PBR; reduction
-#' in mean absolute imbalance) along the regularization path, computed from IPW
+#' in mean absolute imbalance) along the regularization path, computed from balancing
 #' weights and normalized to percentages. The right-hand axis maps these values
 #' to the coefficient of variation (CV) of the weights.
 #' Supplying the `lambda` argument displays the standardized covariate imbalance
 #' \eqn{(\bar X_{\mathrm{weighted}} - \bar X_{\mathrm{target}}) / \sigma_{\mathrm{target}}},
-#' computed using the IPW weights at the specified `lambda`.
+#' computed using the balancing weights at the specified `lambda`.
 #'
 #' @param x A `balnet` object.
 #' @param lambda If NULL (default) diagnostics over the lambda path is shown.
@@ -553,7 +553,9 @@ plot.balnet <- function(
 
 #' Extract balancing weights from a balnet object.
 #'
-#' Retrieves the estimated inverse probability weights \eqn{\hat{\gamma}}.
+#' Retrieves the estimated balancing weights \eqn{\hat{\gamma}}.
+#' Under unconfoundedness, these correspond to inverse probability weights (IPW)
+#' for standard treatment effect estimands.
 #'
 #' @param object A `balnet` object.
 #' @param lambda Value(s) of the penalty parameter `lambda` at which weights
@@ -565,7 +567,7 @@ plot.balnet <- function(
 #'     arm and the second to the treatment.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return Estimated IPW weights
+#' @return Estimated balancing weights
 #'  (for contrast fits, `target` = "ATE" or "ATT", returns a list with entries for each arm).
 #'
 #' @examples
@@ -579,23 +581,23 @@ plot.balnet <- function(
 #' fit <- balnet(X, W, target = "ATT")
 #'
 #' # Extract balancing weights.
-#' wts <- ipw(fit, lambda = 0)
+#' wts <- balweights(fit, lambda = 0)
 #' }
 #'
 #' @export
-ipw <- function(
+balweights <- function(
   object,
   lambda = NULL,
   ...
 )
 {
-  UseMethod("ipw")
+  UseMethod("balweights")
 }
 
-#' @rdname ipw
-#' @method ipw balnet
+#' @rdname balweights
+#' @method balweights balnet
 #' @export
-ipw.balnet <- function(
+balweights.balnet <- function(
   object,
   lambda = NULL,
   ...
