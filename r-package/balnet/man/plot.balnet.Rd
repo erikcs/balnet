@@ -34,7 +34,6 @@ Supplying the \code{lambda} argument displays the standardized covariate imbalan
 computed using the balancing weights at the specified \code{lambda}.
 }
 \examples{
-\donttest{
 n <- 100
 p <- 25
 X <- matrix(rnorm(n * p), n, p)
@@ -45,6 +44,5 @@ fit <- balnet(X, W, target = "ATT")
 
 # Plot the five covariates with the largest unweighted imbalance
 plot(fit, lambda = 0, max = 5)
-}
 
 }

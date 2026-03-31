@@ -37,7 +37,6 @@ Under unconfoundedness, these correspond to inverse probability weights (IPW)
 for standard treatment effect estimands.
 }
 \examples{
-\donttest{
 n <- 100
 p <- 25
 X <- matrix(rnorm(n * p), n, p)
@@ -48,6 +47,5 @@ fit <- balnet(X, W, target = "ATT")
 
 # Extract balancing weights.
 wts <- balweights(fit, lambda = 0)
-}
 
 }

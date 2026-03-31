@@ -88,7 +88,6 @@ For \code{target = "ATT"}, weights balance the control means:
       \bar X_{\mathrm{target}} = \frac{1}{\sum W_i} \sum_{i=1}^n W_i X_i.}
 }
 \examples{
-\donttest{
 # Simulate data with confounding.
 n <- 2000
 p <- 10
@@ -119,7 +118,6 @@ ipw.weights <- balweights(fit, lambda = 0)
 
 # Estimate ATE using balancing weights.
 mean(Y * (ipw.weights$treated - ipw.weights$control))
-}
 
 }
 \references{

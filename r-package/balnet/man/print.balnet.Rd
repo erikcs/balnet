@@ -22,7 +22,6 @@ Invisibly returns the printed information.
 Print a balnet object.
 }
 \examples{
-\donttest{
 n <- 100
 p <- 25
 X <- matrix(rnorm(n * p), n, p)
@@ -33,6 +32,5 @@ fit <- balnet(X, W, target = "ATT")
 
 # Print path summary.
 print(fit)
-}
 
 }

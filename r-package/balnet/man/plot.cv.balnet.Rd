@@ -20,9 +20,8 @@ Invisibly returns the information underlying the plot.
 Plot diagnostics for a \code{cv.balnet} object.
 }
 \examples{
-\donttest{
 n <- 100
-p <- 25
+p <- 15
 X <- matrix(rnorm(n * p), n, p)
 W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 
@@ -31,6 +30,5 @@ cv.fit <- cv.balnet(X, W, target = "ATT")
 
 # Plot at cross-validated lambda.
 plot(cv.fit)
-}
 
 }
