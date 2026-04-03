@@ -11,8 +11,9 @@
 #' @return A fit cv.balnet object.
 #'
 #' @examples
+#' \donttest{
 #' n <- 100
-#' p <- 15
+#' p <- 25
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
@@ -27,6 +28,8 @@
 #'
 #' # Predict at cross-validated lambda.
 #' W.hat <- predict(cv.fit, X)
+#'
+#' }
 #'
 #' @export
 cv.balnet <- function(
@@ -109,8 +112,9 @@ cv.balnet <- function(
 #'  (for dual-arm fits, returns a list with entries for each arm).
 #'
 #' @examples
+#' \donttest{
 #' n <- 100
-#' p <- 15
+#' p <- 25
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
@@ -119,6 +123,7 @@ cv.balnet <- function(
 #'
 #' # Extract coefficients at cross-validated lambda.
 #' coefs <- coef(cv.fit)
+#' }
 #'
 #' @method coef cv.balnet
 #' @export
@@ -147,8 +152,9 @@ coef.cv.balnet <- function(
 #'  (for dual-arm fits, returns a list with entries for each arm).
 #'
 #' @examples
+#' \donttest{
 #' n <- 100
-#' p <- 15
+#' p <- 25
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
@@ -157,6 +163,7 @@ coef.cv.balnet <- function(
 #'
 #' # Predict propensity scores at cross-validated lambda.
 #' W.hat <- predict(cv.fit, X)
+#' }
 #'
 #' @method predict cv.balnet
 #' @export
@@ -184,8 +191,9 @@ predict.cv.balnet <- function(
 #' @return Invisibly returns the printed information.
 #'
 #' @examples
+#' \donttest{
 #' n <- 100
-#' p <- 15
+#' p <- 25
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
@@ -194,6 +202,7 @@ predict.cv.balnet <- function(
 #'
 #' # Print CV summary.
 #' print(cv.fit)
+#' }
 #'
 #' @method print cv.balnet
 #' @export
@@ -230,8 +239,9 @@ print.cv.balnet <- function(
 #' @return Invisibly returns the information underlying the plot.
 #'
 #' @examples
+#' \donttest{
 #' n <- 100
-#' p <- 15
+#' p <- 25
 #' X <- matrix(rnorm(n * p), n, p)
 #' W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 #'
@@ -240,6 +250,7 @@ print.cv.balnet <- function(
 #'
 #' # Plot at cross-validated lambda.
 #' plot(cv.fit)
+#' }
 #'
 #' @method plot cv.balnet
 #' @export

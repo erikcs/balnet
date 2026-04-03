@@ -34,8 +34,9 @@ A fit cv.balnet object.
 Cross-validation for balnet.
 }
 \examples{
+\donttest{
 n <- 100
-p <- 15
+p <- 25
 X <- matrix(rnorm(n * p), n, p)
 W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 
@@ -50,5 +51,7 @@ plot(cv.fit)
 
 # Predict at cross-validated lambda.
 W.hat <- predict(cv.fit, X)
+
+}
 
 }

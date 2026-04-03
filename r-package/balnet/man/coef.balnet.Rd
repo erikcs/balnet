@@ -29,6 +29,7 @@ Estimated logistic coefficients
 Extract coefficients from a balnet object.
 }
 \examples{
+\donttest{
 n <- 100
 p <- 25
 X <- matrix(rnorm(n * p), n, p)
@@ -39,5 +40,6 @@ fit <- balnet(X, W, target = "ATT")
 
 # Extract coefficients.
 coefs <- coef(fit)
+}
 
 }

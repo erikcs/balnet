@@ -48,6 +48,7 @@
 #'  arXiv preprint, arXiv:2602.18577, 2026.
 #'
 #' @examples
+#' \donttest{
 #' # Simulate data with confounding.
 #' n <- 2000
 #' p <- 10
@@ -78,6 +79,7 @@
 #'
 #' # Estimate ATE using balancing weights.
 #' mean(Y * (ipw.weights$treated - ipw.weights$control))
+#' }
 #'
 #' @export
 balnet <- function(
@@ -235,6 +237,7 @@ balnet <- function(
 #'
 #'
 #' @examples
+#' \donttest{
 #' n <- 100
 #' p <- 25
 #' X <- matrix(rnorm(n * p), n, p)
@@ -245,6 +248,7 @@ balnet <- function(
 #'
 #' # Extract coefficients.
 #' coefs <- coef(fit)
+#' }
 #'
 #' @method coef balnet
 #' @export
@@ -291,6 +295,7 @@ coef.balnet <- function(
 #'  (for dual-arm fits, returns a list with entries for each arm).
 #'
 #' @examples
+#' \donttest{
 #' n <- 100
 #' p <- 25
 #' X <- matrix(rnorm(n * p), n, p)
@@ -301,6 +306,7 @@ coef.balnet <- function(
 #'
 #' # Predict propensity scores.
 #' W.hat <- predict(fit, X)
+#' }
 #'
 #' @method predict balnet
 #' @export
@@ -355,6 +361,7 @@ predict.balnet <- function(
 #' @return Invisibly returns the printed information.
 #'
 #' @examples
+#' \donttest{
 #' n <- 100
 #' p <- 25
 #' X <- matrix(rnorm(n * p), n, p)
@@ -365,6 +372,7 @@ predict.balnet <- function(
 #'
 #' # Print path summary.
 #' print(fit)
+#' }
 #'
 #' @method print balnet
 #' @export
@@ -460,6 +468,7 @@ print.balnet <- function(
 #' @return Invisibly returns the information underlying the plot.
 #'
 #' @examples
+#' \donttest{
 #' n <- 100
 #' p <- 25
 #' X <- matrix(rnorm(n * p), n, p)
@@ -470,6 +479,7 @@ print.balnet <- function(
 #'
 #' # Plot the five covariates with the largest unweighted imbalance
 #' plot(fit, lambda = 0, max = 5)
+#' }
 #'
 #' @method plot balnet
 #' @export
@@ -561,6 +571,7 @@ plot.balnet <- function(
 #'  (for contrast fits, `target` = "ATE" or "ATT", returns a list with entries for each arm).
 #'
 #' @examples
+#' \donttest{
 #' n <- 100
 #' p <- 25
 #' X <- matrix(rnorm(n * p), n, p)
@@ -571,6 +582,7 @@ plot.balnet <- function(
 #'
 #' # Extract balancing weights.
 #' wts <- balweights(fit, lambda = 0)
+#' }
 #'
 #' @export
 balweights <- function(

@@ -33,6 +33,7 @@ Estimated predictions
 Predict using a balnet object.
 }
 \examples{
+\donttest{
 n <- 100
 p <- 25
 X <- matrix(rnorm(n * p), n, p)
@@ -43,5 +44,6 @@ fit <- balnet(X, W, target = "ATT")
 
 # Predict propensity scores.
 W.hat <- predict(fit, X)
+}
 
 }

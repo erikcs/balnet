@@ -20,8 +20,9 @@ Invisibly returns the printed information.
 Print a cv.balnet object.
 }
 \examples{
+\donttest{
 n <- 100
-p <- 15
+p <- 25
 X <- matrix(rnorm(n * p), n, p)
 W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 
@@ -30,5 +31,6 @@ cv.fit <- cv.balnet(X, W, target = "ATT")
 
 # Print CV summary.
 print(cv.fit)
+}
 
 }
