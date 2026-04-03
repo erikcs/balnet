@@ -13,6 +13,9 @@
 
 \item{...}{Additional arguments.}
 }
+\value{
+Invisibly returns the information underlying the plot.
+}
 \description{
 Plot diagnostics for a \code{cv.balnet} object.
 }

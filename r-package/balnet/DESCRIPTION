@@ -1,6 +1,6 @@
 Package: balnet
 Title: Pathwise Estimation of Covariate Balancing Propensity Scores
-Version: 0.0.0
+Version: 0.0.1
 Authors@R: c(
     person("Erik", "Sverdrup", role = c("aut", "cre"), email = "erik.sverdrup@monash.edu"),
     person("Trevor", "Hastie", role = "aut"),
@@ -10,7 +10,8 @@ Description: Provides pathwise estimation of regularized logistic propensity
     score models using covariate balancing loss functions rather than maximum
     likelihood. Regularization paths are fit via the 'adelie' elastic-net
     solver with a 'glmnet'-like interface and objectives that directly target
-    covariate balance for the ATE and ATT. Details are in <doi:10.48550/arXiv.2602.18577>.
+    covariate balance for the ATE and ATT.
+    For details, see Sverdrup & Hastie (2026) <doi:10.48550/arXiv.2602.18577>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

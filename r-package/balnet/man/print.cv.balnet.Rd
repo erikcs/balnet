@@ -13,6 +13,9 @@
 
 \item{...}{Additional print arguments.}
 }
+\value{
+Invisibly returns the printed information.
+}
 \description{
 Print a cv.balnet object.
 }
