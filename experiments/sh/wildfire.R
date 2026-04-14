@@ -9,22 +9,22 @@ X = matrix(
 )
 W = scan("treated2008_conifer_W.csv.gz", skip = 1)
 
-# Maximum unweighted imbalance is lambda_max
+# Maximum unweighted imbalance is simply lambda_max
 print(balnet(X, W, target = "ATT", nlambda = 1))
 
 # Fit a balnet targeting the ATT.
-bl <- balnet(X, W, target = "ATT", max.imbalance = 0.05, verbose = TRUE, num.threads = 4)
-print(bl)
+fit <- balnet(X, W, target = "ATT", max.imbalance = 0.05, verbose = TRUE, num.threads = 4)
+print(fit)
 
 # Plot path
 pdf("fig_path.pdf", pointsize = 16)
-plot(bl)
+plot(fit)
 dev.off()
 
 # Plot SMD at lowest lambda
 pdf("fig_smd_top.pdf", pointsize = 16)
 par(mar = c(5, 5.5, 4, 2))
-plot(bl, lambda = 0, max = 10)
+plot(fit, lambda = 0, max = 10)
 dev.off()
 
 # Plot all covariates, grouped
@@ -47,7 +47,7 @@ covariate.groups = list(
 )
 pdf("fig_smd_grp.pdf", pointsize = 16)
 par(mar = c(5, 8.5, 4, 2))
-plot(bl, lambda = 0, groups = covariate.groups)
+plot(fit, lambda = 0, groups = covariate.groups)
 dev.off()
 
 
