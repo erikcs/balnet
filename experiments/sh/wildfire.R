@@ -50,26 +50,13 @@ par(mar = c(5, 8.5, 4, 2))
 plot(fit, lambda = 0, groups = covariate.groups)
 dev.off()
 
-
-# ATT weights vs maximum likelihood
-W.hat = predict(bl, X, lambda = 0)
-ipw = (1 - W) * W.hat / (1 - W.hat)
-
-# (requires adelie to be installed)
-W.hat.ml = predict(ad <- adelie::grpnet(X, adelie::glm.binomial(W), progress_bar = TRUE), X, lambda = 0, type = "response")
-ipw.ml = (1 - W) * W.hat.ml / (1 - W.hat.ml)
+# Inspect ATT weights at min. lambda
+weights = balweights(fit, lambda = 0)
 
 png("fig_weights.png", width = 2100, height = 2100, res = 300, pointsize = 16)
-hist(ipw[W==0], breaks = 150, prob = TRUE,
+hist(weights$control[W==0], breaks = 150, prob = TRUE,
      col = rgb(0,0,0,0.4),
-     main = "ATT weights",
+     main = "",
      xlab = "")
-rug(ipw[W==0], col = rgb(0,0,0,0.4))
-abline(v = ipw.ml[W==0], col = rgb(1,0,0,0.4), lwd = 2)
-legend("topright", legend = c("balance loss", "maximum likelihood"),
-       lty = c(NA, 1),
-       col = c(rgb(0,0,0,0.4), rgb(1,0,0,0.4)),
-       lwd = c(NA, 2),
-       pch = c(15, NA),
-       bty = "n")
+rug(weights$control[W==0], col = rgb(0,0,0,0.4))
 dev.off()
