@@ -17,12 +17,12 @@ fit <- balnet(X, W, target = "ATT", max.imbalance = 0.05, verbose = TRUE, num.th
 print(fit)
 
 # Plot path
-pdf("fig_path.pdf", pointsize = 16)
+pdf("fig_path.pdf", pointsize = 18)
 plot(fit)
 dev.off()
 
 # Plot SMD at lowest lambda
-pdf("fig_smd_top.pdf", pointsize = 16)
+pdf("fig_smd_top.pdf", pointsize = 18)
 par(mar = c(5, 5.5, 4, 2))
 plot(fit, lambda = 0, max = 10)
 dev.off()
@@ -45,7 +45,7 @@ covariate.groups = list(
   `Vegetation: tree cover` = grep("tree_cover_", colnames(X)),
   `Elevation` = grep("elev", colnames(X))
 )
-pdf("fig_smd_grp.pdf", pointsize = 16)
+pdf("fig_smd_grp.pdf", pointsize = 18)
 par(mar = c(5, 8.5, 4, 2))
 plot(fit, lambda = 0, groups = covariate.groups)
 dev.off()
@@ -53,7 +53,7 @@ dev.off()
 # Inspect ATT weights at min. lambda
 weights = balweights(fit, lambda = 0)
 
-png("fig_weights.png", width = 2100, height = 2100, res = 300, pointsize = 16)
+png("fig_weights.png", width = 2100, height = 2100, res = 300, pointsize = 18)
 hist(weights$control[W==0], breaks = 150, prob = TRUE,
      col = rgb(0,0,0,0.4),
      main = "",
