@@ -1,4 +1,4 @@
-## Pathwise Estimation of Covariate Balancing Propensity Scores
+## balnet
 
 [![CRANstatus](https://www.r-pkg.org/badges/version/balnet)](https://cran.r-project.org/package=balnet)
 
@@ -46,8 +46,7 @@ print(fit)
 plot(fit)
 
 # Plot the covariate imbalance at given lambda.
-# Note: lambda = 0 selects the final lambda in the sequence. Scalar values
-# are applied to both arms.
+# lambda = 0 selects the final lambda in the sequences.
 plot(fit, lambda = 0)
 
 # Predict propensity scores at end of lambda path.
@@ -64,7 +63,7 @@ mean(Y * (ipw.weights$treated - ipw.weights$control))
 
 Jerome H. Friedman, Trevor Hastie, and Rob Tibshirani.
 <b>Regularization Paths for Generalized Linear Models via Coordinate Descent.</b>
-<i>Journal of Statistical Software</i>, 33, 2010
+<i>Journal of Statistical Software</i>, 33, 2010.
 [<a href="https://www.jstatsoft.org/article/view/v033i01">paper</a>]
 
 Erik Sverdrup and Trevor Hastie.
