@@ -95,7 +95,7 @@ balnet.fit <- function(
     setup_lmda_path <- FALSE
     lmda_path_size <- length(lmda_path)
   }
-  lmda_max <- -1.0 # Let the solver compute this, is simply max(abs(crossprod(X, weights * (y / mean(y) - 1)))) (or of colMeans(X * y)), but does it faster
+  lmda_max <- -1.0 # Has easy closed-form solution, but let the solver compute this so path and non-zero beta solution line up exactly
   setup_lmda_max <- TRUE
 
   if (is.null(penalty)) {
