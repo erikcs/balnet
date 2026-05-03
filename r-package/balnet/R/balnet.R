@@ -33,6 +33,9 @@
 #' @param penalty.factor Penalty factor per feature. Default is 1 (i.e., each feature receives the same penalty).
 #' @param groups Optional list of group indices for group penalization.
 #' @param alpha Elastic net mixing parameter. Default is 1 (lasso), 0 corresponds to ridge.
+#' @param alpha Elastic net mixing parameter. Default is 1 (lasso), 0 corresponds to ridge.
+#'   For `alpha = 0`, the regularization path is constructed using a small positive value
+#'   (similar to `glmnet`), since \eqn{\lambda_{max} \to \infty} as \eqn{\alpha \to 0}.
 #' @param standardize Whether to standardize the input matrix. Should only be `FALSE` if `X` already has
 #'   zero-mean columns with unit variance. For `target = "ATT"`, standardization should be based on the treated group.
 #' @param tol Coordinate descent convergence tolerance. Default is 1e-7.
