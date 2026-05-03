@@ -31,6 +31,7 @@ get_data = function(size = c("100k", "200k", "400k")) {
     W.out = W[row]
     X.out = X[row, col]
   }
+  colnames(X.out) <- make.names(1:ncol(X.out))
 
   list(W = W.out, X = X.out)
 }
@@ -58,4 +59,6 @@ for (i in 1:nrow(grid)) {
 }
 out.df = do.call(rbind, out)
 write.csv(out.df, "timing.csv", row.names = FALSE)
-print(xtable(out.df, digits = 0), include.rownames = FALSE)
+
+# Raw numbers in seconds behind Table 1
+print(xtable(out.df, digits = 1), include.rownames = FALSE)
