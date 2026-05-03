@@ -143,7 +143,9 @@ balnet.fit <- function(
 
   # Unused warm start options
   lmda <- Inf
-  screen_set <- (0:(groups$G-1))[(penalty <= 0) | (alpha <= 0)]
+  # adelie originally had a separate code path for ridge: `screen_set <- (0:(groups$G-1))[(penalty <= 0) | (alpha <= 0)]`
+  # but this causes issues with generating the lambda sequence, see https://github.com/erikcs/balnet/pull/38
+  screen_set <- (0:(groups$G-1))[(penalty <= 0)]
   screen_beta <- double(sum(groups$group_sizes[screen_set + 1]))
   screen_is_active <- as.integer(rep_len(1, length(screen_set)))
   active_set_size <- length(screen_set)
