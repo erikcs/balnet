@@ -4,12 +4,12 @@ Version: 0.0.1
 Authors@R: c(
     person("Erik", "Sverdrup", role = c("aut", "cre"), email = "erik.sverdrup@monash.edu"),
     person("Trevor", "Hastie", role = "aut"),
-    person("James", "Yang", role = "ctb", comment = "adelie core author")
+    person("James", "Yang", role = "ctb", comment = "adelie author")
     )
 Description: Provides pathwise estimation of regularized logistic propensity
     score models using covariate balancing loss functions rather than maximum
     likelihood. Regularization paths are fit via the 'adelie' elastic-net
-    solver with a 'glmnet'-like interface and objectives that directly target
+    solver with a 'glmnet'-like interface, yielding balancing weights that target
     covariate balance for the ATE and ATT.
     For details, see Sverdrup & Hastie (2026) <doi:10.48550/arXiv.2602.18577>.
 License: MIT + file LICENSE

@@ -1,7 +1,7 @@
 #' Pathwise estimation of covariate balancing propensity scores.
 #'
-#' Fits regularized logistic regression models using covariate balancing loss functions, targeting
-#' the ATE, ATT, or treated/control means.
+#' Fits regularized logistic regression models using covariate balancing loss functions,
+#' yielding balancing weights targeting the ATE, ATT, or treated/control means.
 #'
 #' This function aims to find balancing weights \eqn{\hat\gamma_i}, using logistic propensity scores,
 #' that balance covariate means to a target vector, i.e.,

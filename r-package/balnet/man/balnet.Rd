@@ -68,8 +68,8 @@ zero-mean columns with unit variance. For \code{target = "ATT"}, standardization
 A fit balnet object.
 }
 \description{
-Fits regularized logistic regression models using covariate balancing loss functions, targeting
-the ATE, ATT, or treated/control means.
+Fits regularized logistic regression models using covariate balancing loss functions,
+yielding balancing weights targeting the ATE, ATT, or treated/control means.
 }
 \details{
 This function aims to find balancing weights \eqn{\hat\gamma_i}, using logistic propensity scores,
