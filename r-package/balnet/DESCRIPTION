@@ -1,10 +1,10 @@
 Package: balnet
 Title: Pathwise Estimation of Covariate Balancing Propensity Scores
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: c(
     person("Erik", "Sverdrup", role = c("aut", "cre"), email = "erik.sverdrup@monash.edu"),
     person("Trevor", "Hastie", role = "aut"),
-    person("James", "Yang", role = "ctb", comment = "adelie author")
+    person("James", "Yang", role = "ctb", comment = "Author of adelie_core C++ library (vendored in inst/include/)")
     )
 Description: Provides pathwise estimation of regularized logistic propensity
     score models using covariate balancing loss functions rather than maximum
