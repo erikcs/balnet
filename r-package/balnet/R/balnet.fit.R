@@ -95,7 +95,7 @@ balnet.fit <- function(
     setup_lmda_path <- FALSE
     lmda_path_size <- length(lmda_path)
   }
-  lmda_max <- -1.0 # Let the solver compute this, is simply max(abs(crossprod(X, weights * (y / mean(y) - 1)))) (or of colMeans(X * y)), but does it faster
+  lmda_max <- -1.0 # Has easy closed-form solution, but let the solver compute this so path and non-zero beta solution line up exactly
   setup_lmda_max <- TRUE
 
   if (is.null(penalty)) {
@@ -143,7 +143,9 @@ balnet.fit <- function(
 
   # Unused warm start options
   lmda <- Inf
-  screen_set <- (0:(groups$G-1))[(penalty <= 0) | (alpha <= 0)]
+  # adelie originally had a separate code path for ridge: `screen_set <- (0:(groups$G-1))[(penalty <= 0) | (alpha <= 0)]`
+  # but this causes issues with generating the lambda sequence, see https://github.com/erikcs/balnet/pull/38
+  screen_set <- (0:(groups$G-1))[(penalty <= 0)]
   screen_beta <- double(sum(groups$group_sizes[screen_set + 1]))
   screen_is_active <- as.integer(rep_len(1, length(screen_set)))
   active_set_size <- length(screen_set)
