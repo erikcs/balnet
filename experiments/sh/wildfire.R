@@ -60,3 +60,8 @@ hist(weights$control[W==0], breaks = 150, prob = TRUE,
      xlab = "")
 rug(weights$control[W==0], col = rgb(0,0,0,0.4))
 dev.off()
+
+# cv.balnet example
+set.seed(42)
+cv.fit <-  cv.balnet(X, W, target = "ATT", nfolds = 5, max.imbalance = 0.05, verbose = TRUE, num.threads = 4)
+print(cv.fit)
