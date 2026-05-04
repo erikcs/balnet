@@ -50,7 +50,7 @@ and \code{lambda.min.ratio} (or \code{max.imbalance}, if specified).}
 \item{groups}{Optional list of group indices for group penalization.}
 
 \item{alpha}{Elastic net mixing parameter. Default is 1 (lasso), 0 corresponds to ridge.
-For \code{alpha = 0}, the regularization path is constructed using a small positive value
+For \code{alpha = 0}, the lambda sequence is constructed using a small positive \code{alpha} value
 (similar to \code{glmnet}), since \eqn{\lambda_{max} \to \infty} as \eqn{\alpha \to 0}.}
 
 \item{standardize}{Whether to standardize the input matrix. Should only be \code{FALSE} if \code{X} already has
