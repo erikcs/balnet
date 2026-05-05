@@ -45,7 +45,8 @@ sequence (via \code{lambda.min.ratio}) so that the generated sequence ends at th
 \item{lambda}{Optional \code{lambda} sequence. By default, it is constructed automatically using \code{nlambda}
 and \code{lambda.min.ratio} (or \code{max.imbalance}, if specified).}
 
-\item{penalty.factor}{Penalty factor per feature. Default is 1 (i.e., each feature receives the same penalty).}
+\item{penalty.factor}{Penalty factor per feature. Default is 1 (i.e., each feature receives the same penalty).
+If groups are specified, the penalty factors default to the square root of each group size.}
 
 \item{groups}{Optional list of group indices for group penalization.}
 

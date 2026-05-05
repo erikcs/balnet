@@ -31,6 +31,7 @@
 #' @param lambda Optional `lambda` sequence. By default, it is constructed automatically using `nlambda`
 #'   and `lambda.min.ratio` (or `max.imbalance`, if specified).
 #' @param penalty.factor Penalty factor per feature. Default is 1 (i.e., each feature receives the same penalty).
+#'   If groups are specified, the penalty factors default to the square root of each group size.
 #' @param groups Optional list of group indices for group penalization.
 #' @param alpha Elastic net mixing parameter. Default is 1 (lasso), 0 corresponds to ridge.
 #'   For `alpha = 0`, the lambda sequence is constructed using a small positive `alpha` value
