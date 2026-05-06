@@ -415,6 +415,8 @@ inline auto fit(
         constexpr size_t fast_fail_iters = 0;
         auto max_iters_prime = max_iters;
 
+        // A coeff blow-up does *not* happen at default values of tol
+        // The heuristic check here is only for when relaxing tol (and thus step size) to stop at a reasonable solution
         constexpr auto eta_lim = 50.0;
         auto eta_min = eta.minCoeff();
         if (
