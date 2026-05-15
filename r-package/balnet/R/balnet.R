@@ -448,6 +448,19 @@ print.balnet <- function(
   }
 }
 
+#' Summarize a balnet object.
+#'
+#' @param object `balnet` object.
+#' @param ... Additional summary arguments.
+#'
+#' @return Returns the printed information.
+#'
+#' @method summary balnet
+#' @export
+summary.balnet <- function(object, ...) {
+  print(object, ...)
+}
+
 #' Plot diagnostics for a `balnet` object.
 #'
 #' Shows effective sample size (ESS) and percent bias reduction (PBR; reduction

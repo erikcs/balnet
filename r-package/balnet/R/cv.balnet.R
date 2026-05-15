@@ -230,6 +230,19 @@ print.cv.balnet <- function(
   print(rbind(df0, df1), digits = digits, row.names = FALSE, right = FALSE)
 }
 
+#' Summarize a cv.balnet object.
+#'
+#' @param object `cv.balnet` object.
+#' @param ... Additional summary arguments.
+#'
+#' @return Returns the printed information.
+#'
+#' @method summary cv.balnet
+#' @export
+summary.cv.balnet <- function(object, ...) {
+  print(object, ...)
+}
+
 #' Plot diagnostics for a `cv.balnet` object.
 #'
 #' @param x A `cv.balnet` object.
