@@ -4,7 +4,7 @@
 \alias{predict.balnet}
 \title{Predict using a balnet object.}
 \usage{
-\method{predict}{balnet}(object, newdata, lambda = NULL, type = c("response"), ...)
+\method{predict}{balnet}(object, newdata, lambda = NULL, type = c("response", "link"), ...)
 }
 \arguments{
 \item{object}{A \code{balnet} object.}

@@ -323,7 +323,7 @@ predict.balnet <- function(
   object,
   newdata,
   lambda = NULL,
-  type = c("response"),
+  type = c("response", "link"),
   ...
 )
 {
