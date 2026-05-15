@@ -80,20 +80,21 @@ test_that("cv.balnet has not changed", {
 
   expect_equal(
     coef(fit),
-    list(control = list(intercepts = 0.680645954386779, betas = new("dgRMatrix",
-      p = c(0L, 3L), j = 0:2, Dim = c(1L, 3L), Dimnames = list(
-          NULL, NULL), x = c(0.0964925117386255, 0.210324237163201,
-      0.145107291953369), factors = list())), treated = list(intercepts = -0.681102012267433,
-      betas = new("dgRMatrix", p = c(0L, 3L), j = 0:2, Dim = c(1L,
-      3L), Dimnames = list(NULL, NULL), x = c(-0.0496225138747977,
-      -0.149449789859248, -0.237897822417655), factors = list())))
+    list(control = new("dgCMatrix", i = 0:3, p = c(0L, 4L), Dim = c(4L,
+    1L), Dimnames = list(c("(Intercept)", "X1", "X2", "X3"), NULL),
+        x = c(0.680645954386779, 0.0964925117386255, 0.210324237163201,
+        0.145107291953369), factors = list()), treated = new("dgCMatrix",
+        i = 0:3, p = c(0L, 4L), Dim = c(4L, 1L), Dimnames = list(
+            c("(Intercept)", "X1", "X2", "X3"), NULL), x = c(-0.681102012267433,
+        -0.0496225138747977, -0.149449789859248, -0.237897822417655
+        ), factors = list()))
   )
 
   expect_equal(
     coef(fit.att),
-    list(intercepts = 0.652873281422005, betas = new("dgRMatrix",
-    p = c(0L, 0L), j = integer(0), Dim = c(1L, 3L), Dimnames = list(
-        NULL, NULL), x = numeric(0), factors = list()))
+    new("dgCMatrix", i = 0L, p = 0:1, Dim = c(4L, 1L), Dimnames = list(
+      c("(Intercept)", "X1", "X2", "X3"), NULL), x = 0.652873281422005,
+      factors = list())
   )
 
 })

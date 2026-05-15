@@ -265,10 +265,16 @@ coef.balnet <- function(
 
   coef0 <- coef1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
-    coef0 <- coef(object[["_fit"]]$control, lambda = lambda[[1]])
+    coef0.list <- coef(object[["_fit"]]$control, lambda = lambda[[1]])
+    coef0 <- rbind(coef0.list$intercept, t(coef0.list$betas))
+    rownames(coef0) <- c("(Intercept)", object$colnames)
+    coef0 <- methods::as(coef0, "CsparseMatrix") # C-wise storage
   }
   if (!is.null(object[["_fit"]]$treated)) {
-    coef1 <- coef(object[["_fit"]]$treated, lambda = lambda[[2]])
+    coef1.list <- coef(object[["_fit"]]$treated, lambda = lambda[[2]])
+    coef1 <- rbind(coef1.list$intercept, t(coef1.list$betas))
+    rownames(coef1) <- c("(Intercept)", object$colnames)
+    coef1 <- methods::as(coef1, "CsparseMatrix")
   }
   out <- list(control = coef0, treated = coef1)
   out.nn <- out[!vapply(out, is.null, logical(1))]
