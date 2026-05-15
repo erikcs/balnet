@@ -109,9 +109,6 @@ print(fit)
 # Visualize the path.
 plot(fit)
 
-# Plot the standardized covariate imbalance at given lambda.
-# Note: lambda = 0 selects the final lambda in the sequence. Scalar values
-# are applied to both arms.
 plot(fit, lambda = 0)
 
 # Predict propensity scores at end of lambda path.
