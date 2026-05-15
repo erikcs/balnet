@@ -54,11 +54,11 @@ dev.off()
 weights = balweights(fit, lambda = 0)
 
 png("fig_weights.png", width = 2100, height = 2100, res = 300, pointsize = 18)
-hist(weights$control[W==0], breaks = 150, prob = TRUE,
+hist(weights[W==0], breaks = 150, prob = TRUE,
      col = rgb(0,0,0,0.4),
      main = "",
      xlab = "")
-rug(weights$control[W==0], col = rgb(0,0,0,0.4))
+rug(weights[W==0], col = rgb(0,0,0,0.4))
 dev.off()
 
 # cv.balnet example
