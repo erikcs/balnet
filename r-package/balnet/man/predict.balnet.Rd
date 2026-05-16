@@ -42,7 +42,7 @@ W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 # Fit an ATT model.
 fit <- balnet(X, W, target = "ATT")
 
-# Predict propensity scores.
+# Predict propensity scores over fit lambda sequence.
 W.hat <- predict(fit, X)
 }
 
