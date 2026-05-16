@@ -295,10 +295,10 @@ coef.balnet <- function(
 #' @export
 print.coef.balnet.contrast <- function(x, max = getOption("max.print")/2, ...) {
   cat("Control arm coefficients:", "\n")
-  print(x[[1]], max = max, ...)
+  print(x[["control"]], max = max, ...)
   cat("\n")
   cat("Treated arm coefficients:", "\n")
-  print(x[[2]], max = max, ...)
+  print(x[["treated"]], max = max, ...)
 
   invisible(x)
 }
@@ -308,10 +308,10 @@ print.coef.balnet.contrast <- function(x, max = getOption("max.print")/2, ...) {
 #' @export
 summary.coef.balnet.contrast <- function(object, ...) {
   cat("Control arm coefficients:", "\n")
-  print(summary(object[[1]], ...))
+  print(summary(object[["control"]], ...))
   cat("\n")
   cat("Treated arm coefficients:", "\n")
-  print(summary(object[[2]], ...))
+  print(summary(object[["treated"]], ...))
 }
 
 #' Predict using a balnet object.
@@ -696,10 +696,10 @@ balweights.balnet <- function(
 #' @export
 print.balweights.contrast <- function(x, max = getOption("max.print")/2, ...) {
   cat("Control arm weights:", "\n")
-  print(x[[1]], max = max, ...)
+  print(x[["control"]], max = max, ...)
   cat("\n")
   cat("Treated arm weights:", "\n")
-  print(x[[2]], max = max, ...)
+  print(x[["treated"]], max = max, ...)
 
   invisible(x)
 }
@@ -709,10 +709,10 @@ print.balweights.contrast <- function(x, max = getOption("max.print")/2, ...) {
 #' @export
 summary.balweights.contrast <- function(object, ...) {
   cat("Control arm weights:", "\n")
-  print(summary(object[[1]], ...))
+  print(summary(object[["control"]], ...))
   cat("\n")
   cat("Treated arm weights:", "\n")
-  print(summary(object[[2]], ...))
+  print(summary(object[["treated"]], ...))
 }
 
 get_path <- function(fit, W.hat, W, ..., lambda, devs) {
