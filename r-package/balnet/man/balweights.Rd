@@ -33,7 +33,7 @@ arm and the second to the treatment.
 
 \item{...}{Additional arguments (currently ignored).}
 
-\item{x}{A \code{balnet} object.}
+\item{x}{A \code{balweights} object.}
 }
 \value{
 Estimated balancing weights

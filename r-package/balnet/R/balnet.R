@@ -655,7 +655,7 @@ balweights.balnet <- function(
 }
 
 #' @rdname balweights
-#' @param x A `balnet` object.
+#' @param x A `balweights` object.
 #' @method print balweights
 #' @export
 print.balweights <- function(x, ...) {
