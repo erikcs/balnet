@@ -649,44 +649,36 @@ balweights.balnet <- function(
   out <- list(control = ipw0, treated = ipw1)
   out.nn <- out[!vapply(out, is.null, logical(1))]
 
-  result <- if (length(out.nn) > 1) out.nn else out.nn[[1]]
-
-  structure(result, class = "balweights")
+  if (length(out.nn) > 1) {
+    return(structure(out.nn, class = "balweights.contrast"))
+  } else {
+    return(out.nn[[1]])
+  }
 }
 
 #' @rdname balweights
-#' @param x A `balweights` object.
-#' @method print balweights
+#' @param x A `balweights.contrast` object.
+#' @method print balweights.contrast
 #' @export
-print.balweights <- function(x, ...) {
-  arm <- names(x)
-  if (length(arm) > 1) {
-    cat(paste(tools::toTitleCase(arm[1]), "arm weights:"), "\n")
-    print(x[[1]], ...)
-    cat("\n")
-    cat(paste(tools::toTitleCase(arm[2]), "arm weights:"), "\n")
-    print(x[[2]], ...)
-  } else {
-    print(unclass(x), ...)
-  }
+print.balweights.contrast <- function(x, ...) {
+  cat("Control arm weights:", "\n")
+  print(x[[1]], ...)
+  cat("\n")
+  cat("Treated arm weights:", "\n")
+  print(x[[2]], ...)
 
   invisible(x)
 }
 
 #' @rdname balweights
-#' @method summary balweights
+#' @method summary balweights.contrast
 #' @export
-summary.balweights <- function(object, ...) {
-  arm <- names(object)
-  if (length(arm) > 1) {
-    cat(paste(tools::toTitleCase(arm[1]), "arm weights:"), "\n")
-    print(summary(object[[1]], ...))
-    cat("\n")
-    cat(paste(tools::toTitleCase(arm[2]), "arm weights:"), "\n")
-    print(summary(object[[2]], ...))
-  } else {
-    print(summary(unclass(object), ...))
-  }
+summary.balweights.contrast <- function(object, ...) {
+  cat("Control arm weights:", "\n")
+  print(summary(object[[1]], ...))
+  cat("\n")
+  cat("Treated arm weights:", "\n")
+  print(summary(object[[2]], ...))
 }
 
 get_path <- function(fit, W.hat, W, ..., lambda, devs) {

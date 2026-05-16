@@ -3,8 +3,8 @@
 \name{balweights}
 \alias{balweights}
 \alias{balweights.balnet}
-\alias{print.balweights}
-\alias{summary.balweights}
+\alias{print.balweights.contrast}
+\alias{summary.balweights.contrast}
 \alias{balweights.cv.balnet}
 \title{Extract balancing weights from a balnet object.}
 \usage{
@@ -12,9 +12,9 @@ balweights(object, lambda = NULL, ...)
 
 \method{balweights}{balnet}(object, lambda = NULL, ...)
 
-\method{print}{balweights}(x, ...)
+\method{print}{balweights.contrast}(x, ...)
 
-\method{summary}{balweights}(object, ...)
+\method{summary}{balweights.contrast}(object, ...)
 
 \method{balweights}{cv.balnet}(object, lambda = "lambda.min", ...)
 }
@@ -33,7 +33,7 @@ arm and the second to the treatment.
 
 \item{...}{Additional arguments (currently ignored).}
 
-\item{x}{A \code{balweights} object.}
+\item{x}{A \code{balweights.contrast} object.}
 }
 \value{
 Estimated balancing weights
