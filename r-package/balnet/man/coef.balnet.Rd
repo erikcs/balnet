@@ -8,7 +8,7 @@
 \usage{
 \method{coef}{balnet}(object, lambda = NULL, ...)
 
-\method{print}{coef.balnet.contrast}(x, ...)
+\method{print}{coef.balnet.contrast}(x, max = getOption("max.print")/2, ...)
 
 \method{summary}{coef.balnet.contrast}(object, ...)
 }
@@ -28,6 +28,8 @@ arm and the second to the treatment.
 \item{...}{Additional arguments (currently ignored).}
 
 \item{x}{A \code{coef.balnet.contrast} object.}
+
+\item{max}{Maximal number of entries to be printed.}
 }
 \value{
 Estimated logistic coefficients
