@@ -29,7 +29,7 @@ arm and the second to the treatment.
 }
 \value{
 Estimated balancing weights
-(for contrast fits, \code{target} = "ATE", returns a list with entries for each arm).
+(for dual-arm fits, returns a list with entries for each arm).
 }
 \description{
 Convenience method for extracting the estimated balancing weights \eqn{\hat{\gamma}}.
