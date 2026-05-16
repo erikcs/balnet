@@ -649,10 +649,42 @@ balweights.balnet <- function(
   out <- list(control = ipw0, treated = ipw1)
   out.nn <- out[!vapply(out, is.null, logical(1))]
 
-  if (length(out.nn) > 1) {
-    return(out.nn)
+  result <- if (length(out.nn) > 1) out.nn else out.nn[[1]]
+
+  structure(result, class = "balweights")
+}
+
+#' @rdname balweights
+#' @method print balweights
+#' @export
+print.balweights <- function(x, ...) {
+  arm <- names(x)
+  if (length(arm) > 1) {
+    cat(paste(tools::toTitleCase(arm[1]), "arm weights:"), "\n")
+    print(x[[1]], ...)
+    cat("\n")
+    cat(paste(tools::toTitleCase(arm[2]), "arm weights:"), "\n")
+    print(x[[2]], ...)
   } else {
-    return(out.nn[[1]])
+    print(unclass(x), ...)
+  }
+
+  invisible(x)
+}
+
+#' @rdname balweights
+#' @method summary balweights
+#' @export
+summary.balweights <- function(object, ...) {
+  arm <- names(object)
+  if (length(arm) > 1) {
+    cat(paste(tools::toTitleCase(arm[1]), "arm weights:"), "\n")
+    print(summary(object[[1]], ...))
+    cat("\n")
+    cat(paste(tools::toTitleCase(arm[2]), "arm weights:"), "\n")
+    print(summary(object[[2]], ...))
+  } else {
+    print(summary(unclass(object), ...))
   }
 }
 

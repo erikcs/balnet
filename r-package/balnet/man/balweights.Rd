@@ -3,12 +3,18 @@
 \name{balweights}
 \alias{balweights}
 \alias{balweights.balnet}
+\alias{print.balweights}
+\alias{summary.balweights}
 \alias{balweights.cv.balnet}
 \title{Extract balancing weights from a balnet object.}
 \usage{
 balweights(object, lambda = NULL, ...)
 
 \method{balweights}{balnet}(object, lambda = NULL, ...)
+
+\method{print}{balweights}(x, ...)
+
+\method{summary}{balweights}(object, ...)
 
 \method{balweights}{cv.balnet}(object, lambda = "lambda.min", ...)
 }
