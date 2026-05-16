@@ -290,15 +290,14 @@ coef.balnet <- function(
 
 #' @rdname coef.balnet
 #' @param x A `coef.balnet.contrast` object.
-#' @param max Maximal number of entries to be printed.
 #' @method print coef.balnet.contrast
 #' @export
-print.coef.balnet.contrast <- function(x, max = getOption("max.print")/2, ...) {
+print.coef.balnet.contrast <- function(x, ...) {
   cat("Control arm coefficients:", "\n")
-  print(x[["control"]], max = max, ...)
+  print(x[["control"]], ...)
   cat("\n")
   cat("Treated arm coefficients:", "\n")
-  print(x[["treated"]], max = max, ...)
+  print(x[["treated"]], ...)
 
   invisible(x)
 }
@@ -691,15 +690,14 @@ balweights.balnet <- function(
 
 #' @rdname balweights
 #' @param x A `balweights.contrast` object.
-#' @param max Maximal number of entries to be printed.
 #' @method print balweights.contrast
 #' @export
-print.balweights.contrast <- function(x, max = getOption("max.print")/2, ...) {
+print.balweights.contrast <- function(x, ...) {
   cat("Control arm weights:", "\n")
-  print(x[["control"]], max = max, ...)
+  print(x[["control"]], ...)
   cat("\n")
   cat("Treated arm weights:", "\n")
-  print(x[["treated"]], max = max, ...)
+  print(x[["treated"]], ...)
 
   invisible(x)
 }
