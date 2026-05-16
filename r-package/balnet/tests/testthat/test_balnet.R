@@ -8,11 +8,17 @@ test_that("basic balnet runs", {
 
   fit <- balnet(X, W)
   capture.output(print(fit))
+  capture.output(summary(fit))
   plot(fit)
   plot(fit, lambda = 0)
-  coef(fit)
+  cf <- coef(fit)
+  capture.output(print(cf))
+  capture.output(summary(cf))
   coef(fit, lambda = list(0, 1))
   predict(fit, X)
+  wts <- balweights(fit)
+  capture.output(print(wts))
+  capture.output(summary(wts))
 
   fit.gr <- balnet(X, W, groups = list(age = 10:15, 3:7))
 

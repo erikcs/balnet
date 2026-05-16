@@ -8,9 +8,15 @@ test_that("basic cv.balnet runs", {
 
   fit <- cv.balnet(X, W)
   capture.output(print(fit))
+  capture.output(summary(fit))
   plot(fit)
-  coef(fit)
+  cf <- coef(fit)
+  capture.output(print(cf))
+  capture.output(summary(cf))
   predict(fit, X)
+  wts <- balweights(fit)
+  capture.output(print(wts))
+  capture.output(summary(wts))
 
   expect_true(TRUE)
 })
