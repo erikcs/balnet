@@ -279,10 +279,35 @@ coef.balnet <- function(
   out.nn <- out[!vapply(out, is.null, logical(1))]
 
   if (length(out.nn) > 1) {
-    return(out.nn)
+    return(structure(out.nn, class = "coef.balnet.contrast"))
   } else {
     return(out.nn[[1]])
   }
+}
+
+#' @rdname coef.balnet
+#' @param x A `coef.balnet.contrast` object.
+#' @method print coef.balnet.contrast
+#' @export
+print.coef.balnet.contrast <- function(x, ...) {
+  cat("Control arm coefficients:", "\n")
+  print(x[[1]], ...)
+  cat("\n")
+  cat("Treated arm coefficients:", "\n")
+  print(x[[2]], ...)
+
+  invisible(x)
+}
+
+#' @rdname coef.balnet
+#' @method summary coef.balnet.contrast
+#' @export
+summary.coef.balnet.contrast <- function(object, ...) {
+  cat("Control arm coefficients:", "\n")
+  print(summary(object[[1]], ...))
+  cat("\n")
+  cat("Treated arm coefficients:", "\n")
+  print(summary(object[[2]], ...))
 }
 
 #' Predict using a balnet object.
