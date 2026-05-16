@@ -46,8 +46,11 @@ W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 # Fit an ATT model.
 fit <- balnet(X, W, target = "ATT")
 
-# Extract coefficients.
+# Extract coefficients over fit lambda sequence.
 coefs <- coef(fit)
+
+# Extract coefficients at specified lambda.
+coefs <- coef(fit, lambda = 0)
 }
 
 }

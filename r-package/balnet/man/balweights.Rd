@@ -40,9 +40,10 @@ Estimated balancing weights
 (for contrast fits, \code{target} = "ATE", returns a list with entries for each arm).
 }
 \description{
-Retrieves the estimated balancing weights \eqn{\hat{\gamma}}.
+Convenience method for extracting the estimated balancing weights \eqn{\hat{\gamma}}.
 Under unconfoundedness, these correspond to inverse probability weights (IPW)
-for standard treatment effect estimands.
+for standard treatment effect estimands and are computed from the fitted
+covariate balancing propensity scores.
 }
 \examples{
 \donttest{
@@ -54,7 +55,10 @@ W <- rbinom(n, 1, 1 / (1 + exp(1 - X[, 1])))
 # Fit an ATT model.
 fit <- balnet(X, W, target = "ATT")
 
-# Extract balancing weights.
+# Extract balancing weights over fit lambda sequence.
+wts <- balweights(fit)
+
+# Extract balancing weights at specified lambda.
 wts <- balweights(fit, lambda = 0)
 }
 

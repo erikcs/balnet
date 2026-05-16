@@ -248,8 +248,11 @@ balnet <- function(
 #' # Fit an ATT model.
 #' fit <- balnet(X, W, target = "ATT")
 #'
-#' # Extract coefficients.
+#' # Extract coefficients over fit lambda sequence.
 #' coefs <- coef(fit)
+#'
+#' # Extract coefficients at specified lambda.
+#' coefs <- coef(fit, lambda = 0)
 #' }
 #'
 #' @method coef balnet
@@ -337,7 +340,7 @@ summary.coef.balnet.contrast <- function(object, ...) {
 #' # Fit an ATT model.
 #' fit <- balnet(X, W, target = "ATT")
 #'
-#' # Predict propensity scores.
+#' # Predict propensity scores over fit lambda sequence.
 #' W.hat <- predict(fit, X)
 #' }
 #'
@@ -599,9 +602,10 @@ plot.balnet <- function(
 
 #' Extract balancing weights from a balnet object.
 #'
-#' Retrieves the estimated balancing weights \eqn{\hat{\gamma}}.
+#' Convenience method for extracting the estimated balancing weights \eqn{\hat{\gamma}}.
 #' Under unconfoundedness, these correspond to inverse probability weights (IPW)
-#' for standard treatment effect estimands.
+#' for standard treatment effect estimands and are computed from the fitted
+#' covariate balancing propensity scores.
 #'
 #' @param object A `balnet` object.
 #' @param lambda Value(s) of the penalty parameter `lambda` at which weights
@@ -626,7 +630,10 @@ plot.balnet <- function(
 #' # Fit an ATT model.
 #' fit <- balnet(X, W, target = "ATT")
 #'
-#' # Extract balancing weights.
+#' # Extract balancing weights over fit lambda sequence.
+#' wts <- balweights(fit)
+#'
+#' # Extract balancing weights at specified lambda.
 #' wts <- balweights(fit, lambda = 0)
 #' }
 #'
