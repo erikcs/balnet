@@ -619,7 +619,7 @@ plot.balnet <- function(
 #' @param ... Additional arguments (currently ignored).
 #'
 #' @return Estimated balancing weights
-#'  (for contrast fits, `target` = "ATE", returns a list with entries for each arm).
+#'  (for dual-arm fits, returns a list with entries for each arm).
 #'
 #' @examples
 #' \donttest{
