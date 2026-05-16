@@ -176,10 +176,10 @@ test_that("balnet has not changed", {
 
   expect_equal(
     coef(fit, lambda = fit[["_lambda"]]),
-    list(control = new("dgCMatrix", i = c(0L, 0L, 1L, 2L, 3L, 0L,
-    1L, 2L, 3L, 0L, 1L, 2L, 3L, 0L, 1L, 2L, 3L), p = c(0L, 1L, 5L,
-    9L, 13L, 17L), Dim = 4:5, Dimnames = list(c("(Intercept)", "X1",
-    "X2", "X3"), NULL), x = c(0.652873281422005, 0.66802481765921,
+    structure(list(control = new("dgCMatrix", i = c(0L, 0L, 1L, 2L,
+    3L, 0L, 1L, 2L, 3L, 0L, 1L, 2L, 3L, 0L, 1L, 2L, 3L), p = c(0L,
+    1L, 5L, 9L, 13L, 17L), Dim = 4:5, Dimnames = list(c("(Intercept)",
+    "X1", "X2", "X3"), NULL), x = c(0.652873281422005, 0.66802481765921,
     0.0507573767431381, 0.158769917286064, 0.103686341052803, 0.680645954386779,
     0.0964925117386255, 0.210324237163201, 0.145107291953369, 0.685941154728131,
     0.111004789201444, 0.227049604256553, 0.157882123136175, 0.687747421060082,
@@ -193,7 +193,7 @@ test_that("balnet has not changed", {
         -0.218193176446944, -0.681102012267433, -0.0496225138747977,
         -0.149449789859248, -0.237897822417655, -0.680577640484851,
         -0.0533492030403526, -0.151711346250273, -0.244157630108172
-        ), factors = list()))
+        ), factors = list())), class = "coef.balnet.contrast")
   )
 
   expect_equal(
