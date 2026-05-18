@@ -10,8 +10,10 @@ Description: Provides pathwise estimation of regularized logistic propensity
     score models using covariate balancing loss functions rather than maximum
     likelihood. Regularization paths are fit via the 'adelie' elastic-net
     solver with a 'glmnet'-like interface, yielding balancing weights that target
-    covariate balance for the ATE and ATT.
-    For details, see Sverdrup & Hastie (2026) <doi:10.48550/arXiv.2602.18577>.
+    covariate balance for the ATE and ATT. Under lasso penalization, lambda
+    bounds the maximum covariate imbalance, so the regularization path traces a
+    sequence of decreasing imbalance tolerances. For details, see Sverdrup &
+    Hastie (2026) <doi:10.48550/arXiv.2602.18577>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

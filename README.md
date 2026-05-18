@@ -4,6 +4,8 @@
 
 A package for pathwise estimation of regularized logistic propensity score models using covariate balancing loss functions rather than maximum likelihood. Regularization paths are fit via the [adelie](https://jamesyang007.github.io/adelie/) elastic-net solver with a *glmnet*-like interface, yielding balancing weights that target covariate balance for the ATE and ATT.
 
+The choice of penalty determines which norm of the covariate imbalance vector is bounded by $\lambda$, and so the regularization path traces a sequence of decreasing imbalance tolerances. Lasso bounds the maximum covariate imbalance ($\ell_\infty$), and ridge bounds the $\ell_2$ norm.
+
 Some useful links:
 
 * [An introduction to balnet](https://erikcs.github.io/balnet/balnet.html)
