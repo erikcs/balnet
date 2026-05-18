@@ -2,9 +2,15 @@
 % Please edit documentation in R/balnet.R
 \name{coef.balnet}
 \alias{coef.balnet}
+\alias{print.coef.balnet.contrast}
+\alias{summary.coef.balnet.contrast}
 \title{Extract coefficients from a balnet object.}
 \usage{
 \method{coef}{balnet}(object, lambda = NULL, ...)
+
+\method{print}{coef.balnet.contrast}(x, ...)
+
+\method{summary}{coef.balnet.contrast}(object, ...)
 }
 \arguments{
 \item{object}{A \code{balnet} object.}
@@ -20,6 +26,8 @@ arm and the second to the treatment.
 }}
 
 \item{...}{Additional arguments (currently ignored).}
+
+\item{x}{A \code{coef.balnet.contrast} object.}
 }
 \value{
 Estimated logistic coefficients

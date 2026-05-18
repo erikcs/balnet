@@ -282,10 +282,35 @@ coef.balnet <- function(
   out.nn <- out[!vapply(out, is.null, logical(1))]
 
   if (length(out.nn) > 1) {
-    return(out.nn)
+    return(structure(out.nn, class = "coef.balnet.contrast"))
   } else {
     return(out.nn[[1]])
   }
+}
+
+#' @rdname coef.balnet
+#' @param x A `coef.balnet.contrast` object.
+#' @method print coef.balnet.contrast
+#' @export
+print.coef.balnet.contrast <- function(x, ...) {
+  cat("Control arm coefficients:", "\n")
+  print(x[["control"]], ...)
+  cat("\n")
+  cat("Treated arm coefficients:", "\n")
+  print(x[["treated"]], ...)
+
+  invisible(x)
+}
+
+#' @rdname coef.balnet
+#' @method summary coef.balnet.contrast
+#' @export
+summary.coef.balnet.contrast <- function(object, ...) {
+  cat("Control arm coefficients:", "\n")
+  print(summary(object[["control"]], ...))
+  cat("\n")
+  cat("Treated arm coefficients:", "\n")
+  print(summary(object[["treated"]], ...))
 }
 
 #' Predict using a balnet object.
@@ -657,10 +682,35 @@ balweights.balnet <- function(
   out.nn <- out[!vapply(out, is.null, logical(1))]
 
   if (length(out.nn) > 1) {
-    return(out.nn)
+    return(structure(out.nn, class = "balweights.contrast"))
   } else {
     return(out.nn[[1]])
   }
+}
+
+#' @rdname balweights
+#' @param x A `balweights.contrast` object.
+#' @method print balweights.contrast
+#' @export
+print.balweights.contrast <- function(x, ...) {
+  cat("Control arm weights:", "\n")
+  print(x[["control"]], ...)
+  cat("\n")
+  cat("Treated arm weights:", "\n")
+  print(x[["treated"]], ...)
+
+  invisible(x)
+}
+
+#' @rdname balweights
+#' @method summary balweights.contrast
+#' @export
+summary.balweights.contrast <- function(object, ...) {
+  cat("Control arm weights:", "\n")
+  print(summary(object[["control"]], ...))
+  cat("\n")
+  cat("Treated arm weights:", "\n")
+  print(summary(object[["treated"]], ...))
 }
 
 get_path <- function(fit, W.hat, W, ..., lambda, devs) {
