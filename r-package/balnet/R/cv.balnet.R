@@ -76,12 +76,18 @@ cv.balnet <- function(
   idx.min0 <- idx.min1 <- NULL
   lambda.min0 <- lambda.min1 <- NULL
   if (!is.null(cv.list[[1]][["control"]])) {
-    cv.mean0 <- colMeans(matrix(unlist(lapply(cv.list, `[[`, "control")), nfolds, length(lambda.full$control)))
+    cv.mean0 <- colMeans(matrix(unlist(lapply(cv.list, `[[`, "control")),
+                                nrow = nfolds,
+                                ncol = length(lambda.full$control),
+                                byrow = TRUE))
     idx.min0 <- which.min(cv.mean0)
     lambda.min0 <- lambda.full[["control"]][idx.min0]
   }
   if (!is.null(cv.list[[1]][["treated"]])) {
-    cv.mean1 <- colMeans(matrix(unlist(lapply(cv.list, `[[`, "treated")), nfolds, length(lambda.full$treated)))
+    cv.mean1 <- colMeans(matrix(unlist(lapply(cv.list, `[[`, "treated")),
+                                nrow = nfolds,
+                                ncol = length(lambda.full$treated),
+                                byrow = TRUE))
     idx.min1 <- which.min(cv.mean1)
     lambda.min1 <- lambda.full[["treated"]][idx.min1]
   }
