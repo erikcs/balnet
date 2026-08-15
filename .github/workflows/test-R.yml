@@ -36,7 +36,9 @@ jobs:
 
       - name: Test
         run: |
+          # ignore vignette checks
           echo '^vignettes/' >> .Rbuildignore
+
           ./run.sh run_tests
 
           # Treat WARNING and NOTE as error (but omit flaky timestamp NOTE)
