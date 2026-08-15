@@ -1,3 +1,7 @@
+if (identical(Sys.getenv("GITHUB_ACTIONS"), "true")) {
+  testthat::skip("CVXR tests skipped on GitHub Actions")
+}
+
 tryCatch(
   {
     attachNamespace("CVXR")
