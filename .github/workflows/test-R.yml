@@ -31,6 +31,9 @@ jobs:
           ./run.sh bootstrap
           ./run.sh install_all
 
+          # install CVXR for additional tests
+          Rscript -e 'install.packages("CVXR", repos = "https://cloud.r-project.org")'
+
       - name: Test
         run: |
           echo '^vignettes/' >> .Rbuildignore
