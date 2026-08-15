@@ -10,7 +10,7 @@ on:
 
 jobs:
   ci:
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
 
     env:
       USE_BSPM: true
@@ -33,11 +33,13 @@ jobs:
 
       - name: Test
         run: |
+          # ignore vignette checks
           echo '^vignettes/' >> .Rbuildignore
+
           ./run.sh run_tests
 
-          # Treat WARNING and NOTE as error (but omit flaky timestamp NOTE)
-          issues=$(find . -name '*00check.log' -exec cat {} \; | grep 'WARNING\|NOTE' | grep -v 'checking for future file timestamps' | grep -v '^Status: [0-9]\+ NOTE' || true)
+          # Treat WARNING and NOTE as error (but ignore some NOTE(s))
+          issues=$(find . -name '*00check.log' -exec cat {} \; | grep 'WARNING\|NOTE' | grep -v 'checking compilation flags used' | grep -v '^Status: [0-9]\+ NOTE' || true)
           if [ -n "$issues" ]; then
             echo "Found warnings/notes, treating as errors:"
             echo "$issues"
