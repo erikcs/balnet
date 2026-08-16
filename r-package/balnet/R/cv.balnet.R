@@ -35,7 +35,7 @@
 cv.balnet <- function(
   X,
   W,
-  type.measure = c("balance.loss"),
+  type.measure = c("balance.loss", "imbalance"),
   nfolds = 10,
   foldid = NULL,
   ...
@@ -44,6 +44,8 @@ cv.balnet <- function(
   type.measure <- match.arg(type.measure)
   if (type.measure == "balance.loss") {
     get_loss <- get_balance_loss
+  } else if (type.measure == "imbalance") {
+    get_loss <- get_imbalance
   }
   nfolds <- max(nfolds, 3)
   if (is.null(foldid)) {
@@ -316,6 +318,40 @@ get_balance_loss <- function(object, X, W, sample.weights, lambda) {
   }
   if (!is.null(object[["_fit"]]$treated)) {
     loss1 <- .balance_loss(W, eta$treated)
+  }
+  out <- list(control = loss0, treated = loss1)
+
+  out[!vapply(out, is.null, logical(1))]
+}
+
+get_imbalance <- function(object, X, W, sample.weights, lambda) {
+  X.stats <- col_stats(X, sample.weights, compute_sd = TRUE)
+  X.stats$scale[X.stats$scale <= 0] <- 1
+
+  .imbalance <- function(W, W.hat) {
+    # held-out balancing p-scores might be zero, so we need to clip.
+    # (not as big a concern in the held out balance loss)
+    W.hat[W == 1, ][W.hat[W == 1, ] <= 0.01] <- 0.01
+
+    ipw <- matrix(0, nrow = nrow(W.hat), ncol = ncol(W.hat))
+    ipw[W == 1, ] <- 1 / W.hat[W == 1, ]
+
+    smd <- col_stats(X, ipw * sample.weights, n_threads = object[["num.threads"]])$center
+    smd <- sweep(smd, 2L, X.stats$center, `-`, check.margin	= FALSE)
+    smd <- sweep(smd, 2L, X.stats$scale, `/`, check.margin = FALSE)
+
+    rowMeans(abs(smd))
+  }
+
+  lambda <- validate_lambda(lambda)
+  W.hat <- predict(object, X, lambda = lambda, type = "response", .simplify = FALSE)
+
+  loss0 <- loss1 <- NULL
+  if (!is.null(object[["_fit"]]$control)) {
+    loss0 <- .imbalance(1 - W, 1 - W.hat$control)
+  }
+  if (!is.null(object[["_fit"]]$treated)) {
+    loss1 <- .imbalance(W, W.hat$treated)
   }
   out <- list(control = loss0, treated = loss1)
 
