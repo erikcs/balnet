@@ -114,8 +114,12 @@ test_that("cv.balnet is invariant to W swap", {
     cv.fit <- cv.balnet(X, W, foldid = foldid, type.measure = crit)
     cv.fit.swap <- cv.balnet(X, 1 - W, foldid = foldid, type.measure = crit)
     expect_equal(
-      cv.fit$lambda.min,
-      cv.fit.swap$lambda.min
+      cv.fit$lambda.min$control,
+      cv.fit.swap$lambda.min$treated
+    )
+    expect_equal(
+      cv.fit$lambda.min$treated,
+      cv.fit.swap$lambda.min$control
     )
   }
 })
