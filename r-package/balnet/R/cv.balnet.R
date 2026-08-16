@@ -56,9 +56,14 @@ cv.balnet <- function(
   } else if (type.measure == "imbalance") {
     get_loss <- get_imbalance
   }
-  nfolds <- max(nfolds, 3)
   if (is.null(foldid)) {
+    nfolds <- max(nfolds, 3)
     foldid <- sample(rep(seq(nfolds), length.out = nrow(X)))
+  } else {
+    if (length(foldid) != length(W)) {
+      stop("Invalid `foldid`.")
+    }
+    nfolds <- max(foldid)
   }
   dot.args <- list(...)
 
