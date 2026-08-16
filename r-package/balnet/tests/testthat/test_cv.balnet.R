@@ -18,6 +18,8 @@ test_that("basic cv.balnet runs", {
   capture.output(print(wts))
   capture.output(summary(wts))
 
+  fit <- cv.balnet(X, W, type.measure = "imbalance")
+
   expect_true(TRUE)
 })
 
