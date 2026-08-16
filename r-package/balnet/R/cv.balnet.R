@@ -15,7 +15,6 @@
 #' @references Tan, Zhiqiang.
 #'  "Regularized calibrated estimation of propensity scores with model misspecification and high-dimensional data."
 #'  Biometrika 107(1), 2020.
-#'
 #' @references Wang, Yixin, and Jose R. Zubizarreta.
 #'  "Minimal dispersion approximately balancing weights: asymptotic properties and practical considerations."
 #'  Biometrika 107(1), 2020.
