@@ -303,19 +303,19 @@ balweights.cv.balnet <- function(
 }
 
 get_balance_loss <- function(object, X, W, sample.weights, lambda) {
-  .balance_loss <- function(W) {
+  .balance_loss <- function(W, eta) {
     colSums(sample.weights * (W * exp(-eta) + (1 - W) * eta)) / sum(sample.weights)
   }
 
   lambda <- validate_lambda(lambda)
+  eta <- predict(object, X, lambda = lambda, type = "link", .simplify = FALSE)
+
   loss0 <- loss1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
-    eta <- predict(object[["_fit"]]$control, X, lambda = lambda[[1]], type = "link")
-    loss0 <- .balance_loss(1 - W)
+    loss0 <- .balance_loss(1 - W, eta$control)
   }
   if (!is.null(object[["_fit"]]$treated)) {
-    eta <- predict(object[["_fit"]]$treated, X, lambda = lambda[[2]], type = "link")
-    loss1 <- .balance_loss(W)
+    loss1 <- .balance_loss(W, eta$treated)
   }
   out <- list(control = loss0, treated = loss1)
 
