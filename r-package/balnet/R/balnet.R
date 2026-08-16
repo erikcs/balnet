@@ -370,7 +370,10 @@ predict.balnet <- function(
 
   pred0 <- pred1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
-    pred0 <- 1 - predict(object[["_fit"]]$control, newdata, lambda = lambda[[1]], type = type)
+    pred0 <- predict(object[["_fit"]]$control, newdata, lambda = lambda[[1]], type = type)
+    if (type == "response") {
+      pred0 <- 1 - pred0
+    }
   }
   if (!is.null(object[["_fit"]]$treated)) {
     pred1 <- predict(object[["_fit"]]$treated, newdata, lambda = lambda[[2]], type = type)
