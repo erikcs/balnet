@@ -341,7 +341,7 @@ get_imbalance <- function(object, X, W, sample.weights, lambda) {
   .imbalance <- function(W, W.hat) {
     # held-out balancing p-scores might be zero, so we need to clip.
     # (not as big a concern in the held out balance loss)
-    W.hat[W == 1, ][W.hat[W == 1, ] <= 0.01] <- 0.01
+    W.hat[W == 1, ] <- pmax(W.hat[W == 1, ], 0.01)
 
     ipw <- matrix(0, nrow = nrow(W.hat), ncol = ncol(W.hat))
     ipw[W == 1, ] <- 1 / W.hat[W == 1, ]
