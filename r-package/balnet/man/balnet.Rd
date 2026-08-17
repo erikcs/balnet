@@ -40,7 +40,9 @@ sequence (via \code{lambda.min.ratio}) so that the generated sequence ends at th
 
 \item{nlambda}{Number of values for \code{lambda} if generated automatically. Default is 100.}
 
-\item{lambda.min.ratio}{Ratio of smallest to largest lambda. Default is 1e-2.}
+\item{lambda.min.ratio}{Ratio of smallest to largest lambda. Default is 1e-2.
+For lasso, this equals the fractional reduction in maximum standardized
+imbalance along the path (e.g., 1e-2 = 100x reduction).}
 
 \item{lambda}{Optional \code{lambda} sequence. By default, it is constructed automatically using \code{nlambda}
 and \code{lambda.min.ratio} (or \code{max.imbalance}, if specified).}

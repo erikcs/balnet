@@ -28,6 +28,8 @@
 #'   sequence (via `lambda.min.ratio`) so that the generated sequence ends at the specified imbalance level.
 #' @param nlambda Number of values for `lambda` if generated automatically. Default is 100.
 #' @param lambda.min.ratio Ratio of smallest to largest lambda. Default is 1e-2.
+#'  For lasso, this equals the fractional reduction in maximum standardized
+#'  imbalance along the path (e.g., 1e-2 = 100x reduction).
 #' @param lambda Optional `lambda` sequence. By default, it is constructed automatically using `nlambda`
 #'   and `lambda.min.ratio` (or `max.imbalance`, if specified).
 #' @param penalty.factor Penalty factor per feature. Default is 1 (i.e., each feature receives the same penalty).
