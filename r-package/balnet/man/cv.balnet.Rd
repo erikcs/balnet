@@ -2,7 +2,7 @@
 % Please edit documentation in R/cv.balnet.R
 \name{cv.balnet}
 \alias{cv.balnet}
-\title{Cross-validation for balnet.}
+\title{Tuning for balnet.}
 \usage{
 cv.balnet(
   X,
@@ -38,7 +38,7 @@ If NULL, this defaults to \code{sample(rep(seq(nfolds), length.out = nrow(X)))}.
 A fit cv.balnet object.
 }
 \description{
-Cross-validation for balnet.
+Tuning for balnet.
 }
 \examples{
 \donttest{

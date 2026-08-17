@@ -1,4 +1,4 @@
-#' Cross-validation for balnet.
+#' Tuning for balnet.
 #'
 #' @param X A numeric matrix or data frame with pre-treatment covariates.
 #' @param W Treatment vector (0: control, 1: treated).
