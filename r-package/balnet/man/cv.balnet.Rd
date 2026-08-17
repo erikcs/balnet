@@ -8,6 +8,7 @@ cv.balnet(
   X,
   W,
   type.measure = c("balance.loss", "imbalance"),
+  refit = TRUE,
   nfolds = 10,
   foldid = NULL,
   ...
@@ -21,6 +22,10 @@ cv.balnet(
 \item{type.measure}{The loss to minimize for cross-validation.
 Default is balance loss (e.g., Zhiqiang (2020)).
 For "imbalance", the criterion is mean covariate imbalance (e.g., Wang & Zubizarreta (2020)).}
+
+\item{refit}{Whether to refit the model on each training fold, default is TRUE.
+If FALSE, weights are computed once on full data and the loss is evaluated
+per subsample (e.g., imbalance is measured on each data subsample).}
 
 \item{nfolds}{The number of folds used for cross-validation, default is 10.}
 
