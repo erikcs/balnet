@@ -318,28 +318,28 @@ balweights.cv.balnet <- function(
   balweights.balnet(object, lambda = lambda)
 }
 
-get_balance_loss <- function(object, X, W, sample.weights, lambda) {
+get_balance_loss <- function(object, X.test, W.test, sample.weights, lambda) {
   .balance_loss <- function(W, eta) {
     colSums(sample.weights * (W * exp(-eta) + (1 - W) * eta)) / sum(sample.weights)
   }
 
   lambda <- validate_lambda(lambda)
-  eta <- predict(object, X, lambda = lambda, type = "link", .simplify = FALSE)
+  eta <- predict(object, X.test, lambda = lambda, type = "link", .simplify = FALSE)
 
   loss0 <- loss1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
-    loss0 <- .balance_loss(1 - W, eta$control)
+    loss0 <- .balance_loss(1 - W.test, eta$control)
   }
   if (!is.null(object[["_fit"]]$treated)) {
-    loss1 <- .balance_loss(W, eta$treated)
+    loss1 <- .balance_loss(W.test, eta$treated)
   }
   out <- list(control = loss0, treated = loss1)
 
   out[!vapply(out, is.null, logical(1))]
 }
 
-get_imbalance <- function(object, X, W, sample.weights, lambda) {
-  X.stats <- col_stats(X, sample.weights, compute_sd = TRUE)
+get_imbalance <- function(object, X.test, W.test, sample.weights, lambda) {
+  X.stats <- col_stats(X.test, sample.weights, compute_sd = TRUE)
   X.stats$scale[X.stats$scale <= 0] <- 1
 
   .imbalance <- function(W, W.hat) {
@@ -350,7 +350,7 @@ get_imbalance <- function(object, X, W, sample.weights, lambda) {
     ipw <- matrix(0, nrow = nrow(W.hat), ncol = ncol(W.hat))
     ipw[W == 1, ] <- 1 / W.hat[W == 1, ]
 
-    smd <- col_stats(X, ipw * sample.weights, n_threads = object[["num.threads"]])$center
+    smd <- col_stats(X.test, ipw * sample.weights, n_threads = object[["num.threads"]])$center
     smd <- sweep(smd, 2L, X.stats$center, `-`, check.margin	= FALSE)
     smd <- sweep(smd, 2L, X.stats$scale, `/`, check.margin = FALSE)
 
@@ -358,14 +358,14 @@ get_imbalance <- function(object, X, W, sample.weights, lambda) {
   }
 
   lambda <- validate_lambda(lambda)
-  W.hat <- predict(object, X, lambda = lambda, type = "response", .simplify = FALSE)
+  W.hat <- predict(object, X.test, lambda = lambda, type = "response", .simplify = FALSE)
 
   loss0 <- loss1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
-    loss0 <- .imbalance(1 - W, 1 - W.hat$control)
+    loss0 <- .imbalance(1 - W.test, 1 - W.hat$control)
   }
   if (!is.null(object[["_fit"]]$treated)) {
-    loss1 <- .imbalance(W, W.hat$treated)
+    loss1 <- .imbalance(W.test, W.hat$treated)
   }
   out <- list(control = loss0, treated = loss1)
 
