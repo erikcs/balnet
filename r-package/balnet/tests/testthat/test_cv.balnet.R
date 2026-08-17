@@ -18,6 +18,8 @@ test_that("basic cv.balnet runs", {
   capture.output(print(wts))
   capture.output(summary(wts))
 
+  fit <- cv.balnet(X, W, type.measure = "imbalance")
+
   expect_true(TRUE)
 })
 
@@ -100,4 +102,43 @@ test_that("cv.balnet has not changed", {
       factors = list())
   )
 
+})
+
+test_that("cv.balnet is invariant to W swap", {
+  n <- 111
+  p <- 21
+  X <- matrix(rnorm(n * p), n, p)
+  W <- rbinom(n, 1, 0.5)
+  foldid <- sample(rep(seq(3), length.out = nrow(X)))
+  for (crit in c("balance.loss", "imbalance")) {
+    cv.fit <- cv.balnet(X, W, foldid = foldid, type.measure = crit)
+    cv.fit.swap <- cv.balnet(X, 1 - W, foldid = foldid, type.measure = crit)
+    expect_equal(
+      cv.fit$lambda.min$control,
+      cv.fit.swap$lambda.min$treated
+    )
+    expect_equal(
+      cv.fit$lambda.min$treated,
+      cv.fit.swap$lambda.min$control
+    )
+  }
+})
+
+test_that("cv.balnet is affine-invariant in X", {
+  n <- 111
+  p <- 21
+  X <- matrix(rnorm(n * p), n, p)
+  W <- rbinom(n, 1, 0.5)
+  a <- runif(p, 0.5, 10)
+  b <- runif(p, -5,  5)
+  X.aff <- sweep(sweep(X, 2L, a, `*`), 2L, b, `+`)
+  foldid <- sample(rep(seq(3), length.out = nrow(X)))
+  for (crit in c("balance.loss", "imbalance")) {
+    cv.fit <- cv.balnet(X, W, foldid = foldid, type.measure = crit)
+    cv.fit.aff <- cv.balnet(X.aff, W, foldid = foldid, type.measure = crit)
+    expect_equal(
+      predict(cv.fit, X),
+      predict(cv.fit.aff, X.aff)
+    )
+  }
 })
