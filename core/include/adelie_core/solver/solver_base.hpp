@@ -13,7 +13,7 @@ namespace solver {
 
 /**
  * Updates absolute gradient in the base state.
- * The state DOES NOT have to be in its invariance. 
+ * The state DOES NOT have to be in its invariance.
  * After the function finishes, abs_grad will reflect the correct value
  * respective to grad.
  */
@@ -49,12 +49,12 @@ inline void update_abs_grad(
     vec_value_t buff(group_sizes.maxCoeff());
     rowmat_uint64_t constraint_buffer(std::max<size_t>(1, n_threads), constraint_buffer_size);
 
-    // do not parallelize since it may result in large false sharing 
+    // do not parallelize since it may result in large false sharing
     // (access to abs_grad[i] is random order)
-    for (size_t ss_idx = 0; ss_idx < screen_set.size(); ++ss_idx) 
+    for (size_t ss_idx = 0; ss_idx < screen_set.size(); ++ss_idx)
     {
         const auto i = screen_set[ss_idx];
-        const auto b = screen_begins[ss_idx]; 
+        const auto b = screen_begins[ss_idx];
         const auto k = groups[i];
         const auto size_k = group_sizes[i];
         const auto pk = penalty[i];
@@ -77,7 +77,7 @@ inline void update_abs_grad(
 
     // can be parallelized since access is in linear order.
     // any false sharing is happening near the beginning/ends of the block of indices.
-    std::atomic_bool try_failed = false; 
+    std::atomic_bool try_failed = false;
     const auto routine = [&](int i) {
         if (try_failed.load(std::memory_order_relaxed) || is_screen(i)) return;
         auto cbuff = constraint_buffer.row(util::omp_get_thread_num());
@@ -96,7 +96,7 @@ inline void update_abs_grad(
         }
     };
     const bool is_not_all_none = util::rowvec_type<bool>::NullaryExpr(
-        constraints.size(), 
+        constraints.size(),
         [&](auto i) { return constraints[i] != nullptr; }
     ).any();
     const size_t n_bytes = sizeof(value_t) * abs_grad.size();
@@ -110,7 +110,7 @@ inline void update_abs_grad(
 }
 
 /**
- * Updates all derived quantities from screen_set in the base class. 
+ * Updates all derived quantities from screen_set in the base class.
  * The state must be such that only the screen_set is either unchanged from invariance,
  * or appended with new groups.
  * After the function finishes, all screen quantities in the base class
@@ -136,7 +136,7 @@ inline void update_screen_derived_base(
 
     /* update screen_begins */
     size_t screen_value_size = (
-        (old_screen_size == 0) ? 
+        (old_screen_size == 0) ?
         0 : (screen_begins.back() + group_sizes[screen_set[old_screen_size-1]])
     );
     for (size_t i = old_screen_size; i < screen_set.size(); ++i) {
@@ -152,7 +152,7 @@ inline void update_screen_derived_base(
     screen_is_active.resize(screen_set.size(), false);
 }
 
-// TODO: 
+// TODO:
 // It might be too much to save all of them though especially if we have a lot of active constraints.
 // Then, state.dual is going to be super dense and we have 100 rows of such dense vectors.
 // Nonetheless, it's still useful to have this for diagnostic purposes... maybe a flag to control whether this gets saved?
@@ -177,7 +177,7 @@ inline typename StateType::sp_vec_value_t sparsify_dual(
     vec_index_t begins(n_constraints+1);
     begins[0] = 0;
     begins.tail(n_constraints) = vec_index_t::NullaryExpr(
-        n_constraints, 
+        n_constraints,
         [&](auto i) {
             const auto constraint = constraints[i];
             return constraint ? constraint->duals_nnz() : 0;
@@ -186,7 +186,7 @@ inline typename StateType::sp_vec_value_t sparsify_dual(
     for (Eigen::Index i = 1; i < begins.size(); ++i) {
         begins[i] += begins[i-1];
     }
-    indices.resize(begins[n_constraints]); 
+    indices.resize(begins[n_constraints]);
     values.resize(begins[n_constraints]);
 
     if (begins[n_constraints]) {
@@ -201,7 +201,7 @@ inline typename StateType::sp_vec_value_t sparsify_dual(
             indices_v += dual_groups[i];
         };
         const bool is_not_all_none = util::rowvec_type<bool>::NullaryExpr(
-            constraints.size(), 
+            constraints.size(),
             [&](auto i) { return constraints[i] != nullptr; }
         ).any();
         const size_t n_bytes = (sizeof(index_t) + sizeof(value_t)) * indices.size();
@@ -210,7 +210,7 @@ inline typename StateType::sp_vec_value_t sparsify_dual(
 
     const auto last_constraint = constraints[n_constraints-1];
     const auto n_duals = (
-        dual_groups[n_constraints-1] + 
+        dual_groups[n_constraints-1] +
         (last_constraint ? last_constraint->duals() : 0)
     );
     Eigen::Map<const sp_vec_value_t> dual_map(
@@ -231,11 +231,11 @@ void pb_add_suffix(
 {
     const auto& devs = state.devs;
     // current training % dev explained
-    pb << " [dev:" 
-        << std::fixed << std::setprecision(1) 
+    pb << " [dev:"
+        << std::fixed << std::setprecision(1)
         << ((devs.size() == 0) ? 0.0 : devs.back()) * 100
         << "%]"
-        ; 
+        ;
 }
 
 template <class StateType>
@@ -265,10 +265,10 @@ bool early_exit(
 /**
  * Screens for new variables to include in the screen set
  * for fitting with lmda = lmda_next.
- * 
+ *
  * State MUST be a valid state satisfying its invariance.
  * Note that only the screen set is modified!
- * All derived screen quantities must be updated afterwards. 
+ * All derived screen quantities must be updated afterwards.
  */
 template <class StateType, class ValueType>
 inline void screen(
@@ -300,8 +300,8 @@ inline void screen(
 
     assert(screen_set.size() <= abs_grad.size());
 
-    const auto is_screen = [&](auto i) { 
-        return screen_hashset.find(i) != screen_hashset.end(); 
+    const auto is_screen = [&](auto i) {
+        return screen_hashset.find(i) != screen_hashset.end();
     };
 
     const auto do_pivot = [&]() {
@@ -312,16 +312,16 @@ inline void screen(
             const int G = abs_grad.size();
             vec_index_t order = vec_index_t::LinSpaced(G, 0, G-1);
             vec_value_t weights = vec_value_t::NullaryExpr(
-                G, [&](auto i) { 
-                    return (penalty[i] <= 0) ? 
-                        alpha * lmda : std::min(abs_grad[i] / penalty[i], alpha * lmda); 
+                G, [&](auto i) {
+                    return (penalty[i] <= 0) ?
+                        alpha * lmda : std::min(abs_grad[i] / penalty[i], alpha * lmda);
                 }
             );
             std::sort(
-                order.data(), 
-                order.data() + order.size(), 
-                [&](auto i, auto j) { 
-                    return weights[i] < weights[j]; 
+                order.data(),
+                order.data() + order.size(),
+                [&](auto i, auto j) {
+                    return weights[i] < weights[j];
                 }
             );
             const int subset_size = std::min<int>(std::max<int>(
@@ -331,14 +331,14 @@ inline void screen(
             // top largest subset_size number of weights
             vec_value_t weights_sorted_sub = vec_value_t::NullaryExpr(
                 subset_size,
-                [&](auto i) { return weights[order[G-subset_size+i]]; } 
+                [&](auto i) { return weights[order[G-subset_size+i]]; }
             );
 
             vec_value_t mses(subset_size);
             vec_value_t indices = vec_value_t::LinSpaced(subset_size, 0, subset_size-1);
             const int pivot_idx = optimization::search_pivot(
-                indices, 
-                weights_sorted_sub, 
+                indices,
+                weights_sorted_sub,
                 mses
             );
             const int full_pivot_idx = G - subset_size + pivot_idx;
@@ -347,13 +347,13 @@ inline void screen(
             for (int ii = G-1; ii >= full_pivot_idx; --ii) {
                 const auto i = order[ii];
                 if (is_screen(i)) continue;
-                screen_set.push_back(i); 
+                screen_set.push_back(i);
             }
             // add some slack of new groups below the pivot
             int count = 0;
             for (int ii = full_pivot_idx - 1; ii >= 0; --ii) {
                 if (count >= pivot_slack_ratio * n_new_active) break;
-                const auto i = order[ii]; 
+                const auto i = order[ii];
                 if (is_screen(i)) continue;
                 screen_set.push_back(i);
                 ++count;
@@ -391,7 +391,7 @@ inline void screen(
         throw util::adelie_core_solver_error("Unknown screen rule!");
     }
 
-    // If adding new amount went over max screen size, 
+    // If adding new amount went over max screen size,
     // undo the change to keep invariance from before, then throw exception.
     if (screen_set.size() > max_screen_size) {
         screen_set.erase(
@@ -484,15 +484,15 @@ inline void solve_core(
     // Manually set progress bar to iters_done_ == 1.
     // This ensures that until pb is properly initialized to the range of [0, lmda_path.size()),
     // if the function finishes earlier then pb will print "... 0/0 ..." instead of "... -1/0 ...".
-    pb.manually_set_progress(1); 
+    pb.manually_set_progress(1);
 
     if (screen_set.size() > max_screen_size) throw util::max_screen_set_error();
 
     update_loss_null_f(state);
 
-    // ==================================================================================== 
+    // ====================================================================================
     // Initial fit for lambda ~ infinity to setup lmda_max
-    // ==================================================================================== 
+    // ====================================================================================
     // Only unpenalized (l1) groups are active in this case.
     // State must include all unpenalized groups.
     // We solve for large lambda, then back-track the KKT condition to find the lambda
@@ -504,7 +504,7 @@ inline void solve_core(
         const value_t large_lmda = (
             1e-3 * std::numeric_limits<value_t>::max() /
             std::max<value_t>(1, penalty.maxCoeff())
-        ); 
+        );
 
         auto tup = fit_f(state, large_lmda);
         auto&& state_gaussian_pin = std::get<0>(tup);
@@ -514,9 +514,9 @@ inline void solve_core(
         lmda_max = compute_lmda_max(abs_grad, alpha, penalty);
     }
 
-    // ==================================================================================== 
+    // ====================================================================================
     // Generate lambda path if needed
-    // ==================================================================================== 
+    // ====================================================================================
     if (setup_lmda_path) {
         if (lmda_path_size <= 0) return;
 
@@ -525,13 +525,13 @@ inline void solve_core(
         compute_lmda_path(lmda_path, min_ratio, lmda_max);
     }
 
-    // ==================================================================================== 
+    // ====================================================================================
     // Initial fit for lambda > lambda_max
-    // ==================================================================================== 
+    // ====================================================================================
     // Only unpenalized (l1) groups are active in this case by definition of lmda_max.
     // Since state is in its invariance (solution at state.lmda) and unpenalized groups
     // are ALWAYS active, state includes all unpenalized groups.
-    // If no lambda in lmda_path is > lmda_max and setup at lmda_max is not required, 
+    // If no lambda in lmda_path is > lmda_max and setup at lmda_max is not required,
     // state is left unchanged.
     // Otherwise, it is in its invariance at lmda = lmda_max.
     // All solutions to lambda > lambda_max are saved.
@@ -545,7 +545,7 @@ inline void solve_core(
 
     // slice lambda_path up to lmda_max
     const auto large_lmda_path_size = std::find_if(
-        lmda_path.data(), 
+        lmda_path.data(),
         lmda_path.data() + lmda_path.size(),
         [&](auto x) { return x <= lmda_max; }
     ) - lmda_path.data();
@@ -571,7 +571,7 @@ inline void solve_core(
             // save only the solutions that the user asked for (up to and not including lmda_max)
             if (i < large_lmda_path.size()-1) {
                 update_solutions_f(
-                    state, 
+                    state,
                     state_gaussian_pin,
                     large_lmda_path[i]
                 );
@@ -592,9 +592,9 @@ inline void solve_core(
 
     size_t lmda_path_idx = large_lmda_path_size; // next index into lmda_path to fit
 
-    // ==================================================================================== 
+    // ====================================================================================
     // BASIL iterations for lambda <= lambda_max
-    // ==================================================================================== 
+    // ====================================================================================
     // In this case, screen_set may not contain the true active set.
     // We must go through BASIL iterations to solve each lambda.
     sw_t sw;
@@ -610,52 +610,52 @@ inline void solve_core(
         // keep doing screen-fit-kkt until KKT passes
         while (1) {
             try {
-                // ==================================================================================== 
+                // ====================================================================================
                 // Screening step
-                // ==================================================================================== 
+                // ====================================================================================
                 sw.start();
                 screen_f(state, lmda_curr, kkt_passed, n_new_active);
                 benchmark_screen.push_back(sw.elapsed());
 
-                // ==================================================================================== 
+                // ====================================================================================
                 // Fit step
-                // ==================================================================================== 
+                // ====================================================================================
                 auto tup = fit_f(state, lmda_curr);
                 auto&& state_gaussian_pin = std::get<0>(tup);
                 benchmark_fit_screen.push_back(std::get<1>(tup));
                 benchmark_fit_active.push_back(std::get<2>(tup));
 
-                // ==================================================================================== 
+                // ====================================================================================
                 // Invariance step
-                // ==================================================================================== 
+                // ====================================================================================
                 sw.start();
                 update_invariance_f(state, state_gaussian_pin, lmda_curr);
                 benchmark_invariance.push_back(sw.elapsed());
 
-                // ==================================================================================== 
+                // ====================================================================================
                 // KKT step
-                // ==================================================================================== 
+                // ====================================================================================
                 sw.start();
                 kkt_passed = kkt(state, lmda_curr);
                 n_valid_solutions.push_back(kkt_passed);
                 lmda_path_idx += kkt_passed;
                 if (kkt_passed) {
                     update_solutions_f(
-                        state, 
+                        state,
                         state_gaussian_pin,
                         lmda_curr
                     );
                 }
                 benchmark_kkt.push_back(sw.elapsed());
 
-                // ==================================================================================== 
+                // ====================================================================================
                 // Diagnostic step
-                // ==================================================================================== 
+                // ====================================================================================
                 if (kkt_passed) {
                     active_sizes.push_back(active_set_size);
                     screen_sizes.push_back(state.screen_set.size());
                 }
-                // compute the number of new active groups 
+                // compute the number of new active groups
                 n_new_active = (
                     kkt_passed ?
                     (active_sizes.back() - current_active_size) : n_new_active
@@ -674,7 +674,7 @@ inline void solve_core(
 
         pb_add_suffix_f(state, pb);
 
-        // Early exit condition must be here to ensure that 
+        // Early exit condition must be here to ensure that
         // it is called after processing each lambda (including the last lambda).
         if (early_exit_f(state)) {
             // must add one more bar
@@ -687,4 +687,4 @@ inline void solve_core(
 }
 
 } // namespace solver
-} // namespace adelie_core 
+} // namespace adelie_core
