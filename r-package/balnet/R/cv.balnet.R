@@ -1,10 +1,13 @@
-#' Cross-validation for balnet.
+#' Tuning for balnet.
 #'
 #' @param X A numeric matrix or data frame with pre-treatment covariates.
 #' @param W Treatment vector (0: control, 1: treated).
 #' @param type.measure The loss to minimize for cross-validation.
 #'  Default is balance loss (e.g., Zhiqiang (2020)).
 #'  For "imbalance", the criterion is mean covariate imbalance (e.g., Wang & Zubizarreta (2020)).
+#' @param refit Whether to refit the model on each training fold, default is TRUE.
+#'   If FALSE, weights are computed once on full data and the loss is evaluated
+#'   per subsample (e.g., imbalance is measured on each data subsample).
 #' @param nfolds The number of folds used for cross-validation, default is 10.
 #' @param foldid An optional `n`-vector specifying which fold 1 to `nfold` a sample belongs to.
 #' If NULL, this defaults to `sample(rep(seq(nfolds), length.out = nrow(X)))`.
@@ -45,6 +48,7 @@ cv.balnet <- function(
   X,
   W,
   type.measure = c("balance.loss", "imbalance"),
+  refit = TRUE,
   nfolds = 10,
   foldid = NULL,
   ...
@@ -80,7 +84,11 @@ cv.balnet <- function(
     X.train <- X[train, , drop = FALSE]
     W.train <- W[train]
     dot.args[["sample.weights"]] <- sample.weights[train]
-    fit.train <- do.call(balnet, c(list(X = X.train, W = W.train, standardize = ".inplace"), dot.args))
+    if (refit) {
+      fit.train <- do.call(balnet, c(list(X = X.train, W = W.train, standardize = ".inplace"), dot.args))
+    } else {
+      fit.train <- fit.full
+    }
 
     X.test <- X[test, , drop = FALSE]
     W.test <- W[test]

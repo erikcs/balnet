@@ -2,12 +2,13 @@
 % Please edit documentation in R/cv.balnet.R
 \name{cv.balnet}
 \alias{cv.balnet}
-\title{Cross-validation for balnet.}
+\title{Tuning for balnet.}
 \usage{
 cv.balnet(
   X,
   W,
   type.measure = c("balance.loss", "imbalance"),
+  refit = TRUE,
   nfolds = 10,
   foldid = NULL,
   ...
@@ -22,6 +23,10 @@ cv.balnet(
 Default is balance loss (e.g., Zhiqiang (2020)).
 For "imbalance", the criterion is mean covariate imbalance (e.g., Wang & Zubizarreta (2020)).}
 
+\item{refit}{Whether to refit the model on each training fold, default is TRUE.
+If FALSE, weights are computed once on full data and the loss is evaluated
+per subsample (e.g., imbalance is measured on each data subsample).}
+
 \item{nfolds}{The number of folds used for cross-validation, default is 10.}
 
 \item{foldid}{An optional \code{n}-vector specifying which fold 1 to \code{nfold} a sample belongs to.
@@ -33,7 +38,7 @@ If NULL, this defaults to \code{sample(rep(seq(nfolds), length.out = nrow(X)))}.
 A fit cv.balnet object.
 }
 \description{
-Cross-validation for balnet.
+Tuning for balnet.
 }
 \examples{
 \donttest{
