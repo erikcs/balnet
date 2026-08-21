@@ -7,7 +7,7 @@
 #'  For "imbalance", the criterion is mean covariate imbalance (e.g., Wang & Zubizarreta (2020)).
 #' @param refit Whether to refit the model on each training fold, default is TRUE.
 #'   If FALSE, weights are computed once on full data and the loss is evaluated
-#'   per subsample (e.g., imbalance is measured on each data subsample).
+#'   on `nfold * 50` subsamples (e.g., imbalance is measured on each data subsample).
 #' @param nfolds The number of folds used for cross-validation, default is 10.
 #' @param foldid An optional `n`-vector specifying which fold 1 to `nfold` a sample belongs to.
 #' If NULL, this defaults to `sample(rep(seq(nfolds), length.out = nrow(X)))`.
@@ -60,16 +60,22 @@ cv.balnet <- function(
   } else if (type.measure == "imbalance") {
     get_loss <- get_imbalance
   }
-  if (is.null(foldid)) {
-    nfolds <- max(nfolds, 3)
-    foldid <- sample(rep(seq(nfolds), length.out = nrow(X)))
-  } else {
-    if (length(foldid) != length(W)) {
-      stop("Invalid `foldid`.")
-    }
-    nfolds <- max(foldid)
-  }
   dot.args <- list(...)
+
+  if (refit) {
+    if (is.null(foldid)) {
+      nfolds <- max(nfolds, 3)
+      foldid <- sample(rep(seq(nfolds), length.out = nrow(X)))
+    } else {
+      if (length(foldid) != length(W)) {
+        stop("Invalid `foldid`.")
+      }
+      nfolds <- max(foldid)
+    }
+    test.list <- lapply(seq_len(nfolds), function(k) which(foldid == k))
+  } else {
+    test.list <- replicate(nfolds * 50, sample.int(length(W), length(W) %/% 2), simplify = FALSE)
+  }
 
   if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]]) cat("Fitting full model\n")
   fit.full <- balnet(X, W, ...)
@@ -77,22 +83,22 @@ cv.balnet <- function(
   sample.weights <- fit.full[["sample.weights"]]
 
   cv.list <- list()
-  for (k in 1:nfolds) {
+  for (k in 1:length(test.list)) {
     if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]] && refit) cat(sprintf("\nFold: %d/%d\n", k, nfolds))
-    test <- foldid == k
-    train <- !test
-    X.train <- X[train, , drop = FALSE]
-    W.train <- W[train]
-    dot.args[["sample.weights"]] <- sample.weights[train]
+    test <- test.list[[k]]
+    X.test <- X[test, , drop = FALSE]
+    W.test <- W[test]
+    sample.weights.test <- sample.weights[test]
     if (refit) {
+      train <- setdiff(seq_along(W), test)
+      X.train <- X[train, , drop = FALSE]
+      W.train <- W[train]
+      dot.args[["sample.weights"]] <- sample.weights[train]
       fit.train <- do.call(balnet, c(list(X = X.train, W = W.train, standardize = ".inplace"), dot.args))
     } else {
       fit.train <- fit.full
     }
 
-    X.test <- X[test, , drop = FALSE]
-    W.test <- W[test]
-    sample.weights.test <- sample.weights[test]
     loss <- do.call(get_loss, list(fit.train, X.test, W.test, sample.weights.test, lambda.full))
     cv.list[[k]] <- loss
   }
@@ -101,7 +107,7 @@ cv.balnet <- function(
   lambda.min0 <- lambda.min1 <- NULL
   if (!is.null(cv.list[[1]][["control"]])) {
     cv.mean0 <- colMeans(matrix(unlist(lapply(cv.list, `[[`, "control")),
-                                nrow = nfolds,
+                                nrow = length(cv.list),
                                 ncol = length(lambda.full$control),
                                 byrow = TRUE))
     idx.min0 <- which.min(cv.mean0)
@@ -109,7 +115,7 @@ cv.balnet <- function(
   }
   if (!is.null(cv.list[[1]][["treated"]])) {
     cv.mean1 <- colMeans(matrix(unlist(lapply(cv.list, `[[`, "treated")),
-                                nrow = nfolds,
+                                nrow = length(cv.list),
                                 ncol = length(lambda.full$treated),
                                 byrow = TRUE))
     idx.min1 <- which.min(cv.mean1)

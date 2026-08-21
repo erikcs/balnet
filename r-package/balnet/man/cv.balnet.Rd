@@ -25,7 +25,7 @@ For "imbalance", the criterion is mean covariate imbalance (e.g., Wang & Zubizar
 
 \item{refit}{Whether to refit the model on each training fold, default is TRUE.
 If FALSE, weights are computed once on full data and the loss is evaluated
-per subsample (e.g., imbalance is measured on each data subsample).}
+on \code{nfold * 50} subsamples (e.g., imbalance is measured on each data subsample).}
 
 \item{nfolds}{The number of folds used for cross-validation, default is 10.}
 
