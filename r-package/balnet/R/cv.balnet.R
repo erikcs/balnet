@@ -78,7 +78,7 @@ cv.balnet <- function(
 
   cv.list <- list()
   for (k in 1:nfolds) {
-    if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]]) cat(sprintf("\nFold: %d/%d\n", k, nfolds))
+    if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]] && refit) cat(sprintf("\nFold: %d/%d\n", k, nfolds))
     test <- foldid == k
     train <- !test
     X.train <- X[train, , drop = FALSE]
