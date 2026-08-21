@@ -85,6 +85,11 @@ cv.balnet <- function(
   lambda.full <- fit.full[["_lambda"]]
   sample.weights <- fit.full[["sample.weights"]]
 
+  pred.type <- if (type.measure == "imbalance") "response" else "link"
+  pred.full <- if (!refit) {
+    predict(fit.full, X, lambda = lambda.full, type = pred.type, .simplify = FALSE)
+  } else NULL
+
   cv.list <- list()
   for (k in 1:length(test.list)) {
     if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]] && refit) cat(sprintf("\nFold: %d/%d\n", k, nfolds))
@@ -100,7 +105,8 @@ cv.balnet <- function(
       fit.train <- do.call(balnet, c(list(X = X.train, W = W.train, standardize = ".inplace"), dot.args))
       loss <- do.call(get_loss, list(fit.train, X.test, W.test, sample.weights.test, lambda.full, X.stats = X.stats))
     } else {
-      loss <- do.call(get_loss, list(fit.full, X.test, W.test, sample.weights.test, lambda.full, X.stats = X.stats))
+      pred.test <- lapply(pred.full, function(m) m[test, , drop = FALSE])
+      loss <- do.call(get_loss, list(fit.full, X.test, W.test, sample.weights.test, lambda.full, X.stats = X.stats, pred = pred.test))
     }
 
     cv.list[[k]] <- loss
@@ -335,13 +341,15 @@ balweights.cv.balnet <- function(
   balweights.balnet(object, lambda = lambda)
 }
 
-get_balance_loss <- function(object, X.test, W.test, sample.weights, lambda, ...) {
+get_balance_loss <- function(object, X.test, W.test, sample.weights, lambda, pred = NULL, ...) {
   .balance_loss <- function(W, eta) {
     colSums(sample.weights * (W * exp(-eta) + (1 - W) * eta)) / sum(sample.weights)
   }
 
-  lambda <- validate_lambda(lambda)
-  eta <- predict(object, X.test, lambda = lambda, type = "link", .simplify = FALSE)
+  eta <- if (!is.null(pred)) pred else {
+    lambda <- validate_lambda(lambda)
+    predict(object, X.test, lambda = lambda, type = "link", .simplify = FALSE)
+  }
 
   loss0 <- loss1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
@@ -355,7 +363,7 @@ get_balance_loss <- function(object, X.test, W.test, sample.weights, lambda, ...
   out[!vapply(out, is.null, logical(1))]
 }
 
-get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stats, ...) {
+get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stats, pred = NULL, ...) {
   .imbalance <- function(W, W.hat) {
     # held-out balancing p-scores might be zero, so we need to clip.
     # (not as big a concern in the held out balance loss)
@@ -371,8 +379,10 @@ get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stat
     rowMeans(abs(smd))
   }
 
-  lambda <- validate_lambda(lambda)
-  W.hat <- predict(object, X.test, lambda = lambda, type = "response", .simplify = FALSE)
+  W.hat <- if (!is.null(pred)) pred else {
+    lambda <- validate_lambda(lambda)
+    predict(object, X.test, lambda = lambda, type = "response", .simplify = FALSE)
+  }
 
   loss0 <- loss1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
