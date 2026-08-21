@@ -54,13 +54,16 @@ cv.balnet <- function(
   ...
 )
 {
+  dot.args <- list(...)
   type.measure <- match.arg(type.measure)
+  X.stats <- NULL
   if (type.measure == "balance.loss") {
     get_loss <- get_balance_loss
   } else if (type.measure == "imbalance") {
     get_loss <- get_imbalance
+    X.stats <- col_stats(X, dot.args[["sample.weights"]], compute_sd = TRUE)
+    X.stats$scale[X.stats$scale <= 0] <- 1
   }
-  dot.args <- list(...)
 
   if (refit) {
     if (is.null(foldid)) {
@@ -95,11 +98,11 @@ cv.balnet <- function(
       W.train <- W[train]
       dot.args[["sample.weights"]] <- sample.weights[train]
       fit.train <- do.call(balnet, c(list(X = X.train, W = W.train, standardize = ".inplace"), dot.args))
+      loss <- do.call(get_loss, list(fit.train, X.test, W.test, sample.weights.test, lambda.full, X.stats = X.stats))
     } else {
-      fit.train <- fit.full
+      loss <- do.call(get_loss, list(fit.full, X.test, W.test, sample.weights.test, lambda.full, X.stats = X.stats))
     }
 
-    loss <- do.call(get_loss, list(fit.train, X.test, W.test, sample.weights.test, lambda.full))
     cv.list[[k]] <- loss
   }
   cv.mean0 <- cv.mean1 <- NULL
@@ -332,7 +335,7 @@ balweights.cv.balnet <- function(
   balweights.balnet(object, lambda = lambda)
 }
 
-get_balance_loss <- function(object, X.test, W.test, sample.weights, lambda) {
+get_balance_loss <- function(object, X.test, W.test, sample.weights, lambda, ...) {
   .balance_loss <- function(W, eta) {
     colSums(sample.weights * (W * exp(-eta) + (1 - W) * eta)) / sum(sample.weights)
   }
@@ -352,10 +355,7 @@ get_balance_loss <- function(object, X.test, W.test, sample.weights, lambda) {
   out[!vapply(out, is.null, logical(1))]
 }
 
-get_imbalance <- function(object, X.test, W.test, sample.weights, lambda) {
-  X.stats <- col_stats(X.test, sample.weights, compute_sd = TRUE)
-  X.stats$scale[X.stats$scale <= 0] <- 1
-
+get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stats, ...) {
   .imbalance <- function(W, W.hat) {
     # held-out balancing p-scores might be zero, so we need to clip.
     # (not as big a concern in the held out balance loss)
