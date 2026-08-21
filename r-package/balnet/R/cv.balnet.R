@@ -7,7 +7,7 @@
 #'  For "imbalance", the criterion is mean covariate imbalance (e.g., Wang & Zubizarreta (2020)).
 #' @param refit Whether to refit the model on each training fold, default is TRUE.
 #'   If FALSE, weights are computed once on full data and the loss is evaluated
-#'   per subsample (e.g., imbalance is measured on each data subsample).
+#'   on `nfold * 50` subsamples (e.g., imbalance is measured on each data subsample).
 #' @param nfolds The number of folds used for cross-validation, default is 10.
 #' @param foldid An optional `n`-vector specifying which fold 1 to `nfold` a sample belongs to.
 #' If NULL, this defaults to `sample(rep(seq(nfolds), length.out = nrow(X)))`.
