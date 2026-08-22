@@ -2,13 +2,12 @@
 % Please edit documentation in R/cv.balnet.R
 \name{cv.balnet}
 \alias{cv.balnet}
-\title{Tuning for balnet.}
+\title{Tuning via cross-validation for balnet.}
 \usage{
 cv.balnet(
   X,
   W,
   type.measure = c("balance.loss", "imbalance"),
-  refit = TRUE,
   nfolds = 10,
   foldid = NULL,
   ...
@@ -21,11 +20,7 @@ cv.balnet(
 
 \item{type.measure}{The loss to minimize for cross-validation.
 Default is balance loss (e.g., Zhiqiang (2020)).
-For "imbalance", the criterion is mean covariate imbalance (e.g., Wang & Zubizarreta (2020)).}
-
-\item{refit}{Whether to refit the model on each training fold, default is TRUE.
-If FALSE, weights are computed once on full data and the loss is evaluated
-on \code{nfold * 50} subsamples (e.g., imbalance is measured on each data subsample).}
+For "imbalance", the criterion is mean covariate imbalance (e.g., Zhao (2019)).}
 
 \item{nfolds}{The number of folds used for cross-validation, default is 10.}
 
@@ -38,7 +33,7 @@ If NULL, this defaults to \code{sample(rep(seq(nfolds), length.out = nrow(X)))}.
 A fit cv.balnet object.
 }
 \description{
-Tuning for balnet.
+Tuning via cross-validation for balnet.
 }
 \examples{
 \donttest{
@@ -67,7 +62,7 @@ Tan, Zhiqiang.
 "Regularized calibrated estimation of propensity scores with model misspecification and high-dimensional data."
 Biometrika 107(1), 2020.
 
-Wang, Yixin, and Jose R. Zubizarreta.
-"Minimal dispersion approximately balancing weights: asymptotic properties and practical considerations."
-Biometrika 107(1), 2020.
+Zhao, Qingyuan.
+"Covariate balancing propensity score by tailored loss functions."
+Annals of Statistics 47 (2), 2019.
 }
