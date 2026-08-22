@@ -1,13 +1,10 @@
-#' Tuning for balnet.
+#' Tuning via cross-validation for balnet.
 #'
 #' @param X A numeric matrix or data frame with pre-treatment covariates.
 #' @param W Treatment vector (0: control, 1: treated).
 #' @param type.measure The loss to minimize for cross-validation.
 #'  Default is balance loss (e.g., Zhiqiang (2020)).
-#'  For "imbalance", the criterion is mean covariate imbalance (e.g., Wang & Zubizarreta (2020)).
-#' @param refit Whether to refit the model on each training fold, default is TRUE.
-#'   If FALSE, weights are computed once on full data and the loss is evaluated
-#'   on `nfold * 50` subsamples (e.g., imbalance is measured on each data subsample).
+#'  For "imbalance", the criterion is mean covariate imbalance (e.g., Zhao (2019)).
 #' @param nfolds The number of folds used for cross-validation, default is 10.
 #' @param foldid An optional `n`-vector specifying which fold 1 to `nfold` a sample belongs to.
 #' If NULL, this defaults to `sample(rep(seq(nfolds), length.out = nrow(X)))`.
@@ -18,9 +15,9 @@
 #' @references Tan, Zhiqiang.
 #'  "Regularized calibrated estimation of propensity scores with model misspecification and high-dimensional data."
 #'  Biometrika 107(1), 2020.
-#' @references Wang, Yixin, and Jose R. Zubizarreta.
-#'  "Minimal dispersion approximately balancing weights: asymptotic properties and practical considerations."
-#'  Biometrika 107(1), 2020.
+#' @references Zhao, Qingyuan.
+#'  "Covariate balancing propensity score by tailored loss functions."
+#'  Annals of Statistics 47 (2), 2019.
 #'
 #' @examples
 #' \donttest{
@@ -48,7 +45,6 @@ cv.balnet <- function(
   X,
   W,
   type.measure = c("balance.loss", "imbalance"),
-  refit = TRUE,
   nfolds = 10,
   foldid = NULL,
   ...
@@ -65,19 +61,14 @@ cv.balnet <- function(
     X.stats$scale[X.stats$scale <= 0] <- 1
   }
 
-  if (refit) {
-    if (is.null(foldid)) {
-      nfolds <- max(nfolds, 3)
-      foldid <- sample(rep(seq(nfolds), length.out = nrow(X)))
-    } else {
-      if (length(foldid) != length(W)) {
-        stop("Invalid `foldid`.")
-      }
-      nfolds <- max(foldid)
-    }
-    test.list <- lapply(seq_len(nfolds), function(k) which(foldid == k))
+  if (is.null(foldid)) {
+    nfolds <- max(nfolds, 3)
+    foldid <- sample(rep(seq(nfolds), length.out = nrow(X)))
   } else {
-    test.list <- replicate(nfolds * 50, sample.int(length(W), length(W) %/% 2), simplify = FALSE)
+    if (length(foldid) != length(W)) {
+      stop("Invalid `foldid`.")
+    }
+    nfolds <- max(foldid)
   }
 
   if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]]) cat("Fitting full model\n")
@@ -85,30 +76,20 @@ cv.balnet <- function(
   lambda.full <- fit.full[["_lambda"]]
   sample.weights <- fit.full[["sample.weights"]]
 
-  pred.type <- if (type.measure == "imbalance") "response" else "link"
-  pred.full <- if (!refit) {
-    predict(fit.full, X, lambda = lambda.full, type = pred.type, .simplify = FALSE)
-  } else NULL
-
   cv.list <- list()
-  for (k in 1:length(test.list)) {
-    if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]] && refit) cat(sprintf("\nFold: %d/%d\n", k, nfolds))
-    test <- test.list[[k]]
+  for (k in 1:nfolds) {
+    if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]]) cat(sprintf("\nFold: %d/%d\n", k, nfolds))
+    test <- foldid == k
+    train <- !test
+    X.train <- X[train, , drop = FALSE]
+    W.train <- W[train]
+    dot.args[["sample.weights"]] <- sample.weights[train]
+    fit.train <- do.call(balnet, c(list(X = X.train, W = W.train, standardize = ".inplace"), dot.args))
+
     X.test <- X[test, , drop = FALSE]
     W.test <- W[test]
     sample.weights.test <- sample.weights[test]
-    if (refit) {
-      train <- setdiff(seq_along(W), test)
-      X.train <- X[train, , drop = FALSE]
-      W.train <- W[train]
-      dot.args[["sample.weights"]] <- sample.weights[train]
-      fit.train <- do.call(balnet, c(list(X = X.train, W = W.train, standardize = ".inplace"), dot.args))
-      loss <- do.call(get_loss, list(fit.train, X.test, W.test, sample.weights.test, lambda.full, X.stats = X.stats))
-    } else {
-      pred.test <- lapply(pred.full, function(m) m[test, , drop = FALSE])
-      loss <- do.call(get_loss, list(fit.full, X.test, W.test, sample.weights.test, lambda.full, X.stats = X.stats, pred = pred.test))
-    }
-
+    loss <- do.call(get_loss, list(fit.train, X.test, W.test, sample.weights.test, lambda.full, X.stats = X.stats))
     cv.list[[k]] <- loss
   }
   cv.mean0 <- cv.mean1 <- NULL
@@ -341,15 +322,13 @@ balweights.cv.balnet <- function(
   balweights.balnet(object, lambda = lambda)
 }
 
-get_balance_loss <- function(object, X.test, W.test, sample.weights, lambda, pred = NULL, ...) {
+get_balance_loss <- function(object, X.test, W.test, sample.weights, lambda, ...) {
   .balance_loss <- function(W, eta) {
     colSums(sample.weights * (W * exp(-eta) + (1 - W) * eta)) / sum(sample.weights)
   }
 
-  eta <- if (!is.null(pred)) pred else {
-    lambda <- validate_lambda(lambda)
-    predict(object, X.test, lambda = lambda, type = "link", .simplify = FALSE)
-  }
+  lambda <- validate_lambda(lambda)
+  eta <- predict(object, X.test, lambda = lambda, type = "link", .simplify = FALSE)
 
   loss0 <- loss1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
@@ -363,7 +342,7 @@ get_balance_loss <- function(object, X.test, W.test, sample.weights, lambda, pre
   out[!vapply(out, is.null, logical(1))]
 }
 
-get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stats, pred = NULL, ...) {
+get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stats, ...) {
   .imbalance <- function(W, W.hat) {
     # held-out balancing p-scores might be zero, so we need to clip.
     # (not as big a concern in the held out balance loss)
@@ -379,10 +358,8 @@ get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stat
     rowMeans(abs(smd))
   }
 
-  W.hat <- if (!is.null(pred)) pred else {
-    lambda <- validate_lambda(lambda)
-    predict(object, X.test, lambda = lambda, type = "response", .simplify = FALSE)
-  }
+  lambda <- validate_lambda(lambda)
+  W.hat <- predict(object, X.test, lambda = lambda, type = "response", .simplify = FALSE)
 
   loss0 <- loss1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
