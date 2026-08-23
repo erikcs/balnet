@@ -59,7 +59,6 @@ cv.boot.balnet <- function(
 
   cv.list <- list()
   for (k in 1:length(test.list)) {
-    if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]] && refit) cat(sprintf("\nFold: %d/%d\n", k, nfolds))
     test <- test.list[[k]]
     X.test <- X[test, , drop = FALSE]
     W.test <- W[test]
