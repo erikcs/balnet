@@ -1,8 +1,8 @@
 Package: balnet
 Title: Pathwise Estimation of Covariate Balancing Propensity Scores
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: c(
-    person("Erik", "Sverdrup", role = c("aut", "cre"), email = "erik.sverdrup@monash.edu"),
+    person("Erik", "Sverdrup", role = c("aut", "cre"), email = "erik.sverdrup@gmail.com"),
     person("Trevor", "Hastie", role = "aut"),
     person("James", "Yang", role = "ctb", comment = "Author of the bundled adelie C++ library.")
     )
