@@ -49,7 +49,6 @@ cv.boot.balnet <- function(
   X.stats$scale[X.stats$scale <= 0] <- 1
   test.list <- replicate(B, sample.int(length(W), length(W) %/% 2), simplify = FALSE)
 
-
   if (!is.null(dot.args[["verbose"]]) && dot.args[["verbose"]]) cat("Fitting full model\n")
   fit.full <- balnet(X, W, ...)
   lambda.full <- fit.full[["_lambda"]]
