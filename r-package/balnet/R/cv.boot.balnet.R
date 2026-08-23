@@ -44,6 +44,7 @@ cv.boot.balnet <- function(
 )
 {
   dot.args <- list(...)
+  type.measure <- "bootstrapped.imbalance" # Placeholder info for now
   get_loss <- get_imbalance
   X.stats <- col_stats(X, dot.args[["sample.weights"]], compute_sd = TRUE)
   X.stats$scale[X.stats$scale <= 0] <- 1
@@ -95,7 +96,7 @@ cv.boot.balnet <- function(
     "cv.mean" = list(control = cv.mean0, treated = cv.mean1),
     "idx.min" = list(control = idx.min0, treated = idx.min1),
     "lambda.min" = lambda.min,
-    "type.measure" = "bootstrapped.imbalance"
+    "type.measure" = type.measure
   )
 
   fit.full[["lambda.min"]] <- if (length(lambda.min.out) > 1) lambda.min.out else lambda.min.out[[1]]
