@@ -9,11 +9,11 @@ auto compute_lmda_max(
     const AbsGradType& abs_grad,
     ValueType alpha,
     const PenaltyType& penalty,
-    ValueType ridge_scale = 1e-3
+    ValueType ridge_scale = 0.05
 )
 {
     using vec_value_t = std::decay_t<AbsGradType>;
-    const auto factor = (alpha <= 0) ? ridge_scale : alpha;
+    const auto factor = (alpha <= ridge_scale) ? ridge_scale : alpha;
     return vec_value_t::NullaryExpr(
         abs_grad.size(),
         [&](auto i) { 
