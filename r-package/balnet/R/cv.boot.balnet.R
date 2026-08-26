@@ -5,6 +5,9 @@
 #'
 #' @param X A numeric matrix or data frame with pre-treatment covariates.
 #' @param W Treatment vector (0: control, 1: treated).
+#' @param type.measure
+#'  For "imbalance.mean", the criterion is mean covariate imbalance,
+#'  and for "imbalance.inf", the criterion is max covariate imbalance.
 #' @param B The number of bootstrap replicates.
 #' @param ... Arguments for \code{\link{balnet}}.
 #'
@@ -39,12 +42,13 @@
 cv.boot.balnet <- function(
   X,
   W,
+  type.measure = c("imbalance.mean", "imbalance.inf"),
   B = 500,
   ...
 )
 {
   dot.args <- list(...)
-  type.measure <- "bootstrapped.imbalance" # Placeholder info for now
+  type.measure <- match.arg(type.measure)
   get_loss <- get_imbalance
   X.stats <- col_stats(X, dot.args[["sample.weights"]], compute_sd = TRUE)
   X.stats$scale[X.stats$scale <= 0] <- 1
@@ -66,7 +70,7 @@ cv.boot.balnet <- function(
     W.hat.test <- lapply(W.hat.full, function(m) m[test, , drop = FALSE])
     loss <- do.call(
         get_loss,
-        list(fit.full, X.test, W.test, sample.weights.test, lambda.full, X.stats = X.stats, W.hat = W.hat.test)
+        list(fit.full, X.test, W.test, sample.weights.test, lambda.full, X.stats = X.stats, type.measure = type.measure, W.hat = W.hat.test)
     )
 
     cv.list[[k]] <- loss
@@ -96,7 +100,7 @@ cv.boot.balnet <- function(
     "cv.mean" = list(control = cv.mean0, treated = cv.mean1),
     "idx.min" = list(control = idx.min0, treated = idx.min1),
     "lambda.min" = lambda.min,
-    "type.measure" = type.measure
+    "type.measure" = paste0(type.measure, ".boot")
   )
 
   fit.full[["lambda.min"]] <- if (length(lambda.min.out) > 1) lambda.min.out else lambda.min.out[[1]]

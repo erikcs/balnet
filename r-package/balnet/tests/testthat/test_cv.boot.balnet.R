@@ -18,6 +18,8 @@ test_that("basic cv.boot.balnet runs", {
   capture.output(print(wts))
   capture.output(summary(wts))
 
+  fit <- cv.boot.balnet(X, W, type.measure = "imbalance.inf")
+
   expect_true(TRUE)
 })
 
