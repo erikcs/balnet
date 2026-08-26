@@ -4,12 +4,21 @@
 \alias{cv.boot.balnet}
 \title{Tuning via subsampling for balnet.}
 \usage{
-cv.boot.balnet(X, W, B = 500, ...)
+cv.boot.balnet(
+  X,
+  W,
+  type.measure = c("imbalance.mean", "imbalance.inf"),
+  B = 500,
+  ...
+)
 }
 \arguments{
 \item{X}{A numeric matrix or data frame with pre-treatment covariates.}
 
 \item{W}{Treatment vector (0: control, 1: treated).}
+
+\item{type.measure}{For "imbalance.mean", the criterion is mean covariate imbalance,
+and for "imbalance.inf", the criterion is max covariate imbalance.}
 
 \item{B}{The number of bootstrap replicates.}
 
