@@ -349,7 +349,7 @@ get_balance_loss <- function(object, X.test, W.test, sample.weights, lambda, ...
   out[!vapply(out, is.null, logical(1))]
 }
 
-get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stats, type.measure = "imbalance.mean", ...) {
+get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stats, type.measure = "imbalance.mean", W.hat = NULL, ...) {
   .imbalance <- function(W, W.hat) {
     # held-out balancing p-scores might be zero, so we need to clip.
     # (not as big a concern in the held out balance loss)
@@ -371,8 +371,10 @@ get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stat
     }
   }
 
-  lambda <- validate_lambda(lambda)
-  W.hat <- predict(object, X.test, lambda = lambda, type = "response", .simplify = FALSE)
+  if (is.null(W.hat)) {
+    lambda <- validate_lambda(lambda)
+    W.hat <- predict(object, X.test, lambda = lambda, type = "response", .simplify = FALSE)
+  }
 
   loss0 <- loss1 <- NULL
   if (!is.null(object[["_fit"]]$control)) {
