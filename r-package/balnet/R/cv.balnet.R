@@ -349,7 +349,7 @@ get_balance_loss <- function(object, X.test, W.test, sample.weights, lambda, ...
   out[!vapply(out, is.null, logical(1))]
 }
 
-get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stats = NULL, type.measure = "imbalance.mean", ...) {
+get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stats, type.measure = "imbalance.mean", W.hat = NULL, ...) {
   .imbalance <- function(W, W.hat) {
     # held-out balancing p-scores might be zero, so we need to clip.
     # (not as big a concern in the held out balance loss)
