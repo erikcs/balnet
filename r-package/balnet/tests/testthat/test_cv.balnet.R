@@ -19,7 +19,7 @@ test_that("basic cv.balnet runs", {
   capture.output(summary(wts))
 
   fit <- cv.balnet(X, W, type.measure = "imbalance.mean")
-  fit <- cv.balnet(X, W, type.measure = "imbalance.mean")
+  fit <- cv.balnet(X, W, type.measure = "imbalance.inf")
 
   expect_true(TRUE)
 })
