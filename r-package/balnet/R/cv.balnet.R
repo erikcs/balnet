@@ -3,8 +3,9 @@
 #' @param X A numeric matrix or data frame with pre-treatment covariates.
 #' @param W Treatment vector (0: control, 1: treated).
 #' @param type.measure The loss to minimize for cross-validation.
-#'  Default is balance loss (e.g., Zhiqiang (2020)).
-#'  For "imbalance", the criterion is mean covariate imbalance (e.g., Zhao (2019)).
+#'  Default is balance loss (e.g., Tan (2020)).
+#'  For "imbalance.mean", the criterion is mean covariate imbalance,
+#'  and for "imbalance.inf", the criterion is max covariate imbalance.
 #' @param nfolds The number of folds used for cross-validation, default is 10.
 #' @param foldid An optional `n`-vector specifying which fold 1 to `nfold` a sample belongs to.
 #' If NULL, this defaults to `sample(rep(seq(nfolds), length.out = nrow(X)))`.
@@ -14,6 +15,9 @@
 #'
 #' @references Tan, Zhiqiang.
 #'  "Regularized calibrated estimation of propensity scores with model misspecification and high-dimensional data."
+#'  Biometrika 107(1), 2020.
+#' @references Wang, Yixin, and Jose R. Zubizarreta.
+#'  "Minimal dispersion approximately balancing weights: asymptotic properties and practical considerations."
 #'  Biometrika 107(1), 2020.
 #' @references Zhao, Qingyuan.
 #'  "Covariate balancing propensity score by tailored loss functions."
@@ -44,7 +48,7 @@
 cv.balnet <- function(
   X,
   W,
-  type.measure = c("balance.loss", "imbalance"),
+  type.measure = c("balance.loss", "imbalance.mean", "imbalance.inf"),
   nfolds = 10,
   foldid = NULL,
   ...
@@ -55,7 +59,7 @@ cv.balnet <- function(
   X.stats <- NULL
   if (type.measure == "balance.loss") {
     get_loss <- get_balance_loss
-  } else if (type.measure == "imbalance") {
+  } else if (type.measure %in% c("imbalance.mean", "imbalance.inf")) {
     get_loss <- get_imbalance
     X.stats <- col_stats(X, dot.args[["sample.weights"]], compute_sd = TRUE)
     X.stats$scale[X.stats$scale <= 0] <- 1
@@ -89,7 +93,10 @@ cv.balnet <- function(
     X.test <- X[test, , drop = FALSE]
     W.test <- W[test]
     sample.weights.test <- sample.weights[test]
-    loss <- do.call(get_loss, list(fit.train, X.test, W.test, sample.weights.test, lambda.full, X.stats = X.stats))
+    loss <- do.call(
+      get_loss,
+      list(fit.train, X.test, W.test, sample.weights.test, lambda.full, X.stats = X.stats, type.measure = type.measure)
+    )
     cv.list[[k]] <- loss
   }
   cv.mean0 <- cv.mean1 <- NULL
@@ -342,7 +349,7 @@ get_balance_loss <- function(object, X.test, W.test, sample.weights, lambda, ...
   out[!vapply(out, is.null, logical(1))]
 }
 
-get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stats, W.hat = NULL, ...) {
+get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stats = NULL, type.measure = "imbalance.mean", ...) {
   .imbalance <- function(W, W.hat) {
     # held-out balancing p-scores might be zero, so we need to clip.
     # (not as big a concern in the held out balance loss)
@@ -355,7 +362,13 @@ get_imbalance <- function(object, X.test, W.test, sample.weights, lambda, X.stat
     smd <- sweep(smd, 2L, X.stats$center, `-`, check.margin	= FALSE)
     smd <- sweep(smd, 2L, X.stats$scale, `/`, check.margin = FALSE)
 
-    rowMeans(abs(smd))
+    if (type.measure == "imbalance.mean") {
+      return(rowMeans(abs(smd)))
+    } else if (type.measure == "imbalance.inf") {
+      return(apply(abs(smd), 1, max))
+    } else {
+      stop("Invalid type.measure norm")
+    }
   }
 
   if (is.null(W.hat)) {
