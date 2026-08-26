@@ -7,7 +7,7 @@
 cv.balnet(
   X,
   W,
-  type.measure = c("balance.loss", "imbalance"),
+  type.measure = c("balance.loss", "imbalance.mean", "imbalance.inf"),
   nfolds = 10,
   foldid = NULL,
   ...
@@ -19,8 +19,9 @@ cv.balnet(
 \item{W}{Treatment vector (0: control, 1: treated).}
 
 \item{type.measure}{The loss to minimize for cross-validation.
-Default is balance loss (e.g., Zhiqiang (2020)).
-For "imbalance", the criterion is mean covariate imbalance (e.g., Zhao (2019)).}
+Default is balance loss (e.g., Tan (2020)).
+For "imbalance.mean", the criterion is mean covariate imbalance,
+and for "imbalance.inf", the criterion is max covariate imbalance.}
 
 \item{nfolds}{The number of folds used for cross-validation, default is 10.}
 
@@ -60,6 +61,10 @@ W.hat <- predict(cv.fit, X)
 \references{
 Tan, Zhiqiang.
 "Regularized calibrated estimation of propensity scores with model misspecification and high-dimensional data."
+Biometrika 107(1), 2020.
+
+Wang, Yixin, and Jose R. Zubizarreta.
+"Minimal dispersion approximately balancing weights: asymptotic properties and practical considerations."
 Biometrika 107(1), 2020.
 
 Zhao, Qingyuan.
